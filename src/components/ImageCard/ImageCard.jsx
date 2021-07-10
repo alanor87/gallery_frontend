@@ -1,31 +1,35 @@
-import {React, useState, useEffect, } from "react";
+import { React, useState, useEffect, memo } from "react";
 import { useDispatch } from "react-redux";
-import { onTagsEdit } from '../../redux/gallery/gallery-actions';
+import { onTagsEdit } from "../../redux/gallery/gallery-actions";
 import { NavLink } from "react-router-dom";
 import Tag from "../../components/Tag";
 import TagEditor from "../../components/TagEditor";
 
-export default function ImageCard({ image }) {
-    
-    const { id, previewURL, tags, likes, comments } = image;
-    const tagsArray = tags.split(", ");
-    const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
-    const [imageTags, setImageTags] = useState(tagsArray);
-    const onTagEditOpen = () => setTagEditorOpen(true);
-    const onTagEditClose = () => setTagEditorOpen(false);
-    const dispatch = useDispatch();
+function ImageCard({ image }) {
+  console.log("Render"); // just for debugging -  to be sure memoization works)
 
-    useEffect(() => dispatch(onTagsEdit({ id, imageTags })), [imageTags, id, dispatch]);
+  const { id, previewURL, tags, likes, comments } = image;
+  const tagsArray = tags.split(", ");
+  const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
+  const [imageTags, setImageTags] = useState(tagsArray);
+  const onTagEditOpen = () => setTagEditorOpen(true);
+  const onTagEditClose = () => setTagEditorOpen(false);
+  const dispatch = useDispatch();
 
-    const tagDelHandler = (tagToDelete) => {
-        const newTags = imageTags.filter(tag => tag !== tagToDelete);
-        setImageTags(newTags);
-    }
+  useEffect(
+    () => dispatch(onTagsEdit({ id, imageTags })),
+    [imageTags, id, dispatch]
+  );
 
-    const tagAddHandler = (newTag) => {
-        const newTags = [...imageTags, newTag];
-        setImageTags(newTags);
-    }
+  const tagDelHandler = (tagToDelete) => {
+    const newTags = imageTags.filter((tag) => tag !== tagToDelete);
+    setImageTags(newTags);
+  };
+
+  const tagAddHandler = (newTag) => {
+    const newTags = [...imageTags, newTag];
+    setImageTags(newTags);
+  };
 
   return (
     <div className="gallery-page-card-wrap">
@@ -43,23 +47,32 @@ export default function ImageCard({ image }) {
           <img className="gallery-page-img" src={previewURL} alt="pic" />
         </div>
       </NavLink>
-      {!tagEditorIsOpen && <div className="gallery-page-text">
-        <div className="gallery-page-img-info">
-          <ul
-            title="Double click to edit"
-            className="gallery-page-tag-list"
-            onDoubleClick={() => onTagEditOpen()}
-          >
-            {imageTags.map((tag, index) => (
-              <Tag tagValue={tag} key={index} />
-            ))}
-          </ul>
-          <div className="gallery-page-add-info">
-            <span>Likes: {likes}</span>
-            <span>Comments: {comments}</span>
+      {!tagEditorIsOpen && (
+        <div className="gallery-page-text">
+          <div className="gallery-page-img-info">
+            <ul
+              title="Double click to edit"
+              className="gallery-page-tag-list"
+              onDoubleClick={() => onTagEditOpen()}
+            >
+              {imageTags.map((tag, index) => (
+                <Tag tagValue={tag} key={index} />
+              ))}
+            </ul>
+
+            <div className="gallery-page-add-info">
+              <span>Likes: {likes}</span>
+              <span>Comments: {comments}</span>
+            </div>
           </div>
         </div>
-      </div>}
+      )}
     </div>
   );
 }
+
+function areEqual(prevImg, nextImg) { // memoization comparison function. If the tag list is the same -
+  return prevImg.tags === nextImg.tags; // the image card is not rendered again.
+}
+
+export default memo(ImageCard, areEqual); // memization of image card.

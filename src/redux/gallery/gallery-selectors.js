@@ -1,4 +1,3 @@
-
 export const getImgArray = state => state.images;
 
 export const sortAndFilterImages = state => {
