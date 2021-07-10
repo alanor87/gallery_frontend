@@ -1,0 +1,15 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body {
+  background-color: $main-background-color;
+  font-family: 'Piazzolla';
+  color: $main-text-color;
+  padding-top: 80px;
+  overflow-y: hidden;
+}
+img {
+  display: block;
+}

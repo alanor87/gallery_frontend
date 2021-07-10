@@ -1,0 +1,71 @@
+.tag-editor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background-color: rgba(22, 22, 22, 0.6);
+  z-index: 10;
+
+  &-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+    border: none;
+    border-radius: 50%;
+    background-image: url("../../img/icon_close.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: $color-accent;
+    cursor: pointer;
+  }
+}
+
+.tag-input-form {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 6px;
+  background-color: rgba(135, 131, 131, 0.6);
+}
+
+.new-tag-input {
+  @include border-shadow;
+  padding: 5px;
+  color: $main-text-color;
+  background-color: $input-color;
+  transition: border-color 250ms linear;
+  &:focus {
+    border-color: $color-accent;
+    outline: none;
+  }
+}
+
+.new-tag-btn {
+  @include border-shadow;
+  padding: 4px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform linear 200ms;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.tag-delete-btn {
+  width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: 50%;
+  background-image: url("../../img/icon_close.svg");
+  background-color: $color-accent;
+  background-repeat: no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}

@@ -1,0 +1,93 @@
+.section-gallery {
+  overflow-y: scroll;
+  height: calc(100vh - 45px);
+}
+
+.gallery-page {
+  display: flex;
+  justify-content: space-around;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  &-card-wrap {
+    @include border-shadow(0px, 0px);
+    position: relative;
+    width: 20%;
+    height: auto;
+    max-width: 100%;
+    margin: 30px;
+    overflow: hidden;
+
+    &:hover .gallery-page-text {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media screen and(max-width: $breakpoint-tablet) {
+    width: 100%;
+  }
+  }
+
+  &-img-wrap {
+    height: 100%;    
+    cursor: pointer;
+  }
+
+  &-img {
+    width: 100%;
+    height: 100%;
+  }
+
+  &-text {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+    color: rgb(190, 190, 190);
+    background-color: rgba(22, 22, 22, 0.6);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: transform 250ms linear, opacity 250ms linear;
+  }
+
+  &-img-info {
+    list-style: none;
+  }
+
+  &-tag-list {    
+    list-style: none;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    background-color: rgba(22, 22, 22, 0.6);
+  }
+
+  &-img-tag {
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    margin: 5px;
+    border-radius: 5px;
+    color: $main-background-color;
+    background-color: $color-accent;
+
+    &:not(:last-child) {
+      margin-right: 5px;
+    }
+
+    & span:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+
+  &-add-info {
+    display: flex;
+    justify-content: space-around;
+  }
+}

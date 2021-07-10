@@ -1,0 +1,15 @@
+@mixin header-footer($top-position: 0, $bottom-position: initial) {
+  position: fixed;
+  top: $top-position;
+  bottom: $bottom-position;
+  left: 0;
+  width: 100vw;
+  box-shadow: 0px 0px 10px 2px black;
+  background-color: $main-background-color;
+  transition: background-color 250ms linear, color 250ms linear;
+  z-index: 10;
+}
+@mixin border-shadow($bottom-width: 1px, $right-width: 1px) {
+  border: 1px solid $color-border-main;
+  box-shadow: 3px 3px 5px 0px black;
+}

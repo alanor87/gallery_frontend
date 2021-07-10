@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route } from 'react-router-dom';
+import AppBar from './components/AppBar';
+import GalleryPage from './views/Gallery';
+import ImageDetails from './views/ImageDetails';
+import { useEffect } from "react";
+import { fetchImages } from "./redux/gallery/gallery-operations";
+import { useDispatch } from 'react-redux';
 
 function App() {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => dispatch(fetchImages()), []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AppBar/>
+      <main className="section-gallery">
+        <Route exact path="/" component={GalleryPage} />
+        <Route path="/:id" component={ImageDetails} />
+      </main>
     </div>
   );
 }
