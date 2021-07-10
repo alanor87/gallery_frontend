@@ -15,7 +15,7 @@ export default function ImageCard({ image }) {
     const onTagEditClose = () => setTagEditorOpen(false);
     const dispatch = useDispatch();
 
-    useEffect(() => dispatch(onTagsEdit({ id, imageTags })), [imageTags]);
+    useEffect(() => dispatch(onTagsEdit({ id, imageTags })), [imageTags, id, dispatch]);
 
     const tagDelHandler = (tagToDelete) => {
         const newTags = imageTags.filter(tag => tag !== tagToDelete);

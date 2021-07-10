@@ -10,7 +10,7 @@ function App() {
 
   const dispatch = useDispatch();
 
-  useEffect(() => dispatch(fetchImages()), []);
+  useEffect(() => dispatch(fetchImages()), [dispatch]);
 
   return (
     <div className="App">
