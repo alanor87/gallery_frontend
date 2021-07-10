@@ -43,9 +43,10 @@ export default function ImageCard({ image }) {
           <img className="gallery-page-img" src={previewURL} alt="pic" />
         </div>
       </NavLink>
-      <div className="gallery-page-text">
+      {!tagEditorIsOpen && <div className="gallery-page-text">
         <div className="gallery-page-img-info">
           <ul
+            title="Double click to edit"
             className="gallery-page-tag-list"
             onDoubleClick={() => onTagEditOpen()}
           >
@@ -58,7 +59,7 @@ export default function ImageCard({ image }) {
             <span>Comments: {comments}</span>
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   );
 }

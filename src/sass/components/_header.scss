@@ -18,13 +18,31 @@
   }
   @include border-shadow;
   width: 50%;
+  margin-right: 30px;
   padding: 5px;
-  font-size: 24px;
   background-color: $input-color;
+  font-size: 24px;
   color: $main-text-color;
   transition: border-color 250ms linear;
   &:focus {
     border-color: $color-accent;
     outline: none;
+  }
+}
+
+.sort-menu {
+  width: 30%;
+}
+
+.sort-options {
+  margin-left: 30px;
+  font-size: 16px;
+  color: $main-text-color;
+  background-color: $input-color;
+
+  & option {
+    
+  color: black;
+  background-color: $input-color;
   }
 }

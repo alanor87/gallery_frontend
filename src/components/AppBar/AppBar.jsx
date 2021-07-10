@@ -6,7 +6,7 @@ import {
   onChangeFilter,
 } from "../../redux/gallery/gallery-actions";
 
-export default function AppBar({ onChangeQuery }) {
+export default function AppBar() {
   const dispatch = useDispatch();
 
   const onSortChange = (event) => {
@@ -16,7 +16,6 @@ export default function AppBar({ onChangeQuery }) {
 
   const onFilterChange = (event) => {
     const filterValue = event.target.value;
-    console.log(filterValue);
     dispatch(onChangeFilter(filterValue));
   };
 
@@ -29,15 +28,16 @@ export default function AppBar({ onChangeQuery }) {
         autoComplete="off"
         onKeyUp={debounce(onFilterChange, 300)}
       />
-      <label htmlFor="pet-select">Sorting options:</label>
-
-      <select onChange={onSortChange} name="sort" id="sort-options">
-        <option value="">--Please choose an option--</option>
-        <option value="mostLiked">Most liked first</option>
-        <option value="mostCommented">Most commented first</option>
-        <option value="leastLiked">Least liked first</option>
-        <option value="leastCommented">Least commented first</option>
-      </select>
+      <div className="sort-menu">
+        <span >Sorting options:</span>
+        <select onChange={onSortChange} className="sort-options">
+          <option value="">--Please choose an option--</option>
+          <option value="mostLiked">Most liked first</option>
+          <option value="mostCommented">Most commented first</option>
+          <option value="leastLiked">Least liked first</option>
+          <option value="leastCommented">Least commented first</option>
+        </select>
+      </div>
     </header>
   );
 }
