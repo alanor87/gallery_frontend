@@ -1,14 +1,7 @@
-:root {
-    --main-background-color: rgb(22, 22, 22);
-    --main-text-color: rgb(240, 239, 239);
-    --color-accent: rgb(240, 117, 35);
-    --color-border-main: rgba(77, 81, 85, 0.46);
-}
-
-$main-background-color: var(--main-background-color);
-$main-text-color: var(--main-text-color);
-$color-accent: var(--color-accent);
-$color-border-main: var(--color-border-main);
+$main-background-color: rgb(22, 22, 22);
+$main-text-color: rgb(240, 239, 239);
+$color-accent: rgb(240, 117, 35);
+$color-border-main: rgba(77, 81, 85, 0.46);
 $input-color: rgba(219, 217, 217, 0.384);
 $breakpoint-desktop: 1200px;
 $breakpoint-tablet: 800px;

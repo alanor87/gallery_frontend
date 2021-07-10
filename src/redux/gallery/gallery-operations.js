@@ -8,7 +8,7 @@ export const fetchImages = () => dispatch => {
     axios.get(`${BASE_URL}?key=${API_KEY}&q=cats&image_type=all&per_page=100`)
         .then(response => response.data.hits)
         .then(data => dispatch(fetchImagesSuccess(data)))
-        .catch(error => dispatch(fetchImagesError(error)))
+        .catch(error => dispatch(fetchImagesError(error.message)))
 }
 
 

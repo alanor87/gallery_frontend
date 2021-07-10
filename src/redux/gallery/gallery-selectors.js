@@ -1,5 +1,7 @@
 export const getImgArray = state => state.images;
 
+export const getError = state => state.error;
+
 export const sortAndFilterImages = state => {
     const { sortMethod, filter, images } = state;
     if (!images.length) return state.images;

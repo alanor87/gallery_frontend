@@ -7,6 +7,7 @@ export default function ImageDetails({ match }) {
   if (!imgArray.length) return <p>Oops! Something went terribly wrong!</p>;
   const imgId = Number(match.params.id);
   const imageDetails = imgArray.find((image) => image.id === imgId);
+  
   const { largeImageURL, comments, downloads, id, user, tags, views } =
     imageDetails;
 

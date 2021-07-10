@@ -9,15 +9,17 @@ function ImageCard({ image }) {
   console.log("Render"); // just for debugging -  to be sure memoization works)
 
   const { id, previewURL, tags, likes, comments } = image;
-  const tagsArray = tags.split(", ");
+
   const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
-  const [imageTags, setImageTags] = useState(tagsArray);
+  const [imageTags, setImageTags] = useState(tags.split(", "));//storing tags array for this image
+
   const onTagEditOpen = () => setTagEditorOpen(true);
   const onTagEditClose = () => setTagEditorOpen(false);
+
   const dispatch = useDispatch();
 
   useEffect(
-    () => dispatch(onTagsEdit({ id, imageTags })),
+    () => dispatch(onTagsEdit({ id, imageTags })),//dispatching action with the image id and new list of tags in payload.
     [imageTags, id, dispatch]
   );
 
@@ -27,7 +29,7 @@ function ImageCard({ image }) {
   };
 
   const tagAddHandler = (newTag) => {
-    const newTags = [...imageTags, newTag];
+    const newTags = [...imageTags, ...newTag.split(', ')];
     setImageTags(newTags);
   };
 
@@ -53,7 +55,7 @@ function ImageCard({ image }) {
             <ul
               title="Double click to edit"
               className="gallery-page-tag-list"
-              onDoubleClick={() => onTagEditOpen()}
+              onDoubleClick={onTagEditOpen}
             >
               {imageTags.map((tag, index) => (
                 <Tag tagValue={tag} key={index} />
