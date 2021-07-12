@@ -76,11 +76,11 @@ function ImageCard({ image }) {
 
 ImageCard.propTypes = {
   image: PropTypes.shape({
-    id: PropTypes.number,
-    previewURL: PropTypes.string,
-    tags: PropTypes.string,
-    likes: PropTypes.number,
-    comments: PropTypes.number,
+    id: PropTypes.number.isRequired,
+    previewURL: PropTypes.string.isRequired,
+    tags: PropTypes.string.isRequired,
+    likes: PropTypes.number.isRequired,
+    comments: PropTypes.number.isRequired,
   }),
 };
 

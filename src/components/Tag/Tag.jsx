@@ -17,7 +17,7 @@ export default function Tag({ tagValue, edit, deleteTag }) {
 }
 
 Tag.propTypes = {
-    tagValue: PropTypes.string,
+    tagValue: PropTypes.string.isRequired,
     edit: PropTypes.bool,
     deleteTag: PropTypes.func, 
 }

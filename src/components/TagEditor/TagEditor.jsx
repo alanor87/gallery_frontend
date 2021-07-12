@@ -33,8 +33,8 @@ export default function TagEditor({
 }
 
 TagEditor.propTypes = {
-  tags: PropTypes.array,
-  closeHandle: PropTypes.func,
-  onTagDelete: PropTypes.func,
-  onAddTag: PropTypes.func,
+  tags: PropTypes.array.isRequired,
+  closeHandle: PropTypes.func.isRequired,
+  onTagDelete: PropTypes.func.isRequired,
+  onAddTag: PropTypes.func.isRequired,
 };
