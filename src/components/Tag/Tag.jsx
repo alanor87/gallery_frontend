@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from "prop-types";
 
 export default function Tag({ tagValue, edit, deleteTag }) {
 
@@ -13,4 +14,10 @@ export default function Tag({ tagValue, edit, deleteTag }) {
         )}
       </li>
     );
+}
+
+Tag.propTypes = {
+    tagValue: PropTypes.string,
+    edit: PropTypes.bool,
+    deleteTag: PropTypes.func, 
 }

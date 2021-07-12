@@ -1,4 +1,5 @@
 import { React, useState, useEffect, memo } from "react";
+import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { onTagsEdit } from "../../redux/gallery/gallery-actions";
 import { NavLink } from "react-router-dom";
@@ -72,6 +73,16 @@ function ImageCard({ image }) {
     </div>
   );
 }
+
+ImageCard.propTypes = {
+  image: PropTypes.shape({
+    id: PropTypes.number,
+    previewURL: PropTypes.string,
+    tags: PropTypes.string,
+    likes: PropTypes.number,
+    comments: PropTypes.number,
+  }),
+};
 
 function areEqual(prevImg, nextImg) { // memoization comparison function. If the tag list is the same -
   return prevImg.tags === nextImg.tags; // the image card is not rendered again.

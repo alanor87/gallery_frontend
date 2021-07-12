@@ -1,19 +1,22 @@
 import { React, useRef } from "react";
+import PropTypes from "prop-types";
 import Tag from "../Tag";
 
-export default function TagEditor({ tags, closeHandle, onTagDelete, onAddTag }) {
+export default function TagEditor({
+  tags,
+  closeHandle,
+  onTagDelete,
+  onAddTag,
+}) {
   const tagInput = useRef(null);
 
-    const addTag = () => {
-        const newTag = tagInput.current.value;
-        if (newTag) onAddTag(newTag);
-    }
+  const addTag = () => {
+    const newTag = tagInput.current.value;
+    if (newTag) onAddTag(newTag);
+  };
   return (
     <div className="tag-editor">
-      <button
-        className="tag-editor-close-btn"
-        onClick={closeHandle}
-      ></button>
+      <button className="tag-editor-close-btn" onClick={closeHandle}></button>
       <div className="tag-input-form">
         <input ref={tagInput} type="text" className="new-tag-input" />
         <button className="new-tag-btn" onClick={addTag}>
@@ -28,3 +31,10 @@ export default function TagEditor({ tags, closeHandle, onTagDelete, onAddTag }) 
     </div>
   );
 }
+
+TagEditor.propTypes = {
+  tags: PropTypes.array,
+  closeHandle: PropTypes.func,
+  onTagDelete: PropTypes.func,
+  onAddTag: PropTypes.func,
+};
