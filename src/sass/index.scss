@@ -1,10 +1,60 @@
-@import "utils/var";
-@import "utils/mixin";
-@import "components/base";
-@import "components/scrollbars";
-@import "components/appBar";
-@import "components/gallery";
-@import "components/imageDetails";
-@import "components/tagEditor";
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  scrollbar-width: thin; // for Firefox
+  scrollbar-color: var(--main-text-color) var(--main-background-color); //for Firefox
+}
 
+*::-webkit-scrollbar {
+  width: 10px;
+}
 
+:root {
+  --main-background-color: rgb(22, 22, 22);
+  --main-text-color: rgba(218, 207, 207, 0.952);
+  --color-accent: rgb(240, 117, 35);
+  --color-border-main: rgba(77, 81, 85, 0.46);
+  --input-color: rgba(219, 217, 217, 0.384);
+  --color-error: rgb(238, 23, 41);
+  --breakpoint-desktop: 1200px;
+  --breakpoint-tablet: 800px;
+  --breakpoint-mobile: 600px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--main-background-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border-main);
+  border-radius: 2px;
+}
+
+body {
+  background-color: var(--main-background-color);
+  font-family: "Piazzolla";
+  color: var(--main-text-color);
+  padding-top: 40px;
+  overflow-y: hidden;
+}
+
+img {
+  display: block;
+}
+
+.error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  font-size: 50px;
+  transform: translateX(-50%);
+}
+
+.AppLightTheme {
+  --main-background-color: rgba(219, 219, 219);
+  --main-text-color: rgb(65, 65, 65);
+  transition: background-color 250ms linear, color 250ms linear;
+}

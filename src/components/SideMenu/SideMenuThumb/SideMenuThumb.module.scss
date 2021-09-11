@@ -1,0 +1,72 @@
+.menuList {
+  list-style: none;
+  padding: 15px;
+}
+
+.menuItem {
+  position: relative;
+
+  &:not(:last-child) {
+    margin-bottom: 30px;
+  }
+
+  &:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    display: block;
+    left: 50%;
+    height: 30px;
+    width: 1px;
+    background-color: var(--main-text-color);
+    z-index: -1;
+  }
+}
+
+.thumb {
+  background-color: var(--main-background-color);
+  border: 1px solid var(--color-border-main);
+  box-shadow: 3px 3px 5px 0px black;
+  margin: auto;
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  transition: border-color 250ms linear, transform 250ms linear;
+
+  &:hover {
+    border-color: var(--color-accent);
+    transform: scale(1.1);
+  }
+}
+
+.menuCatButton {
+  display: block;
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+  color: var(--main-text-color);
+  background-image: linear-gradient(
+    to left,
+    var(--main-background-color),
+    var(--color-border-main)
+  );
+  cursor: pointer;
+  border: none;
+}
+
+.menuItemWrap {
+  height: 0;
+  transform-origin: top;
+  overflow: hidden;
+  scrollbar-width: none;
+  transition: height 500ms ease-in-out;
+
+  &.isOpen {
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+}

@@ -1,0 +1,29 @@
+.imgTag {
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  margin: 5px;
+  border-radius: 5px;
+  color: var(--main-background-color);
+  background-color: var(--color-accent);
+
+  &:not(:last-child) {
+    margin-right: 5px;
+  }
+
+  & span:not(:last-child) {
+    margin-right: 10px;
+  }
+}
+
+.tagDeleteBtn {
+  width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: 50%;
+  background-image: url("../../../img/icon_close.svg");
+  background-color: var(--color-accent);
+  background-repeat: no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}

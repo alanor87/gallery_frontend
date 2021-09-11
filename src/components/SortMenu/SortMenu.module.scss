@@ -1,0 +1,15 @@
+.sortMenu {
+  width: 30%;
+}
+
+.sortOptions {
+  margin-left: 30px;
+  font-size: 16px;
+  color: var(--main-text-color);
+  background-color: var(--input-color);
+
+  & option {
+    color: black;
+    background-color: var(--input-color);
+  }
+}

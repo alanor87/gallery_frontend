@@ -1,0 +1,11 @@
+.modalBackdrop {
+  position: absolute;
+  display: flex;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(22, 22, 22, 0.7);
+}

@@ -1,10 +1,10 @@
-export const getImgArray = state => state.images;
+export const getImgArray = state => state.galleryReducer.images;
 
 export const getError = state => state.error;
 
 export const sortAndFilterImages = state => {
-    const { sortMethod, filter, images } = state;
-    if (!images.length) return state.images;
+    const { sortMethod, filter, images } = state.galleryReducer;
+    if (!images.length) return state.galleryReducer.images;
     const filteredImages = images.filter(image => image.tags.includes(filter));
     const sortedImages = [...filteredImages];
     switch (sortMethod) {

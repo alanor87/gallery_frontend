@@ -1,0 +1,18 @@
+.commonButton {
+  display: flex;
+  align-items: center;
+  padding: 7px;
+  margin: 5px;
+  border: 1px solid var(--color-border-main);
+  border-radius: 5px;
+  font-size: 16px;
+  color: var(--main-text-color);
+  background-color: var(--main-background-color);
+  transition: border-color 250ms linear, background-color 250ms linear;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--color-accent);
+    transition: border-color 250ms linear;
+  }
+}

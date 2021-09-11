@@ -1,23 +1,32 @@
 import { useSelector } from "react-redux";
-import ImageCard from "../../components/ImageCard";
-
+import { observer } from "mobx-react-lite";
 import {
   sortAndFilterImages,
   getError,
 } from "../../redux/gallery/gallery-selectors";
+import ImageCard from "../../components/ImageCard";
+import SideMenu from "../../components/SideMenu/SideMenu";
+import store from "../../MST/store";
+import styles from "./Gallery.module.scss";
 
-export default function GalleryPage() {
+function GalleryPage() {
   const imgArray = useSelector(sortAndFilterImages);
   const error = useSelector(getError);
+  const sideMenuOn = store.interfaceSettings.sidePanelIsOpen;
 
   return (
-    <section className="gallery-page-wrap">
-      {!error && <div className="gallery-page">
-        {imgArray.map((image) => (
-          <ImageCard image={image} key={image.id} />
-        ))}
-      </div>}
+    <section className={styles.sectionGallery}>
+      <SideMenu galleryMenuImages={imgArray} isOpen={sideMenuOn} />
+      {!error && (
+        <div className={styles.galleryPage}>
+          {imgArray.map((image) => (
+            <ImageCard image={image} key={image.id} />
+          ))}
+        </div>
+      )}
       {error && <div className="error">Something went terribly wrong!</div>}
     </section>
   );
 }
+
+export default observer(GalleryPage);

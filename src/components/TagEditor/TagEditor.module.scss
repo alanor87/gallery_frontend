@@ -1,4 +1,16 @@
-.tag-editor {
+.tagList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  background-color: rgba(22, 22, 22, 0.6);
+  cursor: help;
+}
+
+.tagEditor {
   position: absolute;
   top: 0;
   left: 0;
@@ -8,7 +20,7 @@
   background-color: rgba(22, 22, 22, 0.6);
   z-index: 10;
 
-  &-close-btn {
+  &CloseBtn {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -19,12 +31,12 @@
     background-image: url("../../img/icon_close.svg");
     background-repeat: no-repeat;
     background-size: cover;
-    background-color: $color-accent;
+    background-color: var(--color-accent);
     cursor: pointer;
   }
 }
 
-.tag-input-form {
+.tagInputForm {
   display: flex;
   justify-content: space-around;
   margin-top: 20px;
@@ -34,38 +46,28 @@
   background-color: rgba(135, 131, 131, 0.6);
 }
 
-.new-tag-input {
-  @include border-shadow;
+.newTagInput {
   padding: 5px;
-  color: $main-text-color;
-  background-color: $input-color;
+  color: var(--main-text-color);
+  border: 1px solid var(--color-border-main);
+  box-shadow: 3px 3px 5px 0px black;
+  background-color: var(--input-color);
   transition: border-color 250ms linear;
   &:focus {
-    border-color: $color-accent;
+    border-color: var(--color-accent);
     outline: none;
   }
 }
 
-.new-tag-btn {
-  @include border-shadow;
+.newTagBtn {
   padding: 4px;
   border-radius: 5px;
   cursor: pointer;
+  border: 1px solid var(--color-border-main);
+  box-shadow: 3px 3px 5px 0px black;
   transition: transform linear 200ms;
 
   &:hover {
     transform: scale(1.05);
   }
-}
-
-.tag-delete-btn {
-  width: 15px;
-  height: 15px;
-  border: none;
-  border-radius: 50%;
-  background-image: url("../../img/icon_close.svg");
-  background-color: $color-accent;
-  background-repeat: no-repeat;
-  background-size: cover;
-  cursor: pointer;
 }

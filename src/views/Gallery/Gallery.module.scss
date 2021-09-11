@@ -1,0 +1,16 @@
+.sectionGallery {
+  overflow-y: scroll;
+  height: calc(100vh - 45px);
+}
+
+.galleryPage {
+  display: flex;
+  justify-content: space-around;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: var(--main-background-color);
+  transition: background-color 250ms linear;
+}

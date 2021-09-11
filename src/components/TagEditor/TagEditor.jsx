@@ -1,6 +1,6 @@
 import { React, useRef } from "react";
-import PropTypes from "prop-types";
-import Tag from "../Tag";
+import { Tag } from "../elements";
+import styles from "./TagEditor.module.scss";
 
 export default function TagEditor({
   tags,
@@ -15,15 +15,18 @@ export default function TagEditor({
     if (newTag) onAddTag(newTag);
   };
   return (
-    <div className="tag-editor">
-      <button className="tag-editor-close-btn" onClick={closeHandle}></button>
-      <div className="tag-input-form">
-        <input ref={tagInput} type="text" className="new-tag-input" />
-        <button className="new-tag-btn" onClick={addTag}>
+    <div className={styles.tagEditor}>
+      <button
+        className={styles.tagEditorCloseBtn}
+        onClick={closeHandle}
+      ></button>
+      <div className={styles.tagInputForm}>
+        <input ref={tagInput} type="text" className={styles.newTagInput} />
+        <button className={styles.newTagBtn} onClick={addTag}>
           Add tag
         </button>
       </div>
-      <ul className="gallery-page-tag-list">
+      <ul className={styles.tagList}>
         {tags.map((tag, index) => (
           <Tag tagValue={tag} edit={true} key={index} deleteTag={onTagDelete} />
         ))}
@@ -31,10 +34,3 @@ export default function TagEditor({
     </div>
   );
 }
-
-TagEditor.propTypes = {
-  tags: PropTypes.array.isRequired,
-  closeHandle: PropTypes.func.isRequired,
-  onTagDelete: PropTypes.func.isRequired,
-  onAddTag: PropTypes.func.isRequired,
-};

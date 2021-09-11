@@ -1,0 +1,33 @@
+.sectionHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  box-shadow: 0px 0px 10px 2px black;
+  background-color: var(--main-background-color);
+  z-index: 20;
+  transition: background-color 250ms linear;
+}
+
+.searchInput {
+  @media screen and(max-width: 600px) {
+    width: 100%;
+  }
+  width: 50%;
+  margin-right: 30px;
+  padding: 5px;
+  background-color: var(--input-color);
+  font-size: 24px;
+  color: var(--main-text-color);
+  border: 1px solid var(--color-border-main);
+  box-shadow: 3px 3px 5px 0px black;
+  transition: border-color 250ms linear;
+  &:focus {
+    border-color: var(--color-accent);
+    outline: none;
+  }
+}

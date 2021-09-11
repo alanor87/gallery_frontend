@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { onTagsEdit } from "../../redux/gallery/gallery-actions";
 import { NavLink } from "react-router-dom";
-import Tag from "../../components/Tag";
+import { Tag } from "../elements";
 import TagEditor from "../../components/TagEditor";
+import styles from "./ImageCard.module.scss";
 
 function ImageCard({ image }) {
   console.log("Render"); // just for debugging -  to be sure memoization works)
@@ -12,7 +13,7 @@ function ImageCard({ image }) {
   const { id, previewURL, tags, likes, comments } = image;
 
   const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
-  const [imageTags, setImageTags] = useState(tags.split(", "));//storing tags array for this image
+  const [imageTags, setImageTags] = useState(tags.split(", ")); //storing tags array for this image
 
   const onTagEditOpen = () => setTagEditorOpen(true);
   const onTagEditClose = () => setTagEditorOpen(false);
@@ -20,7 +21,7 @@ function ImageCard({ image }) {
   const dispatch = useDispatch();
 
   useEffect(
-    () => dispatch(onTagsEdit({ id, imageTags })),//dispatching action with the image id and new list of tags in payload.
+    () => dispatch(onTagsEdit({ id, imageTags })), //dispatching action with the image id and new list of tags in payload.
     [imageTags, id, dispatch]
   );
 
@@ -30,12 +31,12 @@ function ImageCard({ image }) {
   };
 
   const tagAddHandler = (newTag) => {
-    const newTags = [...imageTags, ...newTag.split(', ')];
+    const newTags = [...imageTags, ...newTag.split(", ")];
     setImageTags(newTags);
   };
 
   return (
-    <div className="gallery-page-card-wrap">
+    <div className={styles.cardWrap}>
       {tagEditorIsOpen && (
         <TagEditor
           id={id}
@@ -45,17 +46,17 @@ function ImageCard({ image }) {
           onAddTag={tagAddHandler}
         />
       )}
-      <NavLink to={`/${id}`}>
-        <div className="gallery-page-img-wrap">
-          <img className="gallery-page-img" src={previewURL} alt="pic" />
+      <NavLink to={`/image/${id}`}>
+        <div className={styles.imgWrap}>
+          <img className={styles.img} src={previewURL} alt="pic" />
         </div>
       </NavLink>
       {!tagEditorIsOpen && (
-        <div className="gallery-page-text">
-          <div className="gallery-page-img-info">
+        <div className={styles.text}>
+          <div className={styles.imgCardText}>
             <ul
               title="Double click to edit"
-              className="gallery-page-tag-list"
+              className={styles.tagList}
               onDoubleClick={onTagEditOpen}
             >
               {imageTags.map((tag, index) => (
@@ -63,7 +64,7 @@ function ImageCard({ image }) {
               ))}
             </ul>
 
-            <div className="gallery-page-add-info">
+            <div className={styles.addInfo}>
               <span>Likes: {likes}</span>
               <span>Comments: {comments}</span>
             </div>
@@ -84,7 +85,8 @@ ImageCard.propTypes = {
   }),
 };
 
-function areEqual(prevImg, nextImg) { // memoization comparison function. If the tag list is the same -
+function areEqual(prevImg, nextImg) {
+  // memoization comparison function. If the tag list is the same -
   return prevImg.tags === nextImg.tags; // the image card is not rendered again.
 }
 
