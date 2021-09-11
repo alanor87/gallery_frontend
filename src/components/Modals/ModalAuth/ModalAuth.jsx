@@ -5,7 +5,7 @@ import styles from "./ModalAuth.module.scss";
 
 const validationSchema = Yup.object({
   email: Yup.string()
-    .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+    .matches(/^[\w.]+@([\w-]+\.)+[\w-]{2,4}$/)
     .required(),
   password: Yup.string().min(6).required(),
 });
