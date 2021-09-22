@@ -1,38 +1,35 @@
-import { React, useState, useEffect, memo } from "react";
+import { React, useState, memo } from "react";
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
-import { onTagsEdit } from "../../redux/gallery/gallery-actions";
 import { NavLink } from "react-router-dom";
 import { Tag } from "../elements";
+import store from "../../MST/store";
 import TagEditor from "../../components/TagEditor";
 import styles from "./ImageCard.module.scss";
 
 function ImageCard({ image }) {
   console.log("Render"); // just for debugging -  to be sure memoization works)
 
-  const { id, previewURL, tags, likes, comments } = image;
+  const { id, imageURL, imageInfo } = image;
+  const { tags, likes } = imageInfo;
 
   const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
-  const [imageTags, setImageTags] = useState(tags.split(", ")); //storing tags array for this image
+  const [imageTags, setImageTags] = useState(tags); //storing tags array for this image
 
   const onTagEditOpen = () => setTagEditorOpen(true);
   const onTagEditClose = () => setTagEditorOpen(false);
 
-  const dispatch = useDispatch();
-
-  useEffect(
-    () => dispatch(onTagsEdit({ id, imageTags })), //dispatching action with the image id and new list of tags in payload.
-    [imageTags, id, dispatch]
-  );
-
   const tagDelHandler = (tagToDelete) => {
     const newTags = imageTags.filter((tag) => tag !== tagToDelete);
-    setImageTags(newTags);
+    tagsUpdate(newTags);
   };
 
-  const tagAddHandler = (newTag) => {
-    const newTags = [...imageTags, ...newTag.split(", ")];
+  const tagAddHandler = (tagToAdd) => {
+    tagsUpdate([...imageTags, tagToAdd]);
+  };
+
+  const tagsUpdate = (newTags) => {
     setImageTags(newTags);
+    store.imagesStoreSettings.editTags(id, newTags);
   };
 
   return (
@@ -48,7 +45,7 @@ function ImageCard({ image }) {
       )}
       <NavLink to={`/image/${id}`}>
         <div className={styles.imgWrap}>
-          <img className={styles.img} src={previewURL} alt="pic" />
+          <img className={styles.img} src={imageURL} alt="pic" />
         </div>
       </NavLink>
       {!tagEditorIsOpen && (
@@ -66,7 +63,6 @@ function ImageCard({ image }) {
 
             <div className={styles.addInfo}>
               <span>Likes: {likes}</span>
-              <span>Comments: {comments}</span>
             </div>
           </div>
         </div>

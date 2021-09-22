@@ -1,16 +1,13 @@
 import { useSelector } from "react-redux";
 import { observer } from "mobx-react-lite";
-import {
-  sortAndFilterImages,
-  getError,
-} from "../../redux/gallery/gallery-selectors";
+import { getError } from "../../redux/gallery/gallery-selectors";
 import ImageCard from "../../components/ImageCard";
 import SideMenu from "../../components/SideMenu/SideMenu";
 import store from "../../MST/store";
 import styles from "./Gallery.module.scss";
 
 function GalleryPage() {
-  const imgArray = useSelector(sortAndFilterImages);
+  const imgArray = store.imagesStoreSettings.getAllImages;
   const error = useSelector(getError);
   const sideMenuOn = store.interfaceSettings.sidePanelIsOpen;
 

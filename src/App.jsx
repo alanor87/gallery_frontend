@@ -14,12 +14,14 @@ import { useDispatch } from "react-redux";
 import store from "./MST/store";
 
 function App() {
+  const { interfaceSettings, imagesStoreSettings } = store;
   const { lightThemeIsOn, authModalIsOpen, toggleAuthModal } =
-    store.interfaceSettings;
+    interfaceSettings;
 
   const dispatch = useDispatch();
   useEffect(() => dispatch(fetchImages()), [dispatch]);
-  
+  useEffect(() => imagesStoreSettings.fetchImages(), [imagesStoreSettings]);
+
   useEffect(() => {
     if (lightThemeIsOn) document.body.classList.add("AppLightTheme");
     if (!lightThemeIsOn) document.body.classList.remove("AppLightTheme");

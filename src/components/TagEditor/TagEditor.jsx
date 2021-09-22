@@ -1,13 +1,9 @@
 import { React, useRef } from "react";
+import { observer } from "mobx-react-lite";
 import { Tag } from "../elements";
 import styles from "./TagEditor.module.scss";
 
-export default function TagEditor({
-  tags,
-  closeHandle,
-  onTagDelete,
-  onAddTag,
-}) {
+function TagEditor({ tags, closeHandle, onTagDelete, onAddTag }) {
   const tagInput = useRef(null);
 
   const addTag = () => {
@@ -34,3 +30,5 @@ export default function TagEditor({
     </div>
   );
 }
+
+export default TagEditor;

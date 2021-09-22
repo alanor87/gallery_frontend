@@ -1,5 +1,5 @@
 {
-  "name": "ufo_engineering_test_task",
+  "name": "gallery-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -7,9 +7,10 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "debounce": "^1.2.1",
     "formik": "^2.2.9",
+    "json-server": "^0.16.3",
     "mobx": "^6.3.3",
     "mobx-react-lite": "^3.2.1",
     "mobx-state-tree": "^5.0.2",
@@ -27,6 +28,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "server": "json-server --watch db.json --port 3001",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
