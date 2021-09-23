@@ -13,23 +13,24 @@ function ImageCard({ image }) {
   const { tags, likes } = imageInfo;
 
   const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
-  const [imageTags, setImageTags] = useState(tags); //storing tags array for this image
+  const [tagsAreLoading, setTagsAreLoading] = useState(false);
 
   const onTagEditOpen = () => setTagEditorOpen(true);
   const onTagEditClose = () => setTagEditorOpen(false);
 
   const tagDelHandler = (tagToDelete) => {
-    const newTags = imageTags.filter((tag) => tag !== tagToDelete);
+    const newTags = tags.filter((tag) => tag !== tagToDelete);
     tagsUpdate(newTags);
   };
 
   const tagAddHandler = (tagToAdd) => {
-    tagsUpdate([...imageTags, tagToAdd]);
+    tagsUpdate([...tags, tagToAdd]);
   };
 
-  const tagsUpdate = (newTags) => {
-    setImageTags(newTags);
-    store.imagesStoreSettings.editTags(id, newTags);
+  const tagsUpdate = async (newTags) => {
+    setTagsAreLoading(true);
+    await store.imagesStoreSettings.editTags(id, newTags);
+    setTagsAreLoading(false);
   };
 
   return (
@@ -37,10 +38,11 @@ function ImageCard({ image }) {
       {tagEditorIsOpen && (
         <TagEditor
           id={id}
-          tags={imageTags}
+          tags={tags}
           closeHandle={onTagEditClose}
           onTagDelete={tagDelHandler}
           onAddTag={tagAddHandler}
+          isLoading={tagsAreLoading}
         />
       )}
       <NavLink to={`/image/${id}`}>
@@ -51,19 +53,25 @@ function ImageCard({ image }) {
       {!tagEditorIsOpen && (
         <div className={styles.text}>
           <div className={styles.imgCardText}>
-            <ul
-              title="Double click to edit"
-              className={styles.tagList}
-              onDoubleClick={onTagEditOpen}
-            >
-              {imageTags.map((tag, index) => (
-                <Tag tagValue={tag} key={index} />
-              ))}
-            </ul>
-
-            <div className={styles.addInfo}>
-              <span>Likes: {likes}</span>
-            </div>
+            {!tagsAreLoading ? (
+              <>
+                {" "}
+                <ul
+                  title="Double click to edit"
+                  className={styles.tagList}
+                  onDoubleClick={onTagEditOpen}
+                >
+                  {tags.map((tag, index) => (
+                    <Tag tagValue={tag} key={index} />
+                  ))}
+                </ul>
+                <div className={styles.addInfo}>
+                  <span>Likes: {likes}</span>
+                </div>{" "}
+              </>
+            ) : (
+              <p>is Loading</p>
+            )}
           </div>
         </div>
       )}

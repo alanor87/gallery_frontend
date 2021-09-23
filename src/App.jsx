@@ -9,8 +9,6 @@ import ImageDetails from "./views/ImageDetails";
 import Modal from "./components/Modals/Modal";
 import ModalAuth from "./components/Modals/ModalAuth";
 import { useEffect } from "react";
-import { fetchImages } from "./redux/gallery/gallery-operations";
-import { useDispatch } from "react-redux";
 import store from "./MST/store";
 
 function App() {
@@ -18,8 +16,6 @@ function App() {
   const { lightThemeIsOn, authModalIsOpen, toggleAuthModal } =
     interfaceSettings;
 
-  const dispatch = useDispatch();
-  useEffect(() => dispatch(fetchImages()), [dispatch]);
   useEffect(() => imagesStoreSettings.fetchImages(), [imagesStoreSettings]);
 
   useEffect(() => {

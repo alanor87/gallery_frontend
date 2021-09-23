@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { Tag } from "../elements";
 import styles from "./TagEditor.module.scss";
 
-function TagEditor({ tags, closeHandle, onTagDelete, onAddTag }) {
+function TagEditor({ tags, closeHandle, onTagDelete, onAddTag, isLoading }) {
   const tagInput = useRef(null);
 
   const addTag = () => {
@@ -22,13 +22,22 @@ function TagEditor({ tags, closeHandle, onTagDelete, onAddTag }) {
           Add tag
         </button>
       </div>
-      <ul className={styles.tagList}>
-        {tags.map((tag, index) => (
-          <Tag tagValue={tag} edit={true} key={index} deleteTag={onTagDelete} />
-        ))}
-      </ul>
+      {!isLoading ? (
+        <ul className={styles.tagList}>
+          {tags.map((tag, index) => (
+            <Tag
+              tagValue={tag}
+              edit={true}
+              key={index}
+              deleteTag={onTagDelete}
+            />
+          ))}
+        </ul>
+      ) : (
+        <p>is loading</p>
+      )}
     </div>
   );
 }
 
-export default TagEditor;
+export default observer(TagEditor);

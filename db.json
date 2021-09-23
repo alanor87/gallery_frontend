@@ -16,10 +16,12 @@
       "imageURL": "https://pixabay.com/get/gedbaaf6f371ca97c10365b1860befd3ec5d74f37e2f6c48b5f3783faafa8a0f6190597a6d01aab06bfbc9dbe6a19750712827db2e49602e082c26e2007717d86_1280.jpg",
       "imageInfo": {
         "tags": [
-          "tree",
-          "cat"
+          "asfd",
+          "asfdsss",
+          "meow"
         ],
-        "likes": 226
+        "likes": 226,
+        "error": true
       }
     },
     {
@@ -27,9 +29,8 @@
       "imageURL": "https://pixabay.com/get/g37e9433fb3bc086cf52845f2fdefa199b82ee6ce1c781516190e6155e64bf982f1fb9201dfe194be2ddc3ea0328ee5726d51437dbc870e31784c7a1bc38f55e2_1280.jpg",
       "imageInfo": {
         "tags": [
-          "tree",
-          "cat",
-          "silhouette"
+          "kitten",
+          "ff"
         ],
         "likes": 2226
       }
