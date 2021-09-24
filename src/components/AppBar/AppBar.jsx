@@ -1,17 +1,13 @@
 import { ToggleButton, Button } from "../elements";
-import { useDispatch } from "react-redux";
 import { debounce } from "debounce";
-import { onChangeFilter } from "../../redux/gallery/gallery-actions";
 import store from "../../MST/store";
 import styles from "./AppBar.module.scss";
 
 export default function AppBar({ onAuthModalOpen }) {
   const lightTheme = store.interfaceSettings.lightThemeIsOn;
-  const dispatch = useDispatch();
 
   const onFilterChange = (event) => {
     const filterValue = event.target.value;
-    dispatch(onChangeFilter(filterValue));
   };
 
   const toggleSideMenuHandler = () => {
@@ -34,7 +30,6 @@ export default function AppBar({ onAuthModalOpen }) {
         className={styles.searchInput}
         placeholder="Search"
         autoComplete="off"
-        onKeyUp={debounce(onFilterChange, 300)}
       />{" "}
       <Button text="Authorisation" type="button" onClick={onAuthModalOpen} />
       <Button text="Upload" type="button" />

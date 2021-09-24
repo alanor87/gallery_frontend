@@ -1,14 +1,14 @@
 import { Route, Redirect } from "react-router";
-import { useSelector } from "react-redux";
-import { userSelectors } from "../../redux/user/user-selectors";
+import { observer } from "mobx-react-lite";
+import store from "../../MST/store";
 
 const PrivateRoute = ({ component: Component, ...routeProps }) => {
-  const isAuthenticated = useSelector(userSelectors.isAuthenticated);
+  const { userIsAuthenticated } = store.userSettings;
   return (
     <Route
       {...routeProps}
       render={(props) => {
-        return isAuthenticated ? (
+        return userIsAuthenticated ? (
           <Component {...props} />
         ) : (
           <Redirect to="/login" />
@@ -18,4 +18,4 @@ const PrivateRoute = ({ component: Component, ...routeProps }) => {
   );
 };
 
-export default PrivateRoute;
+export default observer(PrivateRoute);
