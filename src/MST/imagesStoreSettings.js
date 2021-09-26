@@ -40,7 +40,6 @@ const ImagesStore = types
 
     const editTags = flow(function* (imageId, newTagList) {
       const imageToEdit = self.images.find((image) => image.id === imageId);
-      console.log("Before : ", imageToEdit.imageInfo.isLoading);
       try {
         const newImageInfo = { ...imageToEdit.imageInfo, tags: newTagList };
         const updatedImageInfo = yield axios
@@ -51,7 +50,6 @@ const ImagesStore = types
           .then((res) => res.data.imageInfo);
         imageToEdit.updateImageInfo(updatedImageInfo);
         imageToEdit.imageInfo.setIsLoading(false);
-        console.log("After : ", imageToEdit.imageInfo.isLoading);
       } catch (error) {
         imageToEdit.imageInfo.error = true;
       }

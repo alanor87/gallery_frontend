@@ -4,7 +4,7 @@ import SideMenu from "../../components/SideMenu/SideMenu";
 import store from "../../MST/store";
 import styles from "./Gallery.module.scss";
 
-function GalleryPage() {
+function GalleryView() {
   const imgArray = store.imagesStoreSettings.getAllImages;
   const sideMenuOn = store.interfaceSettings.sidePanelIsOpen;
 
@@ -20,4 +20,4 @@ function GalleryPage() {
   );
 }
 
-export default observer(GalleryPage);
+export default observer(GalleryView);

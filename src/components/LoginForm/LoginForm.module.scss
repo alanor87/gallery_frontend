@@ -1,10 +1,11 @@
-.modalAuth {
+.loginForm {
   position: relative;
   padding: 15px;
-  background-color: var(--main-background-color);
+  background-color: var(--main-background-color-alpha);
   width: 100%;
   max-width: 450px;
   border-radius: 5px;
+  transition: background-color 250ms linear;
 
   & h2 {
     text-align: center;

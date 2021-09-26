@@ -1,6 +1,7 @@
 .sectionGallery {
   overflow-y: scroll;
   height: calc(100vh - 45px);
+  transition: background-color 250ms linear;
 }
 
 .galleryPage {

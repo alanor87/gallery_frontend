@@ -12,6 +12,7 @@
 
 :root {
   --main-background-color: rgb(22, 22, 22);
+  --main-background-color-alpha: rgba(22, 22, 22, 0.7);
   --main-text-color: rgba(218, 207, 207, 0.952);
   --color-accent: rgb(240, 117, 35);
   --color-border-main: rgba(77, 81, 85, 0.46);
@@ -33,15 +34,22 @@
 }
 
 body {
+  height: 100vh;
   background-color: var(--main-background-color);
   font-family: "Piazzolla";
   color: var(--main-text-color);
   padding-top: 40px;
   overflow-y: hidden;
+  transition: background-color 250ms linear, color 250ms linear;
 }
 
 img {
   display: block;
+}
+
+.navLink {
+  color: var(--color-accent);
+  text-decoration: none;
 }
 
 .error {
@@ -55,6 +63,7 @@ img {
 
 .AppLightTheme {
   --main-background-color: rgba(219, 219, 219);
+  --main-background-color-alpha: rgba(219, 219, 219, 0.9);
   --main-text-color: rgb(65, 65, 65);
   transition: background-color 250ms linear, color 250ms linear;
 }

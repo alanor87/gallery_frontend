@@ -1,10 +1,9 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { getImgArray } from "../../redux/gallery/gallery-selectors";
+import store from "../../MST/store";
 import styles from "./ImageDetails.module.scss";
 
 export default function ImageDetails({ match }) {
-  const imgArray = useSelector(getImgArray);
+  const imgArray = store.imagesStoreSettings.getAllImages;
   if (!imgArray.length) return <p>Oops! Something went terribly wrong!</p>;
   const imgId = Number(match.params.id);
   const imageDetails = imgArray.find((image) => image.id === imgId);

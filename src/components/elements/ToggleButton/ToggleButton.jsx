@@ -12,7 +12,7 @@ function ToggleButton({ toggleHandler, isChecked, hint }) {
         className={`${styles.sideMenuCheckbox} ${styles.toggleCheckbox} ${styles.isHidden}`}
         autoComplete="off"
         onChange={onToggle}
-        defaultChecked={isChecked}
+        checked={isChecked}
       />
       <span className={styles.innerFrame}>
         <span className={styles.toggleButton} title={hint}></span>

@@ -1,7 +1,8 @@
 import { Formik, Form, Field } from "formik";
+import { NavLink } from "react-router-dom";
 import * as Yup from "yup";
-import Button from "../../elements/Button";
-import styles from "./ModalAuth.module.scss";
+import Button from "../elements/Button";
+import styles from "./LoginForm.module.scss";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -15,12 +16,12 @@ const formInitialValues = {
   password: "",
 };
 
-function ModalAuth() {
+function LoginForm() {
   const formSubmitHandler = (values) => {
     console.log(values);
   };
   return (
-    <div className={styles.modalAuth}>
+    <div className={styles.loginForm}>
       <h2>Login</h2>
       <Formik
         initialValues={formInitialValues}
@@ -58,6 +59,9 @@ function ModalAuth() {
               <div className={styles.btnWrapper}>
                 <Button type="submit" text="Login" />
               </div>
+              <NavLink to="/register" className="navLink">
+                Register
+              </NavLink>
             </Form>
           );
         }}
@@ -66,4 +70,4 @@ function ModalAuth() {
   );
 }
 
-export default ModalAuth;
+export default LoginForm;

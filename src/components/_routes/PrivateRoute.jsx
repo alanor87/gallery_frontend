@@ -2,7 +2,12 @@ import { Route, Redirect } from "react-router";
 import { observer } from "mobx-react-lite";
 import store from "../../MST/store";
 
-const PrivateRoute = ({ component: Component, ...routeProps }) => {
+const PrivateRoute = ({
+  component: Component,
+  redirectTo,
+  children,
+  ...routeProps
+}) => {
   const { userIsAuthenticated } = store.userSettings;
   return (
     <Route
@@ -11,7 +16,7 @@ const PrivateRoute = ({ component: Component, ...routeProps }) => {
         return userIsAuthenticated ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/login" />
+          <Redirect to={redirectTo} />
         );
       }}
     />

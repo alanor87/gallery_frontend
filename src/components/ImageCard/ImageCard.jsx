@@ -1,5 +1,4 @@
 import { React, useState, memo } from "react";
-import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import { Tag } from "../elements";
 import store from "../../MST/store";
@@ -78,16 +77,6 @@ function ImageCard({ image }) {
     </div>
   );
 }
-
-ImageCard.propTypes = {
-  image: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    previewURL: PropTypes.string.isRequired,
-    tags: PropTypes.string.isRequired,
-    likes: PropTypes.number.isRequired,
-    comments: PropTypes.number.isRequired,
-  }),
-};
 
 function areEqual(prevImg, nextImg) {
   // memoization comparison function. If the tag list is the same -
