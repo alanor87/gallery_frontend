@@ -2,7 +2,7 @@ import { React, useState, memo } from "react";
 import { NavLink } from "react-router-dom";
 import { Tag } from "../elements";
 import store from "../../MST/store";
-import TagEditor from "../../components/TagEditor";
+import TagEditor from "../TagEditor";
 import styles from "./ImageCard.module.scss";
 
 function ImageCard({ image }) {

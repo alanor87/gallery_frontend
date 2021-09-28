@@ -29,7 +29,7 @@ const ImagesStore = types
       return self.images;
     },
     get getFilteredImages() {
-      return self.images.filter((image) => image.imageInfo.tags.includes());
+      return self.images.filter((image) => image.imageInfo.tags.includes(""));
     },
   }))
   .actions((self) => {
