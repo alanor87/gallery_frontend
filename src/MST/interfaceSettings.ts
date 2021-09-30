@@ -26,12 +26,12 @@ const interfaceSettings = types
       yield axios.put("/interface", interfaceSettingsToSave);
     });
 
-    const toggleTheme = (value) => {
+    const toggleTheme = (value: boolean) => {
       self.lightThemeIsOn = value;
       setInterfaceSettings();
     };
 
-    const toggleSidePanel = (value) => {
+    const toggleSidePanel = (value: boolean) => {
       self.sidePanelIsOpen = value;
     };
 

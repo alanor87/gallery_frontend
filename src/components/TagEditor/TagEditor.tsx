@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { MutableRefObject, useRef } from "react";
 import { observer } from "mobx-react-lite";
 import { Tag } from "../elements";
 import styles from "./TagEditor.module.scss";
@@ -18,7 +18,7 @@ const TagEditor: React.FC<Props> = ({
   onAddTag,
   isLoading,
 }) => {
-  const tagInput = useRef(null);
+  const tagInput = useRef() as MutableRefObject<HTMLInputElement>;
 
   const addTag = () => {
     const newTag: string = tagInput.current.value;

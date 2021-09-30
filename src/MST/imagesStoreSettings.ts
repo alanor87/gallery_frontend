@@ -48,7 +48,7 @@ const ImagesStore = types
     });
 
     const editTags = flow(function* (imageId: string, newTagList: string[]) {
-      const imageToEdit: ImageType = self.images.find(
+      const imageToEdit: any = self.images.find(
         (image: ImageType) => image.id === imageId
       );
       try {

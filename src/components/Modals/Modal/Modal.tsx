@@ -5,27 +5,27 @@ import styles from "./styles.module.scss";
 
 const modalRoot = document.querySelector("#modal-root");
 
-function Modal({ component, ...props }) {
-  const ModalComponent = component;
+// function Modal({ component, ...props }) {
+//   const ModalComponent = component;
 
-  useEffect(() => {
-    window.addEventListener("keydown", modalBackdropClose);
-    return function cleanup() {
-      window.removeEventListener("keydown", modalBackdropClose);
-    };
-  }, []);
+//   useEffect(() => {
+//     window.addEventListener("keydown", modalBackdropClose);
+//     return function cleanup() {
+//       window.removeEventListener("keydown", modalBackdropClose);
+//     };
+//   }, []);
 
-  const modalBackdropClose = (event) => {
-    if (event.target === event.currentTarget || event.key === "Escape")
-      store.interfaceSettings.toggleAuthModal();
-  };
+//   const modalBackdropClose = (event) => {
+//     if (event.target === event.currentTarget || event.key === "Escape")
+//       store.interfaceSettings.toggleAuthModal();
+//   };
 
-  return createPortal(
-    <div className={styles.modalBackdrop} onClick={modalBackdropClose}>
-      <ModalComponent {...props} />
-    </div>,
-    modalRoot
-  );
-}
+//   return createPortal(
+//     <div className={styles.modalBackdrop} onClick={modalBackdropClose}>
+//       <ModalComponent {...props} />
+//     </div>,
+//     modalRoot
+//   );
+// }
 
-export default Modal;
+// export default Modal;

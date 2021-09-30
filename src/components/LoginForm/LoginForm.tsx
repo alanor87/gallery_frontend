@@ -29,8 +29,8 @@ function LoginForm() {
         onSubmit={formSubmitHandler}
       >
         {({ values, errors }) => {
-          const className = (fieldName, className) => {
-            return values[fieldName] && errors[fieldName]
+          const className = (fieldName: string, className: string) => {
+            return fieldName in values && fieldName in errors
               ? className + " " + styles.error
               : className;
           };

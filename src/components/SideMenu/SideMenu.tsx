@@ -1,7 +1,13 @@
 import SideMenuThumb from "./SideMenuThumb";
+import { ImageType } from "../../MST/imagesStoreSettings";
 import styles from "./SideMenu.module.scss";
 
-function SideMenu({ galleryMenuImages, isOpen }) {
+interface Props {
+  galleryMenuImages: ImageType[];
+  isOpen: boolean;
+}
+
+const SideMenu: React.FC<Props> = ({ galleryMenuImages, isOpen }) => {
   const menuClassList = isOpen
     ? `${styles.galleryMenu} ${styles.isOpen}`
     : styles.galleryMenu;
@@ -13,6 +19,6 @@ function SideMenu({ galleryMenuImages, isOpen }) {
       })}
     </section>
   );
-}
+};
 
 export default SideMenu;
