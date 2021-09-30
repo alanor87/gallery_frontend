@@ -1,6 +1,17 @@
 import axios from "axios";
 import { types, flow } from "mobx-state-tree";
 
+interface ImageInfoType {
+  tags: string[];
+  likes: number;
+}
+
+interface ImageType {
+  id: string;
+  imageURL: string;
+  imageInfo: ImageInfoType;
+}
+
 const ImageInfo = types.model({
   tags: types.optional(types.array(types.string), [""]),
   likes: types.optional(types.number, 0),
@@ -10,10 +21,10 @@ const Image = types
   .model({
     id: types.string,
     imageURL: types.optional(types.string, ""),
-    imageInfo: types.optional(ImageInfo, {}),
+    imageInfo: types.optional(ImageInfo, { tags: [""], likes: 0 }),
   })
   .actions((self) => {
-    const updateImageInfo = (newImageInfo) => {
+    const updateImageInfo = (newImageInfo: ImageInfoType) => {
       self.imageInfo = newImageInfo;
     };
     return { updateImageInfo };
