@@ -1,13 +1,27 @@
-import { React, useRef } from "react";
+import { useRef } from "react";
 import { observer } from "mobx-react-lite";
 import { Tag } from "../elements";
 import styles from "./TagEditor.module.scss";
 
-function TagEditor({ tags, closeHandle, onTagDelete, onAddTag, isLoading }) {
+interface Props {
+  tags: string[];
+  closeHandle: () => void;
+  onTagDelete: (tagToDelete: string) => void;
+  onAddTag: (newTag: string) => void;
+  isLoading: boolean;
+}
+
+const TagEditor: React.FC<Props> = ({
+  tags,
+  closeHandle,
+  onTagDelete,
+  onAddTag,
+  isLoading,
+}) => {
   const tagInput = useRef(null);
 
   const addTag = () => {
-    const newTag = tagInput.current.value;
+    const newTag: string = tagInput.current.value;
     if (newTag) onAddTag(newTag);
   };
   return (
@@ -38,6 +52,6 @@ function TagEditor({ tags, closeHandle, onTagDelete, onAddTag, isLoading }) {
       )}
     </div>
   );
-}
+};
 
 export default observer(TagEditor);

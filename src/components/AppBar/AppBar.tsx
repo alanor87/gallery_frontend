@@ -1,3 +1,4 @@
+import React from "react";
 import { ToggleButton } from "../elements";
 import { observer } from "mobx-react-lite";
 import store from "../../MST/store";
@@ -7,15 +8,15 @@ function AppBar() {
   const { userIsAuthenticated } = store.userSettings;
   const { lightThemeIsOn } = store.interfaceSettings;
 
-  const toggleSideMenuHandler = (value) => {
+  const toggleSideMenuHandler = (value: boolean) => {
     store.interfaceSettings.toggleSidePanel(value);
   };
 
-  const toggleThemeHandler = (value) => {
+  const toggleThemeHandler = (value: boolean) => {
     store.interfaceSettings.toggleTheme(value);
   };
 
-  const toggleAuthHandler = (value) => {
+  const toggleAuthHandler = (value: boolean) => {
     store.userSettings.toggleUserIsAuthenticated(value);
   };
 
@@ -24,6 +25,7 @@ function AppBar() {
       <ToggleButton
         toggleHandler={toggleSideMenuHandler}
         hint="Show/hide side menu"
+        isChecked={false}
       />
       {userIsAuthenticated && (
         <input

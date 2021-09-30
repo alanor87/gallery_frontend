@@ -1,11 +1,16 @@
-import { React, useState, memo } from "react";
+import { useState, memo } from "react";
 import { NavLink } from "react-router-dom";
 import { Tag } from "../elements";
 import store from "../../MST/store";
 import TagEditor from "../TagEditor";
+import { ImageType } from "../../MST/imagesStoreSettings";
 import styles from "./ImageCard.module.scss";
 
-function ImageCard({ image }) {
+interface Props {
+  image: ImageType;
+}
+
+const ImageCard: React.FC<Props> = ({ image }) => {
   console.log("Render"); // just for debugging -  to be sure memoization works)
 
   const { id, imageURL, imageInfo } = image;
@@ -17,16 +22,16 @@ function ImageCard({ image }) {
   const onTagEditOpen = () => setTagEditorOpen(true);
   const onTagEditClose = () => setTagEditorOpen(false);
 
-  const tagDelHandler = (tagToDelete) => {
+  const tagDelHandler = (tagToDelete: string) => {
     const newTags = tags.filter((tag) => tag !== tagToDelete);
     tagsUpdate(newTags);
   };
 
-  const tagAddHandler = (tagToAdd) => {
+  const tagAddHandler = (tagToAdd: string) => {
     tagsUpdate([...tags, tagToAdd]);
   };
 
-  const tagsUpdate = async (newTags) => {
+  const tagsUpdate = async (newTags: string[]) => {
     setTagsAreLoading(true);
     await store.imagesStoreSettings.editTags(id, newTags);
     setTagsAreLoading(false);
@@ -36,7 +41,6 @@ function ImageCard({ image }) {
     <div className={styles.cardWrap}>
       {tagEditorIsOpen && (
         <TagEditor
-          id={id}
           tags={tags}
           closeHandle={onTagEditClose}
           onTagDelete={tagDelHandler}
@@ -61,7 +65,12 @@ function ImageCard({ image }) {
                   onDoubleClick={onTagEditOpen}
                 >
                   {tags.map((tag, index) => (
-                    <Tag tagValue={tag} key={index} />
+                    <Tag
+                      tagValue={tag}
+                      key={index}
+                      edit={true}
+                      deleteTag={tagDelHandler}
+                    />
                   ))}
                 </ul>
                 <div className={styles.addInfo}>
@@ -76,11 +85,13 @@ function ImageCard({ image }) {
       )}
     </div>
   );
-}
+};
 
-function areEqual(prevImg, nextImg) {
+function areEqual(prevImg: any, nextImg: any) {
+  const prevTags = JSON.stringify(prevImg.imageInfo.tags);
+  const nextTags = JSON.stringify(nextImg.imageInfo.tags);
   // memoization comparison function. If the tag list is the same -
-  return prevImg.tags === nextImg.tags; // the image card is not rendered again.
+  return prevTags === nextTags; // the image card is not rendered again.
 }
 
 export default memo(ImageCard, areEqual); // memization of image card.

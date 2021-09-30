@@ -1,3 +1,4 @@
+import React from "react";
 import { Suspense } from "react";
 import { Switch, Redirect } from "react-router-dom";
 import { observer } from "mobx-react-lite";

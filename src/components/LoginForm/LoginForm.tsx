@@ -17,7 +17,7 @@ const formInitialValues = {
 };
 
 function LoginForm() {
-  const formSubmitHandler = (values) => {
+  const formSubmitHandler = (values: any) => {
     console.log(values);
   };
   return (

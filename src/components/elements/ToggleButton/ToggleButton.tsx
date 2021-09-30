@@ -1,7 +1,13 @@
+import React from "react";
 import styles from "./ToggleButton.module.scss";
 
-function ToggleButton({ toggleHandler, isChecked, hint }) {
-  const onToggle = (event) => {
+interface Props {
+  isChecked: boolean;
+  hint: string;
+  toggleHandler: (value: boolean) => void;
+}
+const ToggleButton: React.FC<Props> = ({ toggleHandler, isChecked, hint }) => {
+  const onToggle = (event: any) => {
     toggleHandler(event.target.checked);
   };
 
@@ -19,6 +25,6 @@ function ToggleButton({ toggleHandler, isChecked, hint }) {
       </span>
     </label>
   );
-}
+};
 
 export default ToggleButton;

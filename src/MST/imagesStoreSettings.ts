@@ -1,27 +1,25 @@
 import axios from "axios";
-import { types, flow } from "mobx-state-tree";
+import { types, flow, Instance } from "mobx-state-tree";
 
-interface ImageInfoType {
-  tags: string[];
-  likes: number;
-}
-
-interface ImageType {
-  id: string;
-  imageURL: string;
-  imageInfo: ImageInfoType;
-}
-
-const ImageInfo = types.model({
-  tags: types.optional(types.array(types.string), [""]),
-  likes: types.optional(types.number, 0),
-});
+const ImageInfo = types
+  .model({
+    tags: types.optional(types.array(types.string), []),
+    likes: types.optional(types.number, 0),
+    isLoading: types.optional(types.boolean, false),
+    error: types.optional(types.boolean, false),
+  })
+  .actions((self) => {
+    const setIsLoading = (value: boolean) => {
+      self.isLoading = value;
+    };
+    return { setIsLoading };
+  });
 
 const Image = types
   .model({
     id: types.string,
     imageURL: types.optional(types.string, ""),
-    imageInfo: types.optional(ImageInfo, { tags: [""], likes: 0 }),
+    imageInfo: types.optional(ImageInfo, {}),
   })
   .actions((self) => {
     const updateImageInfo = (newImageInfo: ImageInfoType) => {
@@ -36,10 +34,10 @@ const ImagesStore = types
     imagesPerPage: types.optional(types.number, 10),
   })
   .views((self) => ({
-    get getAllImages() {
+    get getAllImages(): ImageType[] {
       return self.images;
     },
-    get getFilteredImages() {
+    get getFilteredImages(): ImageType[] {
       return self.images.filter((image) => image.imageInfo.tags.includes(""));
     },
   }))
@@ -49,11 +47,16 @@ const ImagesStore = types
       self.images = response.data;
     });
 
-    const editTags = flow(function* (imageId, newTagList) {
-      const imageToEdit = self.images.find((image) => image.id === imageId);
+    const editTags = flow(function* (imageId: string, newTagList: string[]) {
+      const imageToEdit: ImageType = self.images.find(
+        (image: ImageType) => image.id === imageId
+      );
       try {
-        const newImageInfo = { ...imageToEdit.imageInfo, tags: newTagList };
-        const updatedImageInfo = yield axios
+        const newImageInfo = {
+          ...imageToEdit.imageInfo,
+          tags: newTagList,
+        };
+        const updatedImageInfo: ImageInfoType = yield axios
           .put(`/images/${imageId}`, {
             ...imageToEdit,
             imageInfo: newImageInfo,
@@ -67,4 +70,8 @@ const ImagesStore = types
     });
     return { fetchImages, editTags };
   });
+
+export interface ImageInfoType extends Instance<typeof ImageInfo> {}
+export interface ImageType extends Instance<typeof Image> {}
+export interface ImagesStoreType extends Instance<typeof ImagesStore> {}
 export default ImagesStore;

@@ -1,6 +1,12 @@
 import styles from "./Tag.module.scss";
 
-export default function Tag({ tagValue, edit, deleteTag }) {
+interface Props {
+  tagValue: string;
+  edit: boolean;
+  deleteTag: (tagValue: string) => void;
+}
+
+const Tag: React.FC<Props> = ({ tagValue, edit, deleteTag }) => {
   return (
     <li className={styles.imgTag}>
       <span>{tagValue}</span>
@@ -12,4 +18,6 @@ export default function Tag({ tagValue, edit, deleteTag }) {
       )}
     </li>
   );
-}
+};
+
+export default Tag;
