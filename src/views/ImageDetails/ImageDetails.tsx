@@ -1,39 +1,28 @@
 import React from "react";
+import { RouteComponentProps } from "react-router";
 import store from "../../MST/store";
 import styles from "./ImageDetails.module.scss";
 
-export default function ImageDetails({ match }) {
-  const imgArray = store.imagesStoreSettings.getAllImages;
-  if (!imgArray.length) return <p>Oops! Something went terribly wrong!</p>;
-  const imgId = Number(match.params.id);
-  const imageDetails = imgArray.find((image) => image.id === imgId);
+type TParams = { id: string };
 
-  const { largeImageURL, comments, downloads, id, user, tags, views } =
-    imageDetails;
+export default function ImageDetails({ match }: RouteComponentProps<TParams>) {
+  const imageId = match.params.id;
+  const imageToDisplay = store.imagesStoreSettings.getImageById(imageId);
+
+  const imageURL = imageToDisplay?.imageURL;
+  const imageInfo = imageToDisplay?.imageInfo;
 
   return (
     <div className={styles.imageDetails}>
       <div className={styles.largeImageWrapper}>
-        <img src={largeImageURL} alt="" className={styles.largeImage} />
+        <img src={imageURL} alt="" className={styles.largeImage} />
       </div>
       <ul className={styles.largeImageInfo}>
         <li className="large-image-info-item">
-          Image ID : <i>{id}</i>
+          Image ID : <i>{imageId}</i>
         </li>
         <li className="large-image-info-item">
-          Author : <i>{user}</i>
-        </li>
-        <li className="large-image-info-item">
-          Tags : <i>{tags}</i>
-        </li>
-        <li className="large-image-info-item">
-          Comments : <i>{comments}</i>
-        </li>
-        <li className="large-image-info-item">
-          Downloads : <i>{downloads}</i>
-        </li>
-        <li className="large-image-info-item">
-          Views : <i>{views}</i>
+          Tags : <i>{imageInfo}</i>
         </li>
       </ul>
     </div>

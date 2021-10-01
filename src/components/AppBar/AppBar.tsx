@@ -7,6 +7,7 @@ import styles from "./AppBar.module.scss";
 function AppBar() {
   const { userIsAuthenticated } = store.userSettings;
   const { lightThemeIsOn } = store.interfaceSettings;
+  const { sidePanelIsOpen } = store.interfaceSettings;
 
   const toggleSideMenuHandler = (value: boolean) => {
     store.interfaceSettings.toggleSidePanel(value);
@@ -25,7 +26,7 @@ function AppBar() {
       <ToggleButton
         toggleHandler={toggleSideMenuHandler}
         hint="Show/hide side menu"
-        isChecked={false}
+        isChecked={sidePanelIsOpen}
       />
       {userIsAuthenticated && (
         <input

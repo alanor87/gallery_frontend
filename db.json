@@ -6,9 +6,12 @@
       "imageInfo": {
         "tags": [
           "tree",
-          "silhouette"
+          "glass",
+          "another glass"
         ],
-        "likes": 2226
+        "likes": 2226,
+        "isLoading": false,
+        "error": false
       }
     },
     {
@@ -16,10 +19,11 @@
       "imageURL": "https://cdn.pixabay.com/photo/2015/04/23/21/59/tree-736877_960_720.jpg",
       "imageInfo": {
         "tags": [
-          "asfd",
-          "moon"
+          "asfd"
         ],
-        "likes": 226
+        "likes": 226,
+        "isLoading": false,
+        "error": false
       }
     },
     {
@@ -48,7 +52,8 @@
   ],
   "interface": {
     "backgroundImage": "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_960_720.jpg",
-    "lightThemeIsOn": false,
-    "imagesPerPage": 10
+    "lightThemeIsOn": true,
+    "imagesPerPage": 10,
+    "sidePanelIsOpen": false
   }
 }

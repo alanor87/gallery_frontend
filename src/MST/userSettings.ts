@@ -8,7 +8,7 @@ const userSettings = types
     userIsAuthenticated: types.optional(types.boolean, true),
   })
   .actions((self) => ({
-    toggleUserIsAuthenticated(isAuthenticated) {
+    toggleUserIsAuthenticated(isAuthenticated: boolean) {
       self.userIsAuthenticated = isAuthenticated;
     },
   }));

@@ -22,7 +22,6 @@ const interfaceSettings = types
 
     const setInterfaceSettings = flow(function* () {
       const interfaceSettingsToSave = { ...self };
-      delete interfaceSettingsToSave.sidePanelIsOpen;
       yield axios.put("/interface", interfaceSettingsToSave);
     });
 
@@ -32,6 +31,7 @@ const interfaceSettings = types
     };
 
     const toggleSidePanel = (value: boolean) => {
+      console.log("toggle : ", value);
       self.sidePanelIsOpen = value;
     };
 

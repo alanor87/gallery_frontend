@@ -87,11 +87,10 @@ const ImageCard: React.FC<Props> = ({ image }) => {
   );
 };
 
-function areEqual(prevImg: any, nextImg: any) {
-  const prevTags = JSON.stringify(prevImg.imageInfo.tags);
-  const nextTags = JSON.stringify(nextImg.imageInfo.tags);
-  // memoization comparison function. If the tag list is the same -
-  return prevTags === nextTags; // the image card is not rendered again.
+function areEqual(prevProps: any, nextProps: any) {
+  const prevTags = JSON.stringify(prevProps.image.imageInfo.tags);
+  const nextTags = JSON.stringify(nextProps.image.imageInfo.tags);
+  return prevTags === nextTags;
 }
 
 export default memo(ImageCard, areEqual); // memization of image card.

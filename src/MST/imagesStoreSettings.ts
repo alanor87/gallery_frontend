@@ -47,6 +47,10 @@ const ImagesStore = types
       self.images = response.data;
     });
 
+    const getImageById = (id: string) => {
+      return self.images.find((image) => image.id === id);
+    };
+
     const editTags = flow(function* (imageId: string, newTagList: string[]) {
       const imageToEdit: any = self.images.find(
         (image: ImageType) => image.id === imageId
@@ -68,7 +72,7 @@ const ImagesStore = types
         imageToEdit.imageInfo.error = true;
       }
     });
-    return { fetchImages, editTags };
+    return { fetchImages, editTags, getImageById };
   });
 
 export interface ImageInfoType extends Instance<typeof ImageInfo> {}
