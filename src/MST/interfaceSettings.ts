@@ -12,32 +12,29 @@ const interfaceSettings = types
     sidePanelIsOpen: false,
   })
   .actions((self) => {
-    const fetchInterfaceSettings = flow(function* () {
-      const newInterfaceSettings = yield axios
-        .get("/interface")
-        .then((response) => response.data);
-      self.lightThemeIsOn = newInterfaceSettings.lightThemeIsOn;
-      self.imagesPerPage = newInterfaceSettings.imagesPerPage;
+    const fetchGetInterfaceSettings = flow(function* () {
+      const response = yield axios.get("/interface");
+      self.lightThemeIsOn = response.lightThemeIsOn;
+      self.imagesPerPage = response.imagesPerPage;
     });
 
-    const setInterfaceSettings = flow(function* () {
+    const fetchSetInterfaceSettings = flow(function* () {
       const interfaceSettingsToSave = { ...self };
       yield axios.put("/interface", interfaceSettingsToSave);
     });
 
     const toggleTheme = (value: boolean) => {
       self.lightThemeIsOn = value;
-      setInterfaceSettings();
+      fetchSetInterfaceSettings();
     };
 
     const toggleSidePanel = (value: boolean) => {
-      console.log("toggle : ", value);
       self.sidePanelIsOpen = value;
     };
 
     return {
-      fetchInterfaceSettings,
-      setInterfaceSettings,
+      fetchGetInterfaceSettings,
+      fetchSetInterfaceSettings,
       toggleTheme,
       toggleSidePanel,
     };

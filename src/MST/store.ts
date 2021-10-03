@@ -4,7 +4,7 @@ import userSettings from "./userSettings";
 import interfaceSettings from "./interfaceSettings";
 import imagesStoreSettings from "./imagesStoreSettings";
 
-axios.defaults.baseURL = "http://localhost:3001";
+axios.defaults.baseURL = "http://localhost:3030/api/v1";
 
 const store = types.model({
   userSettings: types.optional(userSettings, {}),
