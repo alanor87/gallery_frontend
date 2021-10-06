@@ -13,7 +13,6 @@
     "axios": "^0.21.4",
     "debounce": "^1.2.1",
     "formik": "^2.2.9",
-    "json-server": "^0.16.3",
     "mobx": "^6.3.3",
     "mobx-react-lite": "^3.2.1",
     "mobx-state-tree": "^5.0.2",
