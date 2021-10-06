@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import PrivateRoute from "./components/_routes/PrivateRoute";
 import PublicRoute from "./components/_routes/PublicRoute";
 import AppBar from "./components/AppBar";
+import Spinner from "./components/elements/Spinner";
 import { useEffect } from "react";
 import routes from "./routes";
 import store from "./MST/store";
@@ -28,7 +29,7 @@ function App() {
     <div className={"appMain"}>
       <AppBar />
       <main className="mainSection">
-        <Suspense fallback={<div>Loading ...</div>}>
+        <Suspense fallback={<Spinner side={50} />}>
           {" "}
           <Switch>
             {routes.map(
@@ -64,6 +65,7 @@ function App() {
             <Redirect to={userIsAuthenticated ? "/gallery" : "/login"} />
           </Switch>
         </Suspense>
+        <Spinner side={100} />
       </main>
     </div>
   );

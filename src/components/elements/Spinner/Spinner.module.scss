@@ -1,0 +1,19 @@
+.spinnerContainer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  box-shadow: 0 0 10px 5px var(--color-accent);
+}
+
+.spinnerInnerContainer {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: var(--main-background-color);
+  box-shadow: inset 0 0 10px 5px var(--color-accent);
+}
