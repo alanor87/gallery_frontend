@@ -13,11 +13,11 @@ interface Props {
 const ImageCard: React.FC<Props> = ({ image }) => {
   console.log("Render"); // just for debugging -  to be sure memoization works)
 
-  const { id, imageURL, imageInfo } = image;
+  const { _id, imageURL, imageInfo } = image;
   const { tags, likes } = imageInfo;
 
   const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
-  const [tagsAreLoading, setTagsAreLoading] = useState(false);
+  const [tagsAreLoading, setTagsAreLoading] = useState(imageInfo.isLoading);
 
   const onTagEditOpen = () => setTagEditorOpen(true);
   const onTagEditClose = () => setTagEditorOpen(false);
@@ -33,7 +33,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
 
   const tagsUpdate = async (newTags: string[]) => {
     setTagsAreLoading(true);
-    await store.imagesStoreSettings.editTags(id, newTags);
+    await store.imagesStoreSettings.editTags(_id, newTags);
     setTagsAreLoading(false);
   };
 
@@ -48,7 +48,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
           isLoading={tagsAreLoading}
         />
       )}
-      <NavLink to={`/image/${id}`}>
+      <NavLink to={`/image/${_id}`}>
         <div className={styles.imgWrap}>
           <img className={styles.img} src={imageURL} alt="pic" />
         </div>

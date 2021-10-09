@@ -13,7 +13,7 @@ function App() {
   const { interfaceSettings, imagesStoreSettings, userSettings } = store;
 
   useEffect(() => {
-    imagesStoreSettings.fetchImages();
+    imagesStoreSettings.fetchAllImages();
     interfaceSettings.fetchGetInterfaceSettings();
   }, [imagesStoreSettings, interfaceSettings]);
 
@@ -65,7 +65,6 @@ function App() {
             <Redirect to={userIsAuthenticated ? "/gallery" : "/login"} />
           </Switch>
         </Suspense>
-        <Spinner side={100} />
       </main>
     </div>
   );

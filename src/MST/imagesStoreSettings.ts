@@ -8,6 +8,7 @@ const ImageInfo = types
     isLoading: types.optional(types.boolean, false),
     error: types.optional(types.boolean, false),
   })
+
   .actions((self) => {
     const setIsLoading = (value: boolean) => {
       self.isLoading = value;
@@ -17,7 +18,7 @@ const ImageInfo = types
 
 const Image = types
   .model({
-    id: types.string,
+    _id: types.string,
     imageURL: types.optional(types.string, ""),
     imageInfo: types.optional(ImageInfo, {}),
   })
@@ -25,6 +26,7 @@ const Image = types
     const updateImageInfo = (newImageInfo: ImageInfoType) => {
       self.imageInfo = newImageInfo;
     };
+
     return { updateImageInfo };
   });
 
@@ -42,37 +44,37 @@ const ImagesStore = types
     },
   }))
   .actions((self) => {
-    const fetchImages = flow(function* () {
+    const fetchAllImages = flow(function* () {
       const response = yield axios.get("/images");
       self.images = response.data;
     });
 
     const getImageById = (id: string) => {
-      return self.images.find((image) => image.id === id);
+      return self.images.find((image) => image._id === id);
     };
 
     const editTags = flow(function* (imageId: string, newTagList: string[]) {
-      const imageToEdit: any = self.images.find(
-        (image: ImageType) => image.id === imageId
-      );
       try {
+        const imageToEdit: any = getImageById(imageId);
         const newImageInfo = {
           ...imageToEdit.imageInfo,
           tags: newTagList,
         };
-        const updatedImageInfo: ImageInfoType = yield axios
-          .put(`/images/${imageId}`, {
-            ...imageToEdit,
-            imageInfo: newImageInfo,
-          })
-          .then((res) => res.data.imageInfo);
-        imageToEdit.updateImageInfo(updatedImageInfo);
+        const newImage = {
+          ...imageToEdit,
+          imageInfo: newImageInfo,
+        };
+        const updatedImage: ImageType = yield axios
+          .put(`/images/${imageId}`, newImage)
+          .then((res) => res.data.body);
+        imageToEdit.updateImageInfo(updatedImage.imageInfo);
         imageToEdit.imageInfo.setIsLoading(false);
       } catch (error) {
-        imageToEdit.imageInfo.error = true;
+        console.log(error);
       }
     });
-    return { fetchImages, editTags, getImageById };
+
+    return { fetchAllImages, editTags, getImageById };
   });
 
 export interface ImageInfoType extends Instance<typeof ImageInfo> {}

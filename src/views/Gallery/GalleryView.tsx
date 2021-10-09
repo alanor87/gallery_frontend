@@ -7,13 +7,13 @@ import styles from "./Gallery.module.scss";
 function GalleryView() {
   const imgArray = store.imagesStoreSettings.getAllImages;
   const sideMenuOn = store.interfaceSettings.sidePanelIsOpen;
-  
+
   return (
     <section className={styles.sectionGallery}>
       <SideMenu galleryMenuImages={imgArray} isOpen={sideMenuOn} />
       <div className={styles.galleryPage}>
         {imgArray.map((image) => (
-          <ImageCard image={image} key={image.id} />
+          <ImageCard image={image} key={image._id} />
         ))}
       </div>
     </section>

@@ -15,7 +15,7 @@ const SideMenu: React.FC<Props> = ({ galleryMenuImages, isOpen }) => {
   return (
     <section className={menuClassList}>
       {galleryMenuImages.map((image, idx) => {
-        return <SideMenuThumb image={image} key={image.id} />;
+        return <SideMenuThumb image={image} key={image._id} />;
       })}
     </section>
   );
