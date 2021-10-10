@@ -1,4 +1,5 @@
-import { types, Instance } from "mobx-state-tree";
+import axios from "axios";
+import { types, flow, Instance } from "mobx-state-tree";
 
 const userSettings = types
   .model({
@@ -7,11 +8,21 @@ const userSettings = types
     userToken: types.optional(types.string, ""),
     userIsAuthenticated: types.optional(types.boolean, true),
   })
-  .actions((self) => ({
-    toggleUserIsAuthenticated(isAuthenticated: boolean) {
+  .actions((self) => {
+    const toggleUserIsAuthenticated = (isAuthenticated: boolean) => {
       self.userIsAuthenticated = isAuthenticated;
-    },
-  }));
+    };
+
+    const registerUser = flow(function* (newUser) {
+      try {
+        const registeredUser = yield axios.post("/auth/register", newUser);
+        console.log(registeredUser.data);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    return { registerUser, toggleUserIsAuthenticated };
+  });
 
 export interface UserSettingsType extends Instance<typeof userSettings> {}
 export default userSettings;

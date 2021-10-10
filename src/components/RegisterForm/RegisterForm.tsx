@@ -1,26 +1,29 @@
 import { Formik, Form, Field } from "formik";
 import { NavLink } from "react-router-dom";
+import store from "../../MST/store";
 import * as Yup from "yup";
 import Button from "../elements/Button";
 import styles from "./RegisterForm.module.scss";
 
 const validationSchema = Yup.object({
   userName: Yup.string().required(),
-  email: Yup.string()
+  userEmail: Yup.string()
     .matches(/^[\w.]+@([\w-]+\.)+[\w-]{2,4}$/)
     .required(),
-  password: Yup.string().min(6).required(),
+  userPassword: Yup.string().min(6).required(),
 });
 
 const formInitialValues = {
   userName: "",
-  email: "",
-  password: "",
+  userEmail: "",
+  userPassword: "",
 };
 
 function RegisterForm() {
+  const { registerUser } = store.userSettings;
   const formSubmitHandler = (values: any) => {
     console.log(values);
+    registerUser(values);
   };
   return (
     <div className={styles.registerForm}>
@@ -51,7 +54,7 @@ function RegisterForm() {
                 E-mail
                 <Field
                   type="text"
-                  name="email"
+                  name="userEmail"
                   className={className("email", styles.labelAuthorisationInput)}
                 />
               </label>
@@ -59,7 +62,7 @@ function RegisterForm() {
                 Password
                 <Field
                   type="password"
-                  name="password"
+                  name="userPassword"
                   className={className(
                     "password",
                     styles.labelAuthorisationInput

@@ -21,6 +21,8 @@ const Image = types
     _id: types.string,
     imageURL: types.optional(types.string, ""),
     imageInfo: types.optional(ImageInfo, {}),
+    isPublic: types.optional(types.boolean, true),
+    belongsTo: types.optional(types.string, ""),
   })
   .actions((self) => {
     const updateImageInfo = (newImageInfo: ImageInfoType) => {
@@ -69,7 +71,7 @@ const ImagesStore = types
           .then((res) => res.data.body);
         imageToEdit.updateImageInfo(updatedImage.imageInfo);
         imageToEdit.imageInfo.setIsLoading(false);
-      } catch (error) {
+      } catch (error: any) {
         console.log(error);
       }
     });

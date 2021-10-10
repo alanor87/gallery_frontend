@@ -1,4 +1,4 @@
-import { MutableRefObject, useRef } from "react";
+import React, { KeyboardEvent, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Tag } from "../elements";
 import styles from "./TagEditor.module.scss";
@@ -18,12 +18,23 @@ const TagEditor: React.FC<Props> = ({
   onAddTag,
   isLoading,
 }) => {
-  const tagInput = useRef() as MutableRefObject<HTMLInputElement>;
+  const [tagName, setTagName] = useState("");
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTagName(event.target.value);
+  };
+
+  const handleEnterPress = (event: React.KeyboardEvent) => {
+    if (event.code === "Enter") {
+      onAddTag(tagName);
+      setTagName("");
+    }
+  };
 
   const addTag = () => {
-    const newTag: string = tagInput.current.value;
-    if (newTag) onAddTag(newTag);
+    onAddTag(tagName);
   };
+
   return (
     <div className={styles.tagEditor}>
       <button
@@ -31,7 +42,13 @@ const TagEditor: React.FC<Props> = ({
         onClick={closeHandle}
       ></button>
       <div className={styles.tagInputForm}>
-        <input ref={tagInput} type="text" className={styles.newTagInput} />
+        <input
+          value={tagName}
+          type="text"
+          className={styles.newTagInput}
+          onChange={handleInputChange}
+          onKeyPress={handleEnterPress}
+        />
         <button className={styles.newTagBtn} onClick={addTag}>
           Add tag
         </button>

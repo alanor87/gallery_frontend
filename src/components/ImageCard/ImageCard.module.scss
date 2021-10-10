@@ -33,8 +33,9 @@
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: 10px;
+  padding: 3px;
   color: rgb(190, 190, 190);
+  font-size: 14px;
   background-color: rgba(22, 22, 22, 0.6);
   opacity: 0;
   transform: translateY(20px);
@@ -50,8 +51,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  padding: 8px;
-  margin-bottom: 10px;
+  padding: 3px;
+  margin-bottom: 5px;
   border-radius: 6px;
   background-color: rgba(22, 22, 22, 0.6);
   cursor: help;

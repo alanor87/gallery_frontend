@@ -5,6 +5,12 @@ import interfaceSettings from "./interfaceSettings";
 import imagesStoreSettings from "./imagesStoreSettings";
 
 axios.defaults.baseURL = "http://localhost:3030/api/v1";
+axios.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    throw new Error(err.response.data.message);
+  }
+);
 
 const store = types.model({
   userSettings: types.optional(userSettings, {}),

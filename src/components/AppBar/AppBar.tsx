@@ -6,8 +6,7 @@ import styles from "./AppBar.module.scss";
 
 function AppBar() {
   const { userIsAuthenticated } = store.userSettings;
-  const { lightThemeIsOn } = store.interfaceSettings;
-  const { sidePanelIsOpen } = store.interfaceSettings;
+  const { lightThemeIsOn, sidePanelIsOpen } = store.interfaceSettings;
 
   const toggleSideMenuHandler = (value: boolean) => {
     store.interfaceSettings.toggleSidePanel(value);
@@ -17,17 +16,15 @@ function AppBar() {
     store.interfaceSettings.toggleTheme(value);
   };
 
-  const toggleAuthHandler = (value: boolean) => {
-    store.userSettings.toggleUserIsAuthenticated(value);
-  };
-
   return (
     <header className={styles.sectionHeader}>
-      <ToggleButton
-        toggleHandler={toggleSideMenuHandler}
-        hint="Show/hide side menu"
-        isChecked={sidePanelIsOpen}
-      />
+      {userIsAuthenticated && (
+        <ToggleButton
+          toggleHandler={toggleSideMenuHandler}
+          hint="Show/hide side menu"
+          isChecked={sidePanelIsOpen}
+        />
+      )}
       {userIsAuthenticated && (
         <input
           type="text"
@@ -36,11 +33,7 @@ function AppBar() {
           autoComplete="off"
         />
       )}
-      <ToggleButton
-        toggleHandler={toggleAuthHandler}
-        isChecked={userIsAuthenticated}
-        hint="LogIn / LogOut"
-      />
+
       <ToggleButton
         toggleHandler={toggleThemeHandler}
         isChecked={lightThemeIsOn}
