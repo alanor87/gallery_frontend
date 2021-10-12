@@ -1,9 +1,16 @@
-import { Formik, Form, Field } from "formik";
+import { Formik, Form } from "formik";
 import { NavLink } from "react-router-dom";
+import Input from "../elements/Input";
 import store from "../../MST/store";
 import * as Yup from "yup";
 import Button from "../elements/Button";
 import styles from "./RegisterForm.module.scss";
+
+interface RegisterFormInterface {
+  userName: string;
+  userEmail: string;
+  userPassword: string;
+}
 
 const validationSchema = Yup.object({
   userName: Yup.string().required(),
@@ -21,7 +28,7 @@ const formInitialValues = {
 
 function RegisterForm() {
   const { registerUser } = store.userSettings;
-  const formSubmitHandler = (values: any) => {
+  const formSubmitHandler = (values: RegisterFormInterface) => {
     console.log(values);
     registerUser(values);
   };
@@ -33,51 +40,26 @@ function RegisterForm() {
         validationSchema={validationSchema}
         onSubmit={formSubmitHandler}
       >
-        {({ values, errors }) => {
-          const className = (fieldName: string, className: string) => {
-            return fieldName in values && fieldName in errors
-              ? className + " " + styles.error
-              : className;
-          };
-
-          return (
-            <Form action="#" method="GET">
-              <label className={styles.labelAuthorisation}>
-                Name
-                <Field
-                  type="text"
-                  name="userName"
-                  className={className("name", styles.labelAuthorisationInput)}
-                />
-              </label>
-              <label className={styles.labelAuthorisation}>
-                E-mail
-                <Field
-                  type="text"
-                  name="userEmail"
-                  className={className("email", styles.labelAuthorisationInput)}
-                />
-              </label>
-              <label className={styles.labelAuthorisation}>
-                Password
-                <Field
-                  type="password"
-                  name="userPassword"
-                  className={className(
-                    "password",
-                    styles.labelAuthorisationInput
-                  )}
-                />
-              </label>
-              <div className={styles.btnWrapper}>
-                <Button type="submit" text="Register" />
-              </div>
-              <NavLink to="/login" className="navLink">
-                Login
-              </NavLink>
-            </Form>
-          );
-        }}
+        <Form action="#" method="GET">
+          <label className={styles.labelAuthorisation}>
+            Name
+            <Input fieldType="text" fieldName="userName" />
+          </label>
+          <label className={styles.labelAuthorisation}>
+            E-mail
+            <Input fieldType="text" fieldName="userEmail" />
+          </label>
+          <label className={styles.labelAuthorisation}>
+            Password
+            <Input fieldType="password" fieldName="userPassword" />
+          </label>
+          <div className={styles.btnWrapper}>
+            <Button type="submit" text="Register" />
+          </div>
+          <NavLink to="/login" className="navLink">
+            Login
+          </NavLink>
+        </Form>
       </Formik>
     </div>
   );

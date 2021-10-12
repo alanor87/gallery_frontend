@@ -6,7 +6,7 @@ const userSettings = types
     userName: types.optional(types.string, ""),
     userEmail: types.optional(types.string, ""),
     userToken: types.optional(types.string, ""),
-    userIsAuthenticated: types.optional(types.boolean, true),
+    userIsAuthenticated: types.optional(types.boolean, false),
   })
   .actions((self) => {
     const toggleUserIsAuthenticated = (isAuthenticated: boolean) => {
