@@ -1,5 +1,7 @@
 import axios from "axios";
 import { types, flow, Instance } from "mobx-state-tree";
+import LoginFormInterface from "../components/LoginForm/types";
+import RegisterFormInterface from "../components/RegisterForm/types";
 
 const userSettings = types
   .model({
@@ -13,7 +15,7 @@ const userSettings = types
       self.userIsAuthenticated = isAuthenticated;
     };
 
-    const registerUser = flow(function* (newUser) {
+    const userRegister = flow(function* (newUser: RegisterFormInterface) {
       try {
         const registeredUser = yield axios.post("/auth/register", newUser);
         console.log(registeredUser.data);
@@ -21,7 +23,19 @@ const userSettings = types
         console.log(error);
       }
     });
-    return { registerUser, toggleUserIsAuthenticated };
+
+    const userLogin = flow(function* (userLoginData: LoginFormInterface) {
+      try {
+        const authenticatedUser = yield axios.post(
+          "/auth/login",
+          userLoginData
+        );
+        console.log(authenticatedUser.data);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    return { userRegister, userLogin, toggleUserIsAuthenticated };
   });
 
 export interface UserSettingsType extends Instance<typeof userSettings> {}

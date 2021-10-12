@@ -1,14 +1,11 @@
 import { Formik, Form } from "formik";
 import { NavLink } from "react-router-dom";
 import Input from "../elements/Input";
+import store from "../../MST/store";
 import * as Yup from "yup";
 import Button from "../elements/Button";
+import LoginFormInterface from "./types";
 import styles from "./LoginForm.module.scss";
-
-interface LoginFormInterface {
-  userEmail: string;
-  userPassword: string;
-}
 
 const validationSchema = Yup.object({
   userEmail: Yup.string()
@@ -23,7 +20,11 @@ const formInitialValues = {
 };
 
 function LoginForm() {
-  const formSubmitHandler = (values: LoginFormInterface) => {};
+  const { userLogin } = store.userSettings;
+  const formSubmitHandler = (values: LoginFormInterface) => {
+    console.log(values);
+    userLogin(values);
+  };
 
   return (
     <div className={styles.loginForm}>
