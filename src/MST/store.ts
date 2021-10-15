@@ -8,7 +8,8 @@ axios.defaults.baseURL = "http://localhost:3030/api/v1";
 axios.interceptors.response.use(
   (res) => res,
   (err) => {
-    throw new Error(err.response.data.message);
+    const errorMsg = err?.response?.data?.message || "Unknown error.";
+    throw new Error(errorMsg);
   }
 );
 

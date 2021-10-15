@@ -1,5 +1,6 @@
 import axios from "axios";
 import { types, flow, Instance } from "mobx-state-tree";
+import { alert } from "@pnotify/core";
 
 const ImageInfo = types
   .model({
@@ -47,8 +48,15 @@ const ImagesStore = types
   }))
   .actions((self) => {
     const fetchAllImages = flow(function* () {
-      const response = yield axios.get("/images");
-      self.images = response.data;
+      try {
+        const response = yield axios.get("/images");
+        self.images = response.data;
+      } catch (error) {
+        alert({
+          text: `Error while fetching images. Error info : ${error}`,
+          type: "error",
+        });
+      }
     });
 
     const getImageById = (id: string) => {
@@ -72,7 +80,10 @@ const ImagesStore = types
         imageToEdit.updateImageInfo(updatedImage.imageInfo);
         imageToEdit.imageInfo.setIsLoading(false);
       } catch (error: any) {
-        console.log(error);
+        alert({
+          text: `Error while editing tags. Error info : ${error}`,
+          type: "error",
+        });
       }
     });
 

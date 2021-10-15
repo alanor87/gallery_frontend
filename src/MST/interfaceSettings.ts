@@ -1,5 +1,7 @@
 import axios from "axios";
 import { types, flow, Instance } from "mobx-state-tree";
+import { alert, error, defaults } from "@pnotify/core";
+import "@pnotify/core/dist/PNotify.css";
 
 const interfaceSettings = types
   .model({
@@ -14,17 +16,31 @@ const interfaceSettings = types
   })
   .actions((self) => {
     const fetchGetInterfaceSettings = flow(function* () {
-      const response = yield axios.get("/interface");
-      const settings = response.data;
-      self._id = response._id;
-      self.backgroundImage = settings.backgroundImage;
-      self.lightThemeIsOn = settings.lightThemeIsOn;
-      self.imagesPerPage = settings.imagesPerPage;
+      try {
+        const response = yield axios.get("/interface");
+        const settings = response.data;
+        self._id = response._id;
+        self.backgroundImage = settings.backgroundImage;
+        self.lightThemeIsOn = settings.lightThemeIsOn;
+        self.imagesPerPage = settings.imagesPerPage;
+      } catch (error) {
+        alert({
+          text: `Error while fetching interface settings. Error info : ${error}`,
+          type: "error",
+        });
+      }
     });
 
     const fetchSetInterfaceSettings = flow(function* () {
-      const interfaceSettingsToSave = { ...self };
-      yield axios.put("/interface", interfaceSettingsToSave);
+      try {
+        const interfaceSettingsToSave = { ...self };
+        yield axios.put("/interface", interfaceSettingsToSave);
+      } catch (error) {
+        alert({
+          text: `Error while saving interface settings. Error info : ${error}`,
+          type: "error",
+        });
+      }
     });
 
     const toggleTheme = (value: boolean) => {
