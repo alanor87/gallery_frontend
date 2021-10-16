@@ -15,6 +15,7 @@ function Input({ fieldName, fieldType }: Props) {
       ? styles.input + " " + styles.error
       : styles.input;
   };
+
   return (
     <Field type={fieldType} name={fieldName} className={getFieldClassName()} />
   );

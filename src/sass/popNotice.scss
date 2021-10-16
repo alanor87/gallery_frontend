@@ -5,11 +5,9 @@
 }
 [data-pnotify] .custom-container {
   background-color: var(--main-background-color-alpha);
-  background-image: none;
   border: none;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
   border-radius: 10px;
+  border-right: 6px solid var(--color-accent);
   padding: 15px;
   font-size: 15px;
 }
