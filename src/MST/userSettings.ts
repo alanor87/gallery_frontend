@@ -1,6 +1,6 @@
 import axios from "axios";
+import { popupNotice } from "../utils/popupNotice";
 import { types, flow, Instance } from "mobx-state-tree";
-import { alert } from "@pnotify/core";
 import LoginFormInterface from "../components/LoginForm/types";
 import RegisterFormInterface from "../components/RegisterForm/types";
 
@@ -19,11 +19,9 @@ const userSettings = types
     const userRegister = flow(function* (newUser: RegisterFormInterface) {
       try {
         const registeredUser = yield axios.post("/auth/register", newUser);
-        console.log(registeredUser.data);
       } catch (error) {
-        alert({
-          text: `Error registering user. Error info : ${error}`,
-        });
+        popupNotice(`Error registering user.
+         ${error}`);
       }
     });
 
@@ -33,13 +31,12 @@ const userSettings = types
           "/auth/login",
           userLoginData
         );
-        console.log(authenticatedUser.data);
       } catch (error) {
-        alert({
-          text: `Error user login. Error info : ${error}`,
-        });
+        popupNotice(`Error user login.
+         ${error}`);
       }
     });
+
     return { userRegister, userLogin, toggleUserIsAuthenticated };
   });
 

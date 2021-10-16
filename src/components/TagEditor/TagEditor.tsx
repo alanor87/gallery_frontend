@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useState } from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Tag } from "../elements";
 import styles from "./TagEditor.module.scss";

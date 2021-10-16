@@ -1,7 +1,6 @@
 import axios from "axios";
+import { popupNotice } from "../utils/popupNotice";
 import { types, flow, Instance } from "mobx-state-tree";
-import { alert, error, defaults } from "@pnotify/core";
-import "@pnotify/core/dist/PNotify.css";
 
 const interfaceSettings = types
   .model({
@@ -24,10 +23,10 @@ const interfaceSettings = types
         self.lightThemeIsOn = settings.lightThemeIsOn;
         self.imagesPerPage = settings.imagesPerPage;
       } catch (error) {
-        alert({
-          text: `Error while fetching interface settings. Error info : ${error}`,
-          type: "error",
-        });
+        popupNotice(
+          `Error while fetching interface settings.
+           ${error}`
+        );
       }
     });
 
@@ -36,10 +35,10 @@ const interfaceSettings = types
         const interfaceSettingsToSave = { ...self };
         yield axios.put("/interface", interfaceSettingsToSave);
       } catch (error) {
-        alert({
-          text: `Error while saving interface settings. Error info : ${error}`,
-          type: "error",
-        });
+        popupNotice(
+          `Error while saving interface settings.
+           ${error}`
+        );
       }
     });
 

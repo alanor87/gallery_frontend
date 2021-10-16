@@ -1,12 +1,10 @@
 import { Suspense } from "react";
 import { Switch, Redirect } from "react-router-dom";
 import { observer } from "mobx-react-lite";
-import "@pnotify/core/dist/PNotify.css";
 import PrivateRoute from "./components/_routes/PrivateRoute";
 import PublicRoute from "./components/_routes/PublicRoute";
 import AppBar from "./components/AppBar";
-import { ToggleButton } from "./components/elements";
-import Spinner from "./components/elements/Spinner";
+import { ToggleButton, Spinner } from "./components/elements";
 import { useEffect } from "react";
 import routes from "./routes";
 import store from "./MST/store";

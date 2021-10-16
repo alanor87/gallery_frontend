@@ -1,6 +1,6 @@
 import axios from "axios";
 import { types, flow, Instance } from "mobx-state-tree";
-import { alert } from "@pnotify/core";
+import { popupNotice } from "../utils/popupNotice";
 
 const ImageInfo = types
   .model({
@@ -42,6 +42,7 @@ const ImagesStore = types
     get getAllImages(): ImageType[] {
       return self.images;
     },
+
     get getFilteredImages(): ImageType[] {
       return self.images.filter((image) => image.imageInfo.tags.includes(""));
     },
@@ -52,38 +53,35 @@ const ImagesStore = types
         const response = yield axios.get("/images");
         self.images = response.data;
       } catch (error) {
-        alert({
-          text: `Error while fetching images. Error info : ${error}`,
-          type: "error",
-        });
+        popupNotice(`Error while fetching images.
+           ${error}`);
       }
     });
 
-    const getImageById = (id: string) => {
-      return self.images.find((image) => image._id === id);
-    };
+    const getImageById = (id: string) =>
+      self.images.find((image) => image._id === id);
 
     const editTags = flow(function* (imageId: string, newTagList: string[]) {
       try {
         const imageToEdit: any = getImageById(imageId);
+
         const newImageInfo = {
           ...imageToEdit.imageInfo,
           tags: newTagList,
         };
+
         const newImage = {
           ...imageToEdit,
           imageInfo: newImageInfo,
         };
+
         const updatedImage: ImageType = yield axios
           .put(`/images/${imageId}`, newImage)
           .then((res) => res.data.body);
         imageToEdit.updateImageInfo(updatedImage.imageInfo);
-        imageToEdit.imageInfo.setIsLoading(false);
       } catch (error: any) {
-        alert({
-          text: `Error while editing tags. Error info : ${error}`,
-          type: "error",
-        });
+        popupNotice(`Error while editing tags.
+           ${error}`);
       }
     });
 
