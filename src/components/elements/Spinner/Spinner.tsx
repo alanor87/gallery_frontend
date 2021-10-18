@@ -11,10 +11,14 @@ const Spinner: React.FC<Props> = ({ side }) => {
   };
 
   return (
-    <div className={styles.spinnerContainer} style={containerSize}>
-      <div className={styles.spinnerInnerContainer} style={containerSize}>
-        Loading{" "}
+    <div className={styles.spinnerContainerWrapper}>
+      <div className={styles.spinnerContainer} style={containerSize}>
+        <div
+          className={styles.spinnerInnerContainer}
+          style={containerSize}
+        ></div>
       </div>
+      <span className={styles.spinnerText}>Loading</span>
     </div>
   );
 };

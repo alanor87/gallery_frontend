@@ -1,7 +1,6 @@
 import { lazy } from "react";
 
-const LoginView = lazy(() => import("./views/Login"));
-const RegisterView = lazy(() => import("./views/Register"));
+const LoginRegisterView = lazy(() => import("./views/LoginRegister"));
 const GalleryView = lazy(() => import("./views/Gallery"));
 
 const routes = [
@@ -11,7 +10,7 @@ const routes = [
     redirectTo: "/gallery",
     exact: true,
     restricted: true,
-    component: LoginView,
+    component: LoginRegisterView,
     label: "LoginView",
   },
   {
@@ -20,7 +19,7 @@ const routes = [
     redirectTo: "/gallery",
     exact: true,
     restricted: true,
-    component: RegisterView,
+    component: LoginRegisterView,
     label: "RegisterView",
   },
   {
