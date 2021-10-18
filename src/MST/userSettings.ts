@@ -4,6 +4,13 @@ import { types, flow, Instance } from "mobx-state-tree";
 import LoginFormInterface from "../components/LoginForm/types";
 import RegisterFormInterface from "../components/RegisterForm/types";
 
+interface UserSettingsInterface {
+  userName: string;
+  userEmail: string;
+  userToken: string;
+  userIsAuthenticated?: boolean;
+}
+
 const userSettings = types
   .model({
     userName: types.optional(types.string, ""),
@@ -19,6 +26,9 @@ const userSettings = types
     const userRegister = flow(function* (newUser: RegisterFormInterface) {
       try {
         const registeredUser = yield axios.post("/auth/register", newUser);
+        self.userName = registeredUser.data.userName;
+        self.userEmail = registeredUser.data.userEmail;
+        self.userIsAuthenticated = true;
       } catch (error) {
         popupNotice(`Error registering user.
          ${error}`);
@@ -27,10 +37,14 @@ const userSettings = types
 
     const userLogin = flow(function* (userLoginData: LoginFormInterface) {
       try {
-        const authenticatedUser = yield axios.post(
+        const authenticatedUser: UserSettingsInterface = yield axios.post(
           "/auth/login",
           userLoginData
         );
+        self.userName = authenticatedUser.userName;
+        self.userEmail = authenticatedUser.userEmail;
+        self.userToken = authenticatedUser?.userToken;
+        self.userIsAuthenticated = true;
       } catch (error) {
         popupNotice(`Error user login.
          ${error}`);
