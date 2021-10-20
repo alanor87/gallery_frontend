@@ -10,12 +10,11 @@ import routes from "./routes";
 import store from "./MST/store";
 
 function App() {
-  const { interfaceSettings, imagesStoreSettings, userSettings } = store;
+  const { interfaceSettings, userSettings } = store;
 
   useEffect(() => {
-    imagesStoreSettings.fetchAllImages();
     interfaceSettings.fetchGetInterfaceSettings();
-  }, [imagesStoreSettings, interfaceSettings]);
+  }, [interfaceSettings]);
 
   const { lightThemeIsOn } = interfaceSettings;
   const { userIsAuthenticated } = userSettings;
