@@ -36,19 +36,12 @@ const userSettings = types
     });
 
     const userLogin = flow(function* (userLoginData: LoginFormInterface) {
-      try {
-        const authenticatedUser: UserSettingsInterface = yield axios.post(
-          "/auth/login",
-          userLoginData
-        );
-        self.userName = authenticatedUser.userName;
-        self.userEmail = authenticatedUser.userEmail;
-        self.userToken = authenticatedUser?.userToken;
-        self.userIsAuthenticated = true;
-      } catch (error) {
-        popupNotice(`Error user login.
-         ${error}`);
-      }
+      const authenticatedUser = yield axios.post("/auth/login", userLoginData);
+      self.userName = authenticatedUser.data.body.userName;
+      self.userEmail = authenticatedUser.data.body.userEmail;
+      self.userToken = authenticatedUser.data.body.userToken;
+      axios.defaults.headers.common.Authorization = `Bearer ${self.userToken}`;
+      self.userIsAuthenticated = true;
     });
 
     return { userRegister, userLogin, toggleUserIsAuthenticated };
