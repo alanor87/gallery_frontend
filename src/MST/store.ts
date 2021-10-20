@@ -1,5 +1,6 @@
-import { types } from "mobx-state-tree";
+import { types, flow } from "mobx-state-tree";
 import axios, { AxiosResponse, AxiosError } from "axios";
+import { popupNotice } from "../utils/popupNotice";
 import userSettings from "./userSettings";
 import interfaceSettings from "./interfaceSettings";
 import imagesStoreSettings from "./imagesStoreSettings";
@@ -14,10 +15,23 @@ axios.interceptors.response.use(
   }
 );
 
-const store = types.model({
-  userSettings: types.optional(userSettings, {}),
-  interfaceSettings: types.optional(interfaceSettings, {}),
-  imagesStoreSettings: types.optional(imagesStoreSettings, {}),
-});
+const store = types
+  .model({
+    userSettings: types.optional(userSettings, {}),
+    interfaceSettings: types.optional(interfaceSettings, {}),
+    imagesStoreSettings: types.optional(imagesStoreSettings, {}),
+  })
+  .actions((self) => {
+    const loginInit = flow(function* (loginData: any) {
+      try {
+        yield self.userSettings.userLogin(loginData);
+        yield self.imagesStoreSettings.fetchAllImages();
+      } catch (error) {
+        popupNotice(`Error user login.
+        ${error}`);
+      }
+    });
+    return { loginInit };
+  });
 
 export default store.create();

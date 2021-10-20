@@ -34,7 +34,7 @@ const routes = [
   },
   {
     isPublic: false,
-    path: "/gallery/image/:id",
+    path: "/image/:id",
     redirectTo: "/login",
     exact: false,
     restricted: false,

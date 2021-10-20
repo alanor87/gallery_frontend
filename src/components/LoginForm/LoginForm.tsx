@@ -20,10 +20,10 @@ const formInitialValues = {
 };
 
 function LoginForm() {
-  const { userLogin } = store.userSettings;
+  const { loginInit } = store;
   const formSubmitHandler = (values: LoginFormInterface) => {
     console.log(values);
-    userLogin(values);
+    loginInit(values);
   };
 
   return (

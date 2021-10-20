@@ -1,6 +1,6 @@
 import axios from "axios";
 import { popupNotice } from "../utils/popupNotice";
-import { types, flow, Instance } from "mobx-state-tree";
+import { types, flow, Instance, getParent } from "mobx-state-tree";
 import LoginFormInterface from "../components/LoginForm/types";
 import RegisterFormInterface from "../components/RegisterForm/types";
 

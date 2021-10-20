@@ -1,9 +1,9 @@
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
-const modalRoot: HTMLElement = document.querySelector("modal-root")!;
-
 const ModalImage = () => {
-  return createPortal(<div>Modal</div>, modalRoot);
+  const modalDivRef = document.querySelector("#modal-root");
+  return modalDivRef && createPortal(<div>Modal</div>, modalDivRef);
 };
 
 export default ModalImage;
