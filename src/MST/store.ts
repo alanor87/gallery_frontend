@@ -31,7 +31,22 @@ const store = types
         ${error}`);
       }
     });
-    return { loginInit };
+
+    const logoutInit = flow(function* () {
+      try {
+        console.log("removing token");
+        localStorage.removeItem("token");
+        yield self.userSettings.userLogout();
+      } catch (error) {
+        popupNotice(`Error user logout.
+        ${error}`);
+      } finally {
+        self.imagesStoreSettings.purgeStorage();
+        self.userSettings.purgeStorage();
+      }
+    });
+
+    return { loginInit, logoutInit };
   });
 
 export default store.create();

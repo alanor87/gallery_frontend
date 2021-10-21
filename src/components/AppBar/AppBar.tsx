@@ -16,6 +16,10 @@ function AppBar() {
     store.interfaceSettings.toggleTheme(value);
   };
 
+  const logoutHandler = () => {
+    store.logoutInit();
+  };
+
   return (
     <header className={styles.sectionHeader}>
       {userIsAuthenticated && (
@@ -26,12 +30,17 @@ function AppBar() {
         />
       )}
       {userIsAuthenticated && (
-        <input
-          type="text"
-          className={styles.searchInput}
-          placeholder="Search"
-          autoComplete="off"
-        />
+        <>
+          <input
+            type="text"
+            className={styles.searchInput}
+            placeholder="Search"
+            autoComplete="off"
+          />
+          <span className={styles.logoutSpan} onClick={logoutHandler}>
+            Logout
+          </span>
+        </>
       )}
 
       <ToggleButton

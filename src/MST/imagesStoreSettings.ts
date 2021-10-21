@@ -1,6 +1,11 @@
 import axios from "axios";
-import { types, flow, Instance } from "mobx-state-tree";
+import { types, flow, Instance, applySnapshot } from "mobx-state-tree";
 import { popupNotice } from "../utils/popupNotice";
+
+const initialImageStoreSettings = {
+  images: [],
+  imagesPerPage: 10,
+};
 
 const ImageInfo = types
   .model({
@@ -85,7 +90,12 @@ const ImagesStore = types
       }
     });
 
-    return { fetchAllImages, editTags, getImageById };
+    const purgeStorage = () => {
+      console.log("Clear images");
+      applySnapshot(self, initialImageStoreSettings);
+    };
+
+    return { fetchAllImages, editTags, getImageById, purgeStorage };
   });
 
 export interface ImageInfoType extends Instance<typeof ImageInfo> {}

@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite";
 import PrivateRoute from "./components/_routes/PrivateRoute";
 import PublicRoute from "./components/_routes/PublicRoute";
 import AppBar from "./components/AppBar";
-import { ToggleButton, Spinner } from "./components/elements";
+import { Spinner } from "./components/elements";
 import { useEffect } from "react";
 import routes from "./routes";
 import store from "./MST/store";
@@ -23,10 +23,6 @@ function App() {
     if (lightThemeIsOn) document.body.classList.add("AppLightTheme");
     if (!lightThemeIsOn) document.body.classList.remove("AppLightTheme");
   }, [lightThemeIsOn]);
-
-  const toggleAuthHandler = (value: boolean) => {
-    store.userSettings.toggleUserIsAuthenticated(value);
-  };
 
   return (
     <div className={"appMain"}>
@@ -68,12 +64,6 @@ function App() {
             <Redirect to={userIsAuthenticated ? "/gallery" : "/login"} />
           </Switch>
         </Suspense>
-        <ToggleButton
-          style={{ position: "absolute", top: "90%", left: "90%" }}
-          toggleHandler={toggleAuthHandler}
-          isChecked={userIsAuthenticated}
-          hint="LogIn / LogOut"
-        />
       </main>
     </div>
   );

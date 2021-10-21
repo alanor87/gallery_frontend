@@ -1,10 +1,16 @@
 import axios from "axios";
 import { popupNotice } from "../utils/popupNotice";
-import { types, flow, Instance } from "mobx-state-tree";
+import { types, flow, Instance, applySnapshot } from "mobx-state-tree";
+
+const initialInterfaceSettings = {
+  backgroundImage: "",
+  lightThemeIsOn: false,
+  imagesPerPage: 10,
+  sidePanelIsOpen: false,
+};
 
 const interfaceSettings = types
   .model({
-    _id: types.optional(types.string, "6159d94c4361380380d82f9e"),
     backgroundImage: types.optional(
       types.string,
       "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_960_720.jpg"
@@ -18,7 +24,6 @@ const interfaceSettings = types
       try {
         const response = yield axios.get("/interface");
         const settings = response.data;
-        self._id = response._id;
         self.backgroundImage = settings.backgroundImage;
         self.lightThemeIsOn = settings.lightThemeIsOn;
         self.imagesPerPage = settings.imagesPerPage;
@@ -51,11 +56,17 @@ const interfaceSettings = types
       self.sidePanelIsOpen = value;
     };
 
+    const purgeStorage = () => {
+      console.log("Clear interface");
+      applySnapshot(self, initialInterfaceSettings);
+    };
+
     return {
       fetchGetInterfaceSettings,
       fetchSetInterfaceSettings,
       toggleTheme,
       toggleSidePanel,
+      purgeStorage,
     };
   });
 
