@@ -7,7 +7,7 @@ import styles from "./Gallery.module.scss";
 
 function GalleryView() {
   const imgArray = store.imagesStoreSettings.getAllImages;
-  const sideMenuOn = store.interfaceSettings.sidePanelIsOpen;
+  const sideMenuOn = store.userSettings.userInterface.sidePanelIsOpen;
 
   return (
     <section className={styles.sectionGallery}>

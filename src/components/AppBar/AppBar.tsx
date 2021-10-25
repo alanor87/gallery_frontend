@@ -6,14 +6,14 @@ import styles from "./AppBar.module.scss";
 
 function AppBar() {
   const { userIsAuthenticated } = store.userSettings;
-  const { lightThemeIsOn, sidePanelIsOpen } = store.interfaceSettings;
+  const { lightThemeIsOn, sidePanelIsOpen } = store.userSettings.userInterface;
 
   const toggleSideMenuHandler = (value: boolean) => {
-    store.interfaceSettings.toggleSidePanel(value);
+    store.userSettings.userInterface.toggleSidePanel(value);
   };
 
   const toggleThemeHandler = (value: boolean) => {
-    store.interfaceSettings.toggleTheme(value);
+    store.userSettings.userInterface.toggleTheme(value);
   };
 
   const logoutHandler = () => {

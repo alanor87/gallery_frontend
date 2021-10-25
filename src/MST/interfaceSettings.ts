@@ -1,44 +1,19 @@
 import axios from "axios";
 import { popupNotice } from "../utils/popupNotice";
-import { types, flow, Instance, applySnapshot } from "mobx-state-tree";
+import { types, flow, Instance } from "mobx-state-tree";
 
-const initialInterfaceSettings = {
-  backgroundImage: "",
-  lightThemeIsOn: false,
-  imagesPerPage: 10,
-  sidePanelIsOpen: false,
-};
-
-const interfaceSettings = types
+export const interfaceSettings = types
   .model({
-    backgroundImage: types.optional(
-      types.string,
-      "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_960_720.jpg"
-    ),
-    lightThemeIsOn: false,
-    imagesPerPage: 10,
-    sidePanelIsOpen: false,
+    backgroundImage: types.string,
+    lightThemeIsOn: types.boolean,
+    imagesPerPage: types.number,
+    sidePanelIsOpen: types.boolean,
   })
   .actions((self) => {
-    const fetchGetInterfaceSettings = flow(function* () {
-      try {
-        const response = yield axios.get("/interface");
-        const settings = response.data;
-        self.backgroundImage = settings.backgroundImage;
-        self.lightThemeIsOn = settings.lightThemeIsOn;
-        self.imagesPerPage = settings.imagesPerPage;
-      } catch (error) {
-        popupNotice(
-          `Error while fetching interface settings.
-           ${error}`
-        );
-      }
-    });
-
     const fetchSetInterfaceSettings = flow(function* () {
       try {
         const interfaceSettingsToSave = { ...self };
-        yield axios.put("/interface", interfaceSettingsToSave);
+        yield axios.patch("/users/interface", interfaceSettingsToSave);
       } catch (error) {
         popupNotice(
           `Error while saving interface settings.
@@ -56,17 +31,10 @@ const interfaceSettings = types
       self.sidePanelIsOpen = value;
     };
 
-    const purgeStorage = () => {
-      console.log("Clear interface");
-      applySnapshot(self, initialInterfaceSettings);
-    };
-
     return {
-      fetchGetInterfaceSettings,
       fetchSetInterfaceSettings,
       toggleTheme,
       toggleSidePanel,
-      purgeStorage,
     };
   });
 

@@ -4,8 +4,8 @@ import Input from "../elements/Input";
 import store from "../../MST/store";
 import * as Yup from "yup";
 import Button from "../elements/Button";
-import LoginFormInterface from "./types";
 import styles from "./LoginForm.module.scss";
+import { LoginFormInterface } from "../../types/user";
 
 const validationSchema = Yup.object({
   userEmail: Yup.string()
@@ -14,7 +14,7 @@ const validationSchema = Yup.object({
   userPassword: Yup.string().min(6).required(),
 });
 
-const formInitialValues = {
+const formInitialValues: LoginFormInterface = {
   userEmail: "",
   userPassword: "",
 };

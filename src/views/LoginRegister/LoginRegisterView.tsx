@@ -5,7 +5,7 @@ import styles from "./LoginRegisterView.module.scss";
 
 const LoginView = ({ path }: { path: string }) => {
   console.log("path : ", path);
-  const backgroundImage = store.interfaceSettings.backgroundImage;
+  const backgroundImage = store.userSettings.userInterface.backgroundImage;
   return (
     <div
       className={styles.sectionLoginRegister}

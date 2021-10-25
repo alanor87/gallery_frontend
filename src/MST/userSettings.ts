@@ -1,14 +1,24 @@
 import axios from "axios";
-import { popupNotice } from "../utils/popupNotice";
-import { types, flow, Instance, applySnapshot } from "mobx-state-tree";
-import LoginFormInterface from "../components/LoginForm/types";
-import RegisterFormInterface from "../components/RegisterForm/types";
+import { types, flow, applySnapshot } from "mobx-state-tree";
+import { interfaceSettings } from "./interfaceSettings";
+import { UserInterfaceSettings } from "../types/user";
+import AuthenticatedUserType, {
+  RegisterFormInterface,
+  LoginFormInterface,
+} from "../types/user";
 
-const initialUserSettings = {
+const initialUserSettings: AuthenticatedUserType = {
   userName: "",
   userEmail: "",
   userToken: "",
   userIsAuthenticated: false,
+  userInterface: {
+    backgroundImage:
+      "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_960_720.jpg",
+    lightThemeIsOn: false,
+    imagesPerPage: 10,
+    sidePanelIsOpen: false,
+  },
 };
 
 const userSettings = types
@@ -17,30 +27,31 @@ const userSettings = types
     userEmail: types.optional(types.string, ""),
     userToken: types.optional(types.string, ""),
     userIsAuthenticated: types.optional(types.boolean, false),
+    userInterface: interfaceSettings,
   })
   .actions((self) => {
-    const userRegister = flow(function* (newUser: RegisterFormInterface) {
-      try {
-        const registeredUser = yield axios.post("/auth/register", newUser);
-        self.userName = registeredUser.data.userName;
-        self.userEmail = registeredUser.data.userEmail;
-        self.userIsAuthenticated = true;
-      } catch (error) {
-        popupNotice(`Error registering user.
-         ${error}`);
+    const savingAuthenticatedUserData = (
+      authenticatedUserData: AuthenticatedUserType & {
+        userInterface: UserInterfaceSettings;
       }
-    });
-
-    // Error processing for possible exception in login/logout takes place a level higher -
-    // in the store.loginInit()/store.logoutInit() actions.
-    const userLogin = flow(function* (userLoginData: LoginFormInterface) {
-      const authenticatedUser = yield axios.post("/auth/login", userLoginData);
-      self.userName = authenticatedUser.data.body.userName;
-      self.userEmail = authenticatedUser.data.body.userEmail;
-      self.userToken = authenticatedUser.data.body.userToken;
+    ) => {
+      applySnapshot(self, { ...self, ...authenticatedUserData });
       localStorage.setItem("token", self.userToken);
       axios.defaults.headers.common.Authorization = `Bearer ${self.userToken}`;
+      applySnapshot(self.userInterface, authenticatedUserData.userInterface);
       self.userIsAuthenticated = true;
+    };
+
+    // Error processing for possible exception in register/login/logout takes place a level higher -
+    // in the store.loginInit()/store.logoutInit() actions.
+    const userRegister = flow(function* (newUser: RegisterFormInterface) {
+      const registeredUser = yield axios.post("/auth/register", newUser);
+      savingAuthenticatedUserData(registeredUser.data.body);
+    });
+
+    const userLogin = flow(function* (userLoginData: LoginFormInterface) {
+      const authenticatedUser = yield axios.post("/auth/login", userLoginData);
+      savingAuthenticatedUserData(authenticatedUser.data.body);
     });
 
     const userLogout = flow(function* () {
@@ -51,11 +62,9 @@ const userSettings = types
 
     const purgeStorage = () => {
       console.log("Clear user");
-      applySnapshot(self, initialUserSettings);
+      applySnapshot(self, { ...self, ...initialUserSettings });
     };
 
     return { userRegister, userLogin, userLogout, purgeStorage };
   });
-
-export interface UserSettingsType extends Instance<typeof userSettings> {}
 export default userSettings;

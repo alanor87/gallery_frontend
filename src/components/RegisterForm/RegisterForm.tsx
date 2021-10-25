@@ -4,7 +4,7 @@ import Input from "../elements/Input";
 import store from "../../MST/store";
 import * as Yup from "yup";
 import Button from "../elements/Button";
-import RegisterFormInterface from "./types";
+import { RegisterFormInterface } from "../../types/user";
 import styles from "./RegisterForm.module.scss";
 
 const validationSchema = Yup.object({
@@ -15,17 +15,16 @@ const validationSchema = Yup.object({
   userPassword: Yup.string().min(6).required(),
 });
 
-const formInitialValues = {
+const formInitialValues: RegisterFormInterface = {
   userName: "",
   userEmail: "",
   userPassword: "",
 };
 
 function RegisterForm() {
-  const { userRegister } = store.userSettings;
   const formSubmitHandler = (values: RegisterFormInterface) => {
-    console.log(values);
-    userRegister(values);
+    const { registerInit } = store;
+    registerInit(values);
   };
   return (
     <div className={styles.registerForm}>

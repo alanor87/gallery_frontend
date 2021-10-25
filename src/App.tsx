@@ -10,13 +10,9 @@ import routes from "./routes";
 import store from "./MST/store";
 
 function App() {
-  const { interfaceSettings, userSettings } = store;
+  const { userSettings } = store;
 
-  useEffect(() => {
-    interfaceSettings.fetchGetInterfaceSettings();
-  }, [interfaceSettings]);
-
-  const { lightThemeIsOn } = interfaceSettings;
+  const { lightThemeIsOn } = userSettings.userInterface;
   const { userIsAuthenticated } = userSettings;
 
   useEffect(() => {

@@ -2,8 +2,8 @@ import { types, flow } from "mobx-state-tree";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { popupNotice } from "../utils/popupNotice";
 import userSettings from "./userSettings";
-import interfaceSettings from "./interfaceSettings";
 import imagesStoreSettings from "./imagesStoreSettings";
+import { RegisterFormInterface, LoginFormInterface } from "../types/user";
 
 axios.defaults.baseURL = "http://localhost:3030/api/v1";
 
@@ -15,14 +15,37 @@ axios.interceptors.response.use(
   }
 );
 
+const initialUserSettings = {
+  userName: "",
+  userEmail: "",
+  userToken: "",
+  userIsAuthenticated: false,
+  userInterface: {
+    backgroundImage:
+      "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_960_720.jpg",
+    lightThemeIsOn: false,
+    imagesPerPage: 10,
+    sidePanelIsOpen: false,
+  },
+};
+
 const store = types
   .model({
-    userSettings: types.optional(userSettings, {}),
-    interfaceSettings: types.optional(interfaceSettings, {}),
+    userSettings: types.optional(userSettings, initialUserSettings),
     imagesStoreSettings: types.optional(imagesStoreSettings, {}),
   })
   .actions((self) => {
-    const loginInit = flow(function* (loginData: any) {
+    const registerInit = flow(function* (registerData: RegisterFormInterface) {
+      try {
+        yield self.userSettings.userRegister(registerData);
+        yield self.imagesStoreSettings.fetchAllImages();
+      } catch (error) {
+        popupNotice(`Error user register.
+        ${error}`);
+      }
+    });
+
+    const loginInit = flow(function* (loginData: LoginFormInterface) {
       try {
         yield self.userSettings.userLogin(loginData);
         yield self.imagesStoreSettings.fetchAllImages();
@@ -34,7 +57,6 @@ const store = types
 
     const logoutInit = flow(function* () {
       try {
-        console.log("removing token");
         localStorage.removeItem("token");
         yield self.userSettings.userLogout();
       } catch (error) {
@@ -46,7 +68,7 @@ const store = types
       }
     });
 
-    return { loginInit, logoutInit };
+    return { registerInit, loginInit, logoutInit };
   });
 
 export default store.create();
