@@ -91,7 +91,6 @@ const ImagesStore = types
     });
 
     const purgeStorage = () => {
-      console.log("Clear images");
       applySnapshot(self, initialImageStoreSettings);
     };
 

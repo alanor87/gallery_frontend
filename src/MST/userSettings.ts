@@ -7,7 +7,7 @@ import AuthenticatedUserType, {
   LoginFormInterface,
 } from "../types/user";
 
-const initialUserSettings: AuthenticatedUserType = {
+const initialUserSettings = {
   userName: "",
   userEmail: "",
   userToken: "",
@@ -61,8 +61,8 @@ const userSettings = types
     });
 
     const purgeStorage = () => {
-      console.log("Clear user");
-      applySnapshot(self, { ...self, ...initialUserSettings });
+      applySnapshot(self, initialUserSettings);
+      console.log("self : ", self);
     };
 
     return { userRegister, userLogin, userLogout, purgeStorage };
