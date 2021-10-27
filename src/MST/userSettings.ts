@@ -1,5 +1,6 @@
 import axios from "axios";
 import { types, flow, applySnapshot } from "mobx-state-tree";
+import { Image } from "./imagesStoreSettings";
 import { interfaceSettings } from "./interfaceSettings";
 import { UserInterfaceSettings } from "../types/user";
 import AuthenticatedUserType, {
@@ -12,6 +13,7 @@ const initialUserSettings = {
   userEmail: "",
   userToken: "",
   userIsAuthenticated: false,
+  userOwnedImages: [],
   userInterface: {
     backgroundImage:
       "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_960_720.jpg",
@@ -27,6 +29,7 @@ const userSettings = types
     userEmail: types.optional(types.string, ""),
     userToken: types.optional(types.string, ""),
     userIsAuthenticated: types.optional(types.boolean, false),
+    userOwnedImages: types.optional(types.array(Image), []),
     userInterface: interfaceSettings,
   })
   .actions((self) => {

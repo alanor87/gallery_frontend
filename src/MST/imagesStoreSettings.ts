@@ -22,7 +22,7 @@ const ImageInfo = types
     return { setIsLoading };
   });
 
-const Image = types
+export const Image = types
   .model({
     _id: types.string,
     imageURL: types.optional(types.string, ""),
