@@ -1,3 +1,5 @@
+@import "../../sass/formAnimation.scss";
+
 .registerForm {
   position: relative;
   padding: 15px;
@@ -6,6 +8,10 @@
   max-width: 450px;
   border-radius: 5px;
   transition: background-color 250ms linear;
+  animation-name: form-animation;
+  animation-duration: 800ms;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-out;
 
   & h2 {
     text-align: center;

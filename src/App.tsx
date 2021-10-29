@@ -22,7 +22,7 @@ function App() {
 
   return (
     <div className={"appMain"}>
-      <AppBar />
+      {userIsAuthenticated && <AppBar />}
       <main className="mainSection">
         <Suspense fallback={<Spinner side={100} />}>
           {" "}

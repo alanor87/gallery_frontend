@@ -40,14 +40,13 @@ function AppBar() {
           <span className={styles.logoutSpan} onClick={logoutHandler}>
             Logout
           </span>
+          <ToggleButton
+            toggleHandler={toggleThemeHandler}
+            isChecked={lightThemeIsOn}
+            hint="Dark/light theme"
+          />
         </>
       )}
-
-      <ToggleButton
-        toggleHandler={toggleThemeHandler}
-        isChecked={lightThemeIsOn}
-        hint="Dark/light theme"
-      />
     </header>
   );
 }

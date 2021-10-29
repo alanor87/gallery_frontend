@@ -1,0 +1,8 @@
+@keyframes form-animation {
+  0% {
+    transform: scale(0.9) perspective(800px) rotateX(-20deg);
+  }
+  100% {
+    transform: scale(1) perspective(0) rotateX(0deg);
+  }
+}

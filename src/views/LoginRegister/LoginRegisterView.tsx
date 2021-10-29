@@ -4,7 +4,6 @@ import RegisterForm from "../../components/RegisterForm";
 import styles from "./LoginRegisterView.module.scss";
 
 const LoginView = ({ path }: { path: string }) => {
-  console.log("path : ", path);
   const backgroundImage = store.userSettings.userInterface.backgroundImage;
   return (
     <div
