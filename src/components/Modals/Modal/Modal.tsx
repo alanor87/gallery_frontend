@@ -1,31 +1,39 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
-import store from "../../../MST/store";
 import styles from "./styles.module.scss";
 
-const modalRoot = document.querySelector("#modal-root");
+const modalRoot = document.querySelector("#modal-root")!;
 
-// function Modal({ component, ...props }) {
-//   const ModalComponent = component;
+interface Props {
+  component: React.FunctionComponent;
+  closeModalHandler: () => void;
+}
 
-//   useEffect(() => {
-//     window.addEventListener("keydown", modalBackdropClose);
-//     return function cleanup() {
-//       window.removeEventListener("keydown", modalBackdropClose);
-//     };
-//   }, []);
+const Modal: React.FunctionComponent<Props> = ({
+  component,
+  closeModalHandler,
+  ...props
+}) => {
+  const ModalComponent = component;
 
-//   const modalBackdropClose = (event) => {
-//     if (event.target === event.currentTarget || event.key === "Escape")
-//       store.interfaceSettings.toggleAuthModal();
-//   };
+  useEffect(() => {
+    window.addEventListener("keydown", modalBackdropClose);
+    return function cleanup() {
+      window.removeEventListener("keydown", modalBackdropClose);
+    };
+  }, []);
 
-//   return createPortal(
-//     <div className={styles.modalBackdrop} onClick={modalBackdropClose}>
-//       <ModalComponent {...props} />
-//     </div>,
-//     modalRoot
-//   );
-// }
+  const modalBackdropClose = (event: any) => {
+    if (event.target === event.currentTarget || event.key === "Escape")
+      closeModalHandler();
+  };
 
-// export default Modal;
+  return createPortal(
+    <div className={styles.modalBackdrop} onClick={modalBackdropClose}>
+      <ModalComponent {...props} />
+    </div>,
+    modalRoot
+  );
+};
+
+export default Modal;

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { Switch, Redirect } from "react-router-dom";
 import { observer } from "mobx-react-lite";
+import axios from "axios";
 import PrivateRoute from "./components/_routes/PrivateRoute";
 import PublicRoute from "./components/_routes/PublicRoute";
 import AppBar from "./components/AppBar";
@@ -8,9 +9,10 @@ import { Spinner } from "./components/elements";
 import { useEffect } from "react";
 import routes from "./routes";
 import store from "./MST/store";
+import { ToggleButton } from "./components/elements";
 
 function App() {
-  const { userSettings } = store;
+  const { userSettings, backendToggle } = store;
 
   const { lightThemeIsOn } = userSettings.userInterface;
   const { userIsAuthenticated } = userSettings;
@@ -60,6 +62,11 @@ function App() {
             <Redirect to={userIsAuthenticated ? "/gallery" : "/login"} />
           </Switch>
         </Suspense>
+        <ToggleButton
+          hint={axios.defaults.baseURL}
+          style={{ position: "absolute", bottom: "10px", right: "10px" }}
+          toggleHandler={backendToggle}
+        />
       </main>
     </div>
   );

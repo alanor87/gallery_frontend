@@ -29,6 +29,7 @@ export const interfaceSettings = types
 
     const toggleSidePanel = (value: boolean) => {
       self.sidePanelIsOpen = value;
+      fetchSetInterfaceSettings();
     };
 
     return {

@@ -1,11 +1,4 @@
-@keyframes form-animation {
-  0% {
-    transform: scale(0.9) perspective(800px) rotateX(-20deg);
-  }
-  100% {
-    transform: scale(1) perspective(0) rotateX(0deg);
-  }
-}
+@import "../../sass/formAnimation.scss";
 
 .loginForm {
   position: relative;
@@ -15,10 +8,7 @@
   max-width: 450px;
   border-radius: 5px;
   transition: background-color 250ms linear;
-  animation-name: form-animation;
-  animation-duration: 800ms;
-  animation-fill-mode: forwards;
-  animation-timing-function: ease-out;
+  @include form-animation-settings;
 
   & h2 {
     text-align: center;

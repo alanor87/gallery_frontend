@@ -1,0 +1,19 @@
+@import "../../../sass/formAnimation.scss";
+
+.modalUploadWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 50%;
+  padding: 10px;
+  border: 5px dashed var(--main-text-color);
+  border-radius: 25px;
+  @include form-animation-settings;
+}
+
+.modalUploadText {
+  margin: auto;
+  font-size: 25px;
+  color: var(--main-text-color);
+}

@@ -6,6 +6,7 @@ import imagesStoreSettings from "./imagesStoreSettings";
 import { RegisterFormInterface, LoginFormInterface } from "../types/user";
 
 axios.defaults.baseURL = "http://localhost:3030/api/v1";
+// axios.defaults.baseURL = "https://gallery-app-mj.herokuapp.com/api/v1";
 
 axios.interceptors.response.use(
   (res: AxiosResponse) => res,
@@ -30,10 +31,29 @@ const initialUserSettings = {
   },
 };
 
+const modalSettings = types
+  .model({
+    uploadModalIsOpen: types.optional(types.boolean, false),
+    imageModalIsOpen: types.optional(types.boolean, false),
+  })
+  .actions((self) => {
+    const uploadModalToggle = () => {
+      self.uploadModalIsOpen = !self.uploadModalIsOpen;
+    };
+    const imageModalToggle = () => {
+      self.imageModalIsOpen = !self.imageModalIsOpen;
+    };
+    return {
+      uploadModalToggle,
+      imageModalToggle,
+    };
+  });
+
 const store = types
   .model({
     userSettings: types.optional(userSettings, initialUserSettings),
     imagesStoreSettings: types.optional(imagesStoreSettings, {}),
+    modalWindowsSettings: types.optional(modalSettings, {}),
   })
   .actions((self) => {
     const registerInit = flow(function* (registerData: RegisterFormInterface) {
@@ -69,7 +89,18 @@ const store = types
       }
     });
 
-    return { registerInit, loginInit, logoutInit };
+    const backendToggle = (value: boolean) => {
+      axios.defaults.baseURL = value
+        ? "https://gallery-app-mj.herokuapp.com/api/v1"
+        : "http://localhost:3030/api/v1";
+    };
+
+    return {
+      registerInit,
+      loginInit,
+      logoutInit,
+      backendToggle,
+    };
   });
 
 export default store.create();

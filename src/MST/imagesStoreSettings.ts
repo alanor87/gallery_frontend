@@ -90,11 +90,21 @@ const ImagesStore = types
       }
     });
 
+    const uploadImage = flow(function* (imageToUpload) {
+      const uploadedImage = yield axios.post("/images/upload", imageToUpload);
+    });
+
     const purgeStorage = () => {
       applySnapshot(self, initialImageStoreSettings);
     };
 
-    return { fetchAllImages, editTags, getImageById, purgeStorage };
+    return {
+      fetchAllImages,
+      editTags,
+      getImageById,
+      uploadImage,
+      purgeStorage,
+    };
   });
 
 export interface ImageInfoType extends Instance<typeof ImageInfo> {}

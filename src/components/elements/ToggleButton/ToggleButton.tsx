@@ -2,8 +2,8 @@ import React from "react";
 import styles from "./ToggleButton.module.scss";
 
 interface Props {
-  isChecked: boolean;
-  hint: string;
+  isChecked?: boolean;
+  hint?: string;
   toggleHandler: (value: boolean) => void;
   style?: {};
 }
