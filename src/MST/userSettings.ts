@@ -65,7 +65,6 @@ const userSettings = types
 
     const purgeStorage = () => {
       applySnapshot(self, initialUserSettings);
-      console.log("self : ", self);
     };
 
     return { userRegister, userLogin, userLogout, purgeStorage };

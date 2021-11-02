@@ -1,6 +1,10 @@
 import axios from "axios";
 import { types, flow, Instance, applySnapshot } from "mobx-state-tree";
 import { popupNotice } from "../utils/popupNotice";
+import dotenv from "dotenv";
+
+dotenv.config();
+const { IMGBB_API_KEY } = process.env;
 
 const initialImageStoreSettings = {
   images: [],
@@ -91,7 +95,21 @@ const ImagesStore = types
     });
 
     const uploadImage = flow(function* (imageToUpload) {
-      const uploadedImage = yield axios.post("/images/upload", imageToUpload);
+      try {
+        const uploadedImage = yield axios.post(
+          "/images/upload",
+          imageToUpload,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("uploadedImage : ", uploadedImage);
+      } catch (error) {
+        popupNotice(`Error while uploading images.
+           ${error}`);
+      }
     });
 
     const purgeStorage = () => {

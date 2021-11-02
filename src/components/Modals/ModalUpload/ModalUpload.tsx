@@ -6,9 +6,8 @@ const ModalUpload = () => {
 
   const handleImageUpload = (e: any) => {
     e.preventDefault();
-    console.log(e.target.files[0]);
     const formData = new FormData();
-    formData.append("uploadingFile", "Here should be the file");
+    formData.append("image", e.target.files[0]);
     uploadImage(formData);
   };
   return (
