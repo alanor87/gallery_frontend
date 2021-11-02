@@ -1,10 +1,6 @@
 import axios from "axios";
 import { types, flow, Instance, applySnapshot } from "mobx-state-tree";
 import { popupNotice } from "../utils/popupNotice";
-import dotenv from "dotenv";
-
-dotenv.config();
-const { IMGBB_API_KEY } = process.env;
 
 const initialImageStoreSettings = {
   images: [],
