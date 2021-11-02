@@ -6,6 +6,8 @@ import '@pnotify/core/dist/BrightTheme.css';
 import '@pnotify/core/dist/PNotify.css';
 import "./sass/index.scss";
 
+process.env.CI = false;
+
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
