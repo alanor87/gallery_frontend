@@ -1,5 +1,11 @@
 import axios from "axios";
-import { types, flow, Instance, applySnapshot } from "mobx-state-tree";
+import {
+  types,
+  flow,
+  Instance,
+  applySnapshot,
+  getSnapshot,
+} from "mobx-state-tree";
 import { popupNotice } from "../utils/popupNotice";
 
 const initialImageStoreSettings = {
@@ -26,6 +32,7 @@ export const Image = types
   .model({
     _id: types.string,
     imageURL: types.optional(types.string, ""),
+    smallImageURL: types.optional(types.string, ""),
     imageInfo: types.optional(ImageInfo, {}),
     isPublic: types.optional(types.boolean, true),
     belongsTo: types.optional(types.string, ""),
@@ -101,7 +108,10 @@ const ImagesStore = types
             },
           }
         );
-        console.log("uploadedImage : ", uploadedImage);
+        applySnapshot(self.images, [
+          ...getSnapshot(self.images),
+          uploadedImage.data.bpdy,
+        ]);
       } catch (error) {
         popupNotice(`Error while uploading images.
            ${error}`);
