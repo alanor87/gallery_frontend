@@ -1,4 +1,4 @@
-import { types, flow } from "mobx-state-tree";
+import { types, flow, getSnapshot, applySnapshot } from "mobx-state-tree";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { popupNotice } from "../utils/popupNotice";
 import userSettings from "./userSettings";
@@ -59,7 +59,6 @@ const store = types
     const registerInit = flow(function* (registerData: RegisterFormInterface) {
       try {
         yield self.userSettings.userRegister(registerData);
-        yield self.imagesStoreSettings.fetchAllImages();
       } catch (error) {
         popupNotice(`Error user register.
         ${error}`);
@@ -69,7 +68,10 @@ const store = types
     const loginInit = flow(function* (loginData: LoginFormInterface) {
       try {
         yield self.userSettings.userLogin(loginData);
-        yield self.imagesStoreSettings.fetchAllImages();
+        applySnapshot(
+          self.imagesStoreSettings.images,
+          getSnapshot(self.userSettings.userOwnedImages)
+        );
       } catch (error) {
         popupNotice(`Error user login.
         ${error}`);

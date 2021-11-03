@@ -4,7 +4,7 @@ import {
   flow,
   Instance,
   applySnapshot,
-  getSnapshot,
+  getParent,
 } from "mobx-state-tree";
 import { popupNotice } from "../utils/popupNotice";
 
@@ -48,7 +48,6 @@ export const Image = types
 const ImagesStore = types
   .model({
     images: types.array(Image),
-    imagesPerPage: types.optional(types.number, 10),
   })
   .views((self) => ({
     get getAllImages(): ImageType[] {
@@ -60,16 +59,6 @@ const ImagesStore = types
     },
   }))
   .actions((self) => {
-    const fetchAllImages = flow(function* () {
-      try {
-        const response = yield axios.get("/images");
-        self.images = response.data;
-      } catch (error) {
-        popupNotice(`Error while fetching images.
-           ${error}`);
-      }
-    });
-
     const getImageById = (id: string) =>
       self.images.find((image) => image._id === id);
 
@@ -108,10 +97,9 @@ const ImagesStore = types
             },
           }
         );
-        applySnapshot(self.images, [
-          ...getSnapshot(self.images),
-          uploadedImage.data.bpdy,
-        ]);
+        self.images.push(uploadedImage.data.body);
+        const store: any = getParent(self, 1);
+        store.userSettings.addUserOwnedImage(uploadedImage.data.body);
       } catch (error) {
         popupNotice(`Error while uploading images.
            ${error}`);
@@ -123,7 +111,6 @@ const ImagesStore = types
     };
 
     return {
-      fetchAllImages,
       editTags,
       getImageById,
       uploadImage,

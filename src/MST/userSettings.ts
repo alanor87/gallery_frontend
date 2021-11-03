@@ -1,6 +1,7 @@
 import axios from "axios";
 import { types, flow, applySnapshot } from "mobx-state-tree";
 import { Image } from "./imagesStoreSettings";
+import { ImageType } from "./imagesStoreSettings";
 import { interfaceSettings } from "./interfaceSettings";
 import { UserInterfaceSettings } from "../types/user";
 import AuthenticatedUserType, {
@@ -63,10 +64,20 @@ const userSettings = types
       self.userIsAuthenticated = false;
     });
 
+    const addUserOwnedImage = (image: ImageType) => {
+      self.userOwnedImages.push(image);
+    };
+
     const purgeStorage = () => {
       applySnapshot(self, initialUserSettings);
     };
 
-    return { userRegister, userLogin, userLogout, purgeStorage };
+    return {
+      userRegister,
+      userLogin,
+      userLogout,
+      addUserOwnedImage,
+      purgeStorage,
+    };
   });
 export default userSettings;
