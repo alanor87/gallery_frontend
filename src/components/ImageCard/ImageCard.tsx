@@ -13,7 +13,7 @@ interface Props {
 const ImageCard: React.FC<Props> = ({ image }) => {
   console.log("Render"); // just for debugging -  to be sure memoization works)
 
-  const { _id, smallImageURL, imageInfo } = image;
+  const { _id, imageURL, imageInfo } = image;
   const { tags, likes } = imageInfo;
 
   const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
@@ -50,7 +50,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
       )}
       <NavLink to={`/image/${_id}`}>
         <div className={styles.imgWrap}>
-          <img className={styles.img} src={smallImageURL} alt="pic" />
+          <img className={styles.img} src={imageURL} alt="pic" />
         </div>
       </NavLink>
       {!tagEditorIsOpen && (
