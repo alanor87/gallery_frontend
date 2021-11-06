@@ -33,6 +33,7 @@ const TagEditor: React.FC<Props> = ({
 
   const addTag = () => {
     onAddTag(tagName);
+    setTagName("");
   };
 
   return (

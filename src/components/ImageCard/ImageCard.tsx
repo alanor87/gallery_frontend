@@ -4,6 +4,7 @@ import TagList from "../TagList";
 import store from "../../MST/store";
 import TagEditor from "../TagEditor";
 import { ImageType } from "../../MST/imagesStoreSettings";
+import { ReactComponent as IconDelete } from "../../img/icon_delete.svg";
 import styles from "./ImageCard.module.scss";
 
 interface Props {
@@ -39,6 +40,11 @@ const ImageCard: React.FC<Props> = ({ image }) => {
 
   return (
     <div className={styles.cardWrap}>
+      <div className={styles.menu}>
+        <button type="button">
+          <IconDelete style={{ width: "30px", height: "30px" }} />
+        </button>
+      </div>
       {tagEditorIsOpen && (
         <TagEditor
           tags={tags}
