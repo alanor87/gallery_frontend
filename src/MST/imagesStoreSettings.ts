@@ -5,6 +5,7 @@ import {
   Instance,
   applySnapshot,
   getParent,
+  destroy,
 } from "mobx-state-tree";
 import { popupNotice } from "../utils/popupNotice";
 
@@ -31,6 +32,7 @@ const ImageInfo = types
 export const Image = types
   .model({
     _id: types.string,
+    imageHostingId: types.string,
     imageURL: types.optional(types.string, ""),
     smallImageURL: types.optional(types.string, ""),
     imageInfo: types.optional(ImageInfo, {}),
@@ -42,7 +44,9 @@ export const Image = types
       self.imageInfo = newImageInfo;
     };
 
-    return { updateImageInfo };
+    const deleteImage = () => destroy(self);
+
+    return { updateImageInfo, deleteImage };
   });
 
 const ImagesStore = types
@@ -106,6 +110,20 @@ const ImagesStore = types
       }
     });
 
+    const deleteImage = flow(function* (imageId, imageHostingId) {
+      try {
+        const imageToDelete: ImageType = self.images.find(
+          (image) => image._id === imageId
+        )!;
+        // imageToDelete.deleteImage();
+        destroy(imageToDelete);
+        yield axios.delete(`/images/${imageId}/${imageHostingId}`);
+      } catch (error) {
+        popupNotice(`Error while deleting image.
+           ${error}`);
+      }
+    });
+
     const purgeStorage = () => {
       applySnapshot(self, initialImageStoreSettings);
     };
@@ -114,6 +132,7 @@ const ImagesStore = types
       editTags,
       getImageById,
       uploadImage,
+      deleteImage,
       purgeStorage,
     };
   });

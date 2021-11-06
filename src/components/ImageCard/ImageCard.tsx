@@ -14,7 +14,8 @@ interface Props {
 const ImageCard: React.FC<Props> = ({ image }) => {
   console.log("Render"); // just for debugging -  to be sure memoization works)
 
-  const { _id, imageURL, imageInfo } = image;
+  const { editTags, deleteImage } = store.imagesStoreSettings;
+  const { _id, imageURL, imageInfo, imageHostingId } = image;
   const { tags, likes } = imageInfo;
 
   const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
@@ -34,14 +35,18 @@ const ImageCard: React.FC<Props> = ({ image }) => {
 
   const tagsUpdate = async (newTags: string[]) => {
     setTagsAreLoading(true);
-    await store.imagesStoreSettings.editTags(_id, newTags);
+    await editTags(_id, newTags);
     setTagsAreLoading(false);
+  };
+
+  const deleteImageHandler = () => {
+    deleteImage(_id, imageHostingId);
   };
 
   return (
     <div className={styles.cardWrap}>
       <div className={styles.menu}>
-        <button type="button">
+        <button type="button" onClick={deleteImageHandler}>
           <IconDelete style={{ width: "30px", height: "30px" }} />
         </button>
       </div>
