@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
-import { Tag } from "../elements";
+import TagList from "../TagList";
 import styles from "./TagEditor.module.scss";
 
 interface Props {
@@ -45,6 +45,7 @@ const TagEditor: React.FC<Props> = ({
         <input
           value={tagName}
           type="text"
+          maxLength={30}
           className={styles.newTagInput}
           onChange={handleInputChange}
           onKeyPress={handleEnterPress}
@@ -54,16 +55,7 @@ const TagEditor: React.FC<Props> = ({
         </button>
       </div>
       {!isLoading ? (
-        <ul className={styles.tagList}>
-          {tags.map((tag, index) => (
-            <Tag
-              tagValue={tag}
-              edit={true}
-              key={index}
-              deleteTag={onTagDelete}
-            />
-          ))}
-        </ul>
+        <TagList tags={tags} tagDelHandler={onTagDelete} />
       ) : (
         <p>is loading</p>
       )}

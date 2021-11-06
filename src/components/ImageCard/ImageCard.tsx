@@ -1,6 +1,6 @@
 import { useState, memo } from "react";
 import { NavLink } from "react-router-dom";
-import { Tag } from "../elements";
+import TagList from "../TagList";
 import store from "../../MST/store";
 import TagEditor from "../TagEditor";
 import { ImageType } from "../../MST/imagesStoreSettings";
@@ -61,21 +61,13 @@ const ImageCard: React.FC<Props> = ({ image }) => {
           <div className={styles.imgCardText}>
             {!tagsAreLoading ? (
               <>
-                {" "}
-                <ul
-                  title="Double click to edit"
-                  className={styles.tagList}
+                <TagList
+                  tags={tags}
+                  title={"Double click to edit"}
+                  placeholder={"Double click to add tags"}
                   onDoubleClick={onTagEditOpen}
-                >
-                  {tags.map((tag, index) => (
-                    <Tag
-                      tagValue={tag}
-                      key={index}
-                      edit={true}
-                      deleteTag={tagDelHandler}
-                    />
-                  ))}
-                </ul>
+                  tagDelHandler={tagDelHandler}
+                />
                 <div className={styles.addInfo}>
                   <span>Likes: {likes}</span>
                 </div>{" "}
