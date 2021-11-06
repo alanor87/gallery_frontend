@@ -49,8 +49,11 @@ const ImageCard: React.FC<Props> = ({ image }) => {
         />
       )}
       <NavLink to={`/image/${_id}`}>
-        <div className={styles.imgWrap}>
-          <img className={styles.img} src={imageURL} alt="pic" />
+        <div
+          className={styles.imgWrap}
+          style={{ backgroundImage: `url(${imageURL})` }}
+        >
+          {/* <img className={styles.img} src={imageURL} alt="pic"/> */}
         </div>
       </NavLink>
       {!tagEditorIsOpen && (

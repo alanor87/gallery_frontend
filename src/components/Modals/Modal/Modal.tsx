@@ -7,11 +7,13 @@ const modalRoot = document.querySelector("#modal-root")!;
 interface Props {
   component: React.FunctionComponent;
   closeModalHandler: () => void;
+  style?: any;
 }
 
 const Modal: React.FunctionComponent<Props> = ({
   component,
   closeModalHandler,
+  style,
   ...props
 }) => {
   const ModalComponent = component;
@@ -29,7 +31,11 @@ const Modal: React.FunctionComponent<Props> = ({
   };
 
   return createPortal(
-    <div className={styles.modalBackdrop} onClick={modalBackdropClose}>
+    <div
+      className={styles.modalBackdrop}
+      onClick={modalBackdropClose}
+      style={style}
+    >
       <ModalComponent {...props} />
     </div>,
     modalRoot

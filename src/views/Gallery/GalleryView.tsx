@@ -26,9 +26,11 @@ function GalleryView() {
       ) : (
         <Spinner side={100} />
       )}
-      {uploadModalIsOpen && (
-        <Modal component={ModalUpload} closeModalHandler={uploadModalToggle} />
-      )}
+      <Modal
+        component={ModalUpload}
+        closeModalHandler={uploadModalToggle}
+        style={uploadModalIsOpen ? { opacity: 1, pointerEvents: "all" } : {}}
+      />
     </section>
   );
 }

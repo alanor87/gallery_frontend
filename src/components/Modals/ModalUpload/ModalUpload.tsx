@@ -13,7 +13,12 @@ const ModalUpload = () => {
   return (
     <div className={styles.modalUploadWrapper}>
       <div className={styles.modalUploadText}>Drag'n'drop your images here</div>
-      <input type="file" name="uploadingFile" onChange={handleImageUpload} />
+      <input
+        type="file"
+        name="uploadingFile"
+        accept="image/*"
+        onChange={handleImageUpload}
+      />
     </div>
   );
 };
