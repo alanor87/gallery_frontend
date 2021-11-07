@@ -32,7 +32,7 @@ const TagEditor: React.FC<Props> = ({
   };
 
   const addTag = () => {
-    onAddTag(tagName);
+    if (tagName) onAddTag(tagName);
     setTagName("");
   };
 
@@ -56,7 +56,11 @@ const TagEditor: React.FC<Props> = ({
         </button>
       </div>
       {!isLoading ? (
-        <TagList tags={tags} tagDelHandler={onTagDelete} />
+        <TagList
+          tags={tags}
+          tagDelHandler={onTagDelete}
+          isTagDeletable={true}
+        />
       ) : (
         <p>is loading</p>
       )}

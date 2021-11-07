@@ -1,5 +1,6 @@
 import { ToggleButton } from "../elements";
 import { observer } from "mobx-react-lite";
+import { Button } from "../elements";
 import store from "../../MST/store";
 import styles from "./AppBar.module.scss";
 
@@ -27,12 +28,8 @@ function AppBar() {
             placeholder="Search"
             autoComplete="off"
           />
-          <span className={styles.logoutSpan} onClick={logoutInit}>
-            Logout
-          </span>
-          <span className={styles.logoutSpan} onClick={uploadModalToggle}>
-            Upload
-          </span>
+          <Button type="button" text="Logout" onClick={logoutInit} />
+          <Button type="button" text="Upload" onClick={uploadModalToggle} />
           <ToggleButton
             toggleHandler={toggleTheme}
             isChecked={lightThemeIsOn}

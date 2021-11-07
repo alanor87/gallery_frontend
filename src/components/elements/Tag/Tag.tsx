@@ -14,6 +14,7 @@ const Tag: React.FC<Props> = ({ tagValue, isDeletable, deleteTag }) => {
         <button
           className={styles.tagDeleteBtn}
           onClick={() => deleteTag(tagValue)}
+          title="Delete tag"
         />
       )}
     </li>

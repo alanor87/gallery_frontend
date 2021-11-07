@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import Input from "../elements/Input";
 import store from "../../MST/store";
 import * as Yup from "yup";
-import Button from "../elements/Button";
+import { Button } from "../elements";
 import styles from "./LoginForm.module.scss";
 import { LoginFormInterface } from "../../types/user";
 

@@ -40,17 +40,18 @@
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   opacity: 0;
   transform: translateY(-20px);
   transition: transform 250ms linear, opacity 250ms linear;
+}
 
-  & button {
-    background-color: var(--color-accent);
-    opacity: 0.8;
-    cursor: pointer;
-  }
+.menuButton {
+  background-color: var(--color-accent);
+  opacity: 0.8;
+  cursor: pointer;
 }
 
 .text {

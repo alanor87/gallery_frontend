@@ -5,6 +5,7 @@ interface Props {
   tags: string[];
   title?: string;
   placeholder?: string;
+  isTagDeletable?: boolean;
   onDoubleClick?: () => void;
   tagDelHandler: (tagValue: string) => void;
 }
@@ -13,6 +14,7 @@ const TagList: React.FunctionComponent<Props> = ({
   tags,
   title,
   placeholder,
+  isTagDeletable = false,
   onDoubleClick,
   tagDelHandler,
 }) => {
@@ -27,7 +29,7 @@ const TagList: React.FunctionComponent<Props> = ({
           <Tag
             tagValue={tag}
             key={index}
-            isDeletable={true}
+            isDeletable={isTagDeletable}
             deleteTag={tagDelHandler}
           />
         ))
