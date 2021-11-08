@@ -47,20 +47,22 @@ const ImageCard: React.FC<Props> = ({ image }) => {
 
   return (
     <div className={styles.cardWrap}>
-      <div className={styles.menu}>
-        <Button
-          type="button"
-          icon={IconDelete}
-          onClick={deleteImageHandler}
-          className={styles.menuButton}
-        />
-        <Button
-          type="button"
-          icon={IconLike}
-          onClick={() => null}
-          className={styles.menuButton}
-        />
-      </div>
+      {!tagEditorIsOpen && (
+        <div className={styles.menu}>
+          <Button
+            type="button"
+            icon={IconDelete}
+            onClick={deleteImageHandler}
+            className={styles.menuButton}
+          />
+          <Button
+            type="button"
+            icon={IconLike}
+            onClick={() => null}
+            className={styles.menuButton}
+          />
+        </div>
+      )}
       {tagEditorIsOpen && (
         <TagEditor
           tags={tags}
@@ -74,9 +76,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
         <div
           className={styles.imgWrap}
           style={{ backgroundImage: `url(${imageURL})` }}
-        >
-          {/* <img className={styles.img} src={imageURL} alt="pic"/> */}
-        </div>
+        ></div>
       </NavLink>
       {!tagEditorIsOpen && (
         <div className={styles.text}>

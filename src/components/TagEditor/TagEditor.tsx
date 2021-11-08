@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
 import TagList from "../TagList";
+import { Button } from "../elements";
+import { ReactComponent as CloseIcon } from "../../img/icon_close.svg";
 import styles from "./TagEditor.module.scss";
 
 interface Props {
@@ -38,10 +40,6 @@ const TagEditor: React.FC<Props> = ({
 
   return (
     <div className={styles.tagEditor}>
-      <button
-        className={styles.tagEditorCloseBtn}
-        onClick={closeHandle}
-      ></button>
       <div className={styles.tagInputForm}>
         <input
           value={tagName}
@@ -54,6 +52,16 @@ const TagEditor: React.FC<Props> = ({
         <button className={styles.newTagBtn} onClick={addTag}>
           Add tag
         </button>
+        {/* <button
+          className={styles.tagEditorCloseBtn}
+          onClick={closeHandle}
+        ></button> */}
+        <Button
+          type="button"
+          className={styles.tagEditorCloseBtn}
+          icon={CloseIcon}
+          onClick={closeHandle}
+        />
       </div>
       {!isLoading ? (
         <TagList
