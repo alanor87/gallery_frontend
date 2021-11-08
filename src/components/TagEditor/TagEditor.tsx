@@ -49,15 +49,15 @@ const TagEditor: React.FC<Props> = ({
           onChange={handleInputChange}
           onKeyPress={handleEnterPress}
         />
-        <button className={styles.newTagBtn} onClick={addTag}>
-          Add tag
-        </button>
-        {/* <button
-          className={styles.tagEditorCloseBtn}
-          onClick={closeHandle}
-        ></button> */}
         <Button
           type="button"
+          className={styles.newTagBtn}
+          text="Add tag"
+          onClick={addTag}
+        />
+        <Button
+          type="button"
+          title="Close tag editor"
           className={styles.tagEditorCloseBtn}
           icon={CloseIcon}
           onClick={closeHandle}
