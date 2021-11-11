@@ -1,10 +1,12 @@
 .cardWrap {
   position: relative;
   align-self: center;
+  flex-grow: 1;
   width: 16%;
-  height: 210px;
   max-width: 100%;
-  margin: 5px;
+  min-width: 220px;
+  height: 210px;
+  margin: 4px;
   overflow: hidden;
   border: 1px solid var(--color-border-main);
   box-shadow: 3px 3px 5px 0px black;

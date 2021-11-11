@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite";
 import TagList from "../TagList";
 import { Button } from "../elements";
 import { ReactComponent as CloseIcon } from "../../img/icon_close.svg";
+import { ReactComponent as PlusIcon } from "../../img/icon_plus.svg";
 import styles from "./TagEditor.module.scss";
 
 interface Props {
@@ -41,6 +42,13 @@ const TagEditor: React.FC<Props> = ({
   return (
     <div className={styles.tagEditor}>
       <div className={styles.tagInputForm}>
+        <Button
+          type="button"
+          title="Close tag editor"
+          className={styles.tagEditorInputFormBtn}
+          icon={CloseIcon}
+          onClick={closeHandle}
+        />
         <input
           value={tagName}
           type="text"
@@ -51,16 +59,11 @@ const TagEditor: React.FC<Props> = ({
         />
         <Button
           type="button"
-          className={styles.newTagBtn}
-          text="Add tag"
+          className={styles.tagEditorInputFormBtn}
+          title="Add tag"
+          style={{ transform: "rotate(45deg)" }}
+          icon={PlusIcon}
           onClick={addTag}
-        />
-        <Button
-          type="button"
-          title="Close tag editor"
-          className={styles.tagEditorCloseBtn}
-          icon={CloseIcon}
-          onClick={closeHandle}
         />
       </div>
       {!isLoading ? (

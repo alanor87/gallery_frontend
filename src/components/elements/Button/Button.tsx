@@ -4,12 +4,25 @@ interface Props {
   text?: string;
   type: "button" | "submit" | "reset" | undefined;
   title?: string;
+  style?: any;
   icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   className?: string;
   onClick?: () => void;
 }
 
-function Button({ text, type, title, icon: Icon, className, onClick }: Props) {
+function Button({
+  text,
+  type,
+  title,
+  style,
+  icon: Icon,
+  className,
+  onClick,
+}: Props) {
+  const defaultStyle = {
+    width: `20px`,
+    height: `20px`,
+  };
   return (
     <button
       className={styles.commonButton + " " + className}
@@ -17,7 +30,7 @@ function Button({ text, type, title, icon: Icon, className, onClick }: Props) {
       onClick={onClick}
       title={title}
     >
-      {Icon && <Icon style={{ width: "20px", height: "20px" }} />}
+      {Icon && <Icon style={{ ...defaultStyle, ...style }} />}
       {text}
     </button>
   );
