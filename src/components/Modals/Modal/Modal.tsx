@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
+import { observer } from "mobx-react-lite";
 import { createPortal } from "react-dom";
+import store from "../../../MST/store";
 import styles from "./styles.module.scss";
 
 const modalRoot = document.querySelector("#modal-root")!;
@@ -17,18 +19,20 @@ const Modal: React.FunctionComponent<Props> = ({
   ...props
 }) => {
   const ModalComponent = component;
-
-  useEffect(() => {
-    window.addEventListener("keydown", modalBackdropClose);
-    return function cleanup() {
-      window.removeEventListener("keydown", modalBackdropClose);
-    };
-  }, []);
+  const { uploadModalIsOpen, imageModalIsOpen } = store.modalWindowsSettings;
 
   const modalBackdropClose = (event: any) => {
     if (event.target === event.currentTarget || event.key === "Escape")
       closeModalHandler();
   };
+
+  useEffect(() => {
+    if (uploadModalIsOpen || imageModalIsOpen)
+      window.addEventListener("keydown", modalBackdropClose);
+    return function cleanup() {
+      window.removeEventListener("keydown", modalBackdropClose);
+    };
+  }, [uploadModalIsOpen, imageModalIsOpen]);
 
   return createPortal(
     <div
@@ -42,4 +46,4 @@ const Modal: React.FunctionComponent<Props> = ({
   );
 };
 
-export default Modal;
+export default observer(Modal);
