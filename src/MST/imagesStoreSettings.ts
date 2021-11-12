@@ -44,9 +44,7 @@ export const Image = types
       self.imageInfo = newImageInfo;
     };
 
-    const deleteImage = () => destroy(self);
-
-    return { updateImageInfo, deleteImage };
+    return { updateImageInfo };
   });
 
 const ImagesStore = types
@@ -90,6 +88,20 @@ const ImagesStore = types
       }
     });
 
+    const editImageInfo = flow(function* (_id, newImageInfo) {
+      try {
+        const imageToEdit: ImageType = getImageById(_id)!;
+        const updatedImage = { ...imageToEdit, imageInfo: newImageInfo };
+        const updatedImageFromServer = yield axios
+          .put(`/images/${_id}`, updatedImage)
+          .then((res) => res.data.body);
+        imageToEdit.updateImageInfo(updatedImageFromServer.imageInfo);
+      } catch (error: any) {
+        popupNotice(`Error while updating image info.
+        ${error}`);
+      }
+    });
+
     const uploadImage = flow(function* (imageToUpload) {
       try {
         const uploadedImage = yield axios.post(
@@ -115,7 +127,6 @@ const ImagesStore = types
         const imageToDelete: ImageType = self.images.find(
           (image) => image._id === imageId
         )!;
-        // imageToDelete.deleteImage();
         destroy(imageToDelete);
         yield axios.delete(`/images/${imageId}/${imageHostingId}`);
       } catch (error) {
@@ -131,6 +142,7 @@ const ImagesStore = types
     return {
       editTags,
       getImageById,
+      editImageInfo,
       uploadImage,
       deleteImage,
       purgeStorage,
