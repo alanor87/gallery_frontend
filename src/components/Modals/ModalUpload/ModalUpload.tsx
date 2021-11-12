@@ -14,13 +14,6 @@ const ModalUpload = () => {
     }
   };
 
-  const handleDrop = (e: any) => {
-    console.log("Drop");
-    const formData = new FormData();
-    formData.append("image", e.dataTransfer.files[0]);
-    uploadImage(formData);
-  };
-
   return (
     <div className={styles.modalUploadWrapper}>
       <div className={styles.modalUploadText}>Drag'n'drop your images here</div>
@@ -30,7 +23,6 @@ const ModalUpload = () => {
         className={styles.modalUploadArea}
         accept="image/*"
         onChange={handleImageUpload}
-        onDrop={handleDrop}
       />
     </div>
   );
