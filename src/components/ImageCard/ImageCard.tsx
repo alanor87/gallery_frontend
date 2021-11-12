@@ -4,6 +4,7 @@ import TagList from "../TagList";
 import { Button } from "../elements";
 import store from "../../MST/store";
 import TagEditor from "../TagEditor";
+import DeleteWindow from "../DeleteWindow";
 import { ImageType } from "../../MST/imagesStoreSettings";
 import { ReactComponent as IconDelete } from "../../img/icon_delete.svg";
 import { ReactComponent as IconLike } from "../../img/icon_like.svg";
@@ -16,11 +17,12 @@ interface Props {
 const ImageCard: React.FC<Props> = ({ image }) => {
   console.log("Render"); // just for debugging -  to be sure memoization works)
 
-  const { editTags, deleteImage } = store.imagesStoreSettings;
-  const { _id, imageURL, imageInfo, imageHostingId } = image;
+  const { editTags } = store.imagesStoreSettings;
+  const { _id, imageHostingId, imageURL, imageInfo } = image;
   const { tags, likes } = imageInfo;
 
   const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
+  const [deleteWindowIsOpen, setdeleteWindowIsOpen] = useState(false);
   const [tagsAreLoading, setTagsAreLoading] = useState(imageInfo.isLoading);
 
   const onTagEditOpen = () => setTagEditorOpen(true);
@@ -41,18 +43,22 @@ const ImageCard: React.FC<Props> = ({ image }) => {
     setTagsAreLoading(false);
   };
 
-  const deleteImageHandler = () => {
-    deleteImage(_id, imageHostingId);
+  const deleteWindowOpenHandler = () => {
+    setdeleteWindowIsOpen(true);
+  };
+
+  const deleteWindowCloseHandler = () => {
+    setdeleteWindowIsOpen(false);
   };
 
   return (
     <div className={styles.cardWrap}>
-      {!tagEditorIsOpen && (
+      {!tagEditorIsOpen && !deleteWindowIsOpen && (
         <div className={styles.menu}>
           <Button
             type="button"
             icon={IconDelete}
-            onClick={deleteImageHandler}
+            onClick={deleteWindowOpenHandler}
             className={styles.menuButton}
           />
           <Button
@@ -72,13 +78,15 @@ const ImageCard: React.FC<Props> = ({ image }) => {
           isLoading={tagsAreLoading}
         />
       )}
+
       <NavLink to={`/image/${_id}`}>
         <div
           className={styles.imgWrap}
           style={{ backgroundImage: `url(${imageURL})` }}
         ></div>
       </NavLink>
-      {!tagEditorIsOpen && (
+
+      {!tagEditorIsOpen && !deleteWindowIsOpen && (
         <div className={styles.text}>
           <div className={styles.imgCardText}>
             {!tagsAreLoading ? (
@@ -101,6 +109,13 @@ const ImageCard: React.FC<Props> = ({ image }) => {
           </div>
         </div>
       )}
+      {deleteWindowIsOpen && (
+        <DeleteWindow
+          _id={_id}
+          imageHostingId={imageHostingId}
+          onCloseDeleteWindow={deleteWindowCloseHandler}
+        />
+      )}
     </div>
   );
 };
@@ -111,4 +126,4 @@ function areEqual(prevProps: any, nextProps: any) {
   return prevTags === nextTags;
 }
 
-export default memo(ImageCard, areEqual); // memization of image card.
+export default memo(ImageCard, areEqual); // memiozation of image card.

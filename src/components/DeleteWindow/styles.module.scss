@@ -1,0 +1,25 @@
+.deleteWindow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: var(--main-background-color-alpha);
+}
+
+.deleteWindowTitle {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.buttonWrapper {
+  display: flex;
+
+  & > button:nth-child(1) {
+    margin-right: 20px;
+  }
+}
