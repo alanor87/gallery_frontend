@@ -5,11 +5,13 @@ const ModalUpload = () => {
   const { uploadImage } = store.imagesStoreSettings;
 
   const handleImageUpload = (e: any) => {
-    console.log("Change");
     e.preventDefault();
     const formData = new FormData();
+    console.log("e.target.files : ", e.target.files);
     if (e.target.files.length) {
-      formData.append("image", e.target.files[0]);
+      for (let i = 0; i < e.target.files.length; i += 1) {
+        formData.append("images", e.target.files[i]);
+      }
       uploadImage(formData);
     }
   };
@@ -18,6 +20,7 @@ const ModalUpload = () => {
     <div className={styles.modalUploadWrapper}>
       <div className={styles.modalUploadText}>Drag'n'drop your images here</div>
       <input
+        multiple
         type="file"
         name="uploadingFile"
         className={styles.modalUploadArea}

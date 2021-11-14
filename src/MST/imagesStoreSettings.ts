@@ -1,12 +1,5 @@
 import axios from "axios";
-import {
-  types,
-  flow,
-  Instance,
-  applySnapshot,
-  getParent,
-  destroy,
-} from "mobx-state-tree";
+import { types, flow, Instance, applySnapshot, destroy } from "mobx-state-tree";
 import { popupNotice } from "../utils/popupNotice";
 
 const initialImageStoreSettings = {
@@ -81,20 +74,20 @@ const ImagesStore = types
       }
     });
 
-    const uploadImage = flow(function* (imageToUpload) {
+    const uploadImage = flow(function* (imagesToUpload) {
       try {
-        const uploadedImage = yield axios.post(
+        const uploadedImages = yield axios.post(
           "/images/upload",
-          imageToUpload,
+          imagesToUpload,
           {
             headers: {
               "Content-Type": "multipart/form-data",
             },
           }
         );
-        self.images.push(uploadedImage.data.body);
-        const store: any = getParent(self, 1);
-        store.userSettings.addUserOwnedImage(uploadedImage.data.body);
+        uploadedImages.data.newImages.forEach((image: ImageType) => {
+          self.images.push(image);
+        });
       } catch (error) {
         popupNotice(`Error while uploading images.
            ${error}`);
