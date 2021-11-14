@@ -17,13 +17,14 @@ interface Props {
 const ImageCard: React.FC<Props> = ({ image }) => {
   console.log("Render"); // just for debugging -  to be sure memoization works)
 
-  const { editTags } = store.imagesStoreSettings;
+  const { editImageInfo } = store.imagesStoreSettings;
+  const { userName } = store.userSettings;
   const { _id, imageHostingId, imageURL, imageInfo } = image;
   const { tags, likes } = imageInfo;
 
   const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
   const [deleteWindowIsOpen, setdeleteWindowIsOpen] = useState(false);
-  const [tagsAreLoading, setTagsAreLoading] = useState(imageInfo.isLoading);
+  const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
 
   const onTagEditOpen = () => setTagEditorOpen(true);
   const onTagEditClose = () => setTagEditorOpen(false);
@@ -38,9 +39,9 @@ const ImageCard: React.FC<Props> = ({ image }) => {
   };
 
   const tagsUpdate = async (newTags: string[]) => {
-    setTagsAreLoading(true);
-    await editTags(_id, newTags);
-    setTagsAreLoading(false);
+    setimgInfoIsLoading(true);
+    await editImageInfo(_id, { tags: newTags });
+    setimgInfoIsLoading(false);
   };
 
   const deleteWindowOpenHandler = () => {
@@ -49,6 +50,18 @@ const ImageCard: React.FC<Props> = ({ image }) => {
 
   const deleteWindowCloseHandler = () => {
     setdeleteWindowIsOpen(false);
+  };
+
+  const toggleLikeHandle = async () => {
+    setimgInfoIsLoading(true);
+    if (!likes.includes(userName)) {
+      const newLikesList = [...likes, userName];
+      await editImageInfo(_id, { likes: newLikesList });
+    } else {
+      const newLikesList = likes.filter((name) => name !== userName);
+      await editImageInfo(_id, { likes: newLikesList });
+    }
+    setimgInfoIsLoading(false);
   };
 
   return (
@@ -64,18 +77,19 @@ const ImageCard: React.FC<Props> = ({ image }) => {
           <Button
             type="button"
             icon={IconLike}
-            onClick={() => null}
+            onClick={toggleLikeHandle}
             className={styles.menuButton}
           />
         </div>
       )}
+
       {tagEditorIsOpen && (
         <TagEditor
           tags={tags}
           closeHandle={onTagEditClose}
           onTagDelete={tagDelHandler}
           onAddTag={tagAddHandler}
-          isLoading={tagsAreLoading}
+          isLoading={imgInfoIsLoading}
         />
       )}
 
@@ -89,7 +103,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
       {!tagEditorIsOpen && !deleteWindowIsOpen && (
         <div className={styles.text}>
           <div className={styles.imgCardText}>
-            {!tagsAreLoading ? (
+            {!imgInfoIsLoading ? (
               <>
                 <TagList
                   tags={tags}
@@ -100,8 +114,8 @@ const ImageCard: React.FC<Props> = ({ image }) => {
                   tagDelHandler={tagDelHandler}
                 />
                 <div className={styles.addInfo}>
-                  <span>Likes: {likes}</span>
-                </div>{" "}
+                  <span>Likes: {likes.length}</span>
+                </div>
               </>
             ) : (
               <p>is Loading</p>
@@ -109,6 +123,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
           </div>
         </div>
       )}
+
       {deleteWindowIsOpen && (
         <DeleteWindow
           _id={_id}
@@ -121,9 +136,9 @@ const ImageCard: React.FC<Props> = ({ image }) => {
 };
 
 function areEqual(prevProps: any, nextProps: any) {
-  const prevTags = JSON.stringify(prevProps.image.imageInfo.tags);
-  const nextTags = JSON.stringify(nextProps.image.imageInfo.tags);
-  return prevTags === nextTags;
+  const prevTagsLength = prevProps.image.imageInfo._id;
+  const nextTagsLength = nextProps.image.imageInfo._id;
+  return prevTagsLength === nextTagsLength;
 }
 
 export default memo(ImageCard, areEqual); // memiozation of image card.

@@ -17,7 +17,7 @@ const initialImageStoreSettings = {
 const ImageInfo = types
   .model({
     tags: types.optional(types.array(types.string), []),
-    likes: types.optional(types.number, 0),
+    likes: types.optional(types.array(types.string), []),
     isLoading: types.optional(types.boolean, false),
     error: types.optional(types.boolean, false),
   })
@@ -41,6 +41,7 @@ export const Image = types
   })
   .actions((self) => {
     const updateImageInfo = (newImageInfo: ImageInfoType) => {
+      console.log("update Image info");
       self.imageInfo = newImageInfo;
     };
 
@@ -55,7 +56,6 @@ const ImagesStore = types
     get getAllImages(): ImageType[] {
       return self.images;
     },
-
     get getFilteredImages(): ImageType[] {
       return self.images.filter((image) => image.imageInfo.tags.includes(""));
     },
@@ -64,34 +64,13 @@ const ImagesStore = types
     const getImageById = (id: string) =>
       self.images.find((image) => image._id === id);
 
-    const editTags = flow(function* (imageId: string, newTagList: string[]) {
-      try {
-        const imageToEdit: any = getImageById(imageId);
-
-        const newImageInfo = {
-          ...imageToEdit.imageInfo,
-          tags: newTagList,
-        };
-
-        const newImage = {
-          ...imageToEdit,
-          imageInfo: newImageInfo,
-        };
-
-        const updatedImage: ImageType = yield axios
-          .put(`/images/${imageId}`, newImage)
-          .then((res) => res.data.body);
-        imageToEdit.updateImageInfo(updatedImage.imageInfo);
-      } catch (error: any) {
-        popupNotice(`Error while editing tags.
-           ${error}`);
-      }
-    });
-
     const editImageInfo = flow(function* (_id, newImageInfo) {
       try {
         const imageToEdit: ImageType = getImageById(_id)!;
-        const updatedImage = { ...imageToEdit, imageInfo: newImageInfo };
+        const updatedImage = {
+          ...imageToEdit,
+          imageInfo: { ...imageToEdit.imageInfo, ...newImageInfo },
+        };
         const updatedImageFromServer = yield axios
           .put(`/images/${_id}`, updatedImage)
           .then((res) => res.data.body);
@@ -140,7 +119,6 @@ const ImagesStore = types
     };
 
     return {
-      editTags,
       getImageById,
       editImageInfo,
       uploadImage,
