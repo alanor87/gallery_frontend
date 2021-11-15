@@ -31,14 +31,14 @@ const ImageCard: React.FC<Props> = ({ image }) => {
 
   const tagDelHandler = (tagToDelete: string) => {
     const newTags = tags.filter((tag) => tag !== tagToDelete);
-    tagsUpdate(newTags);
+    tagsUpdateHandler(newTags);
   };
 
   const tagAddHandler = (tagToAdd: string) => {
-    tagsUpdate([...tags, tagToAdd]);
+    tagsUpdateHandler([...tags, tagToAdd]);
   };
 
-  const tagsUpdate = async (newTags: string[]) => {
+  const tagsUpdateHandler = async (newTags: string[]) => {
     setimgInfoIsLoading(true);
     await editImageInfo(_id, { tags: newTags });
     setimgInfoIsLoading(false);
@@ -52,7 +52,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
     setdeleteWindowIsOpen(false);
   };
 
-  const toggleLikeHandle = async () => {
+  const toggleLikeHandler = async () => {
     setimgInfoIsLoading(true);
     if (!likes.includes(userName)) {
       const newLikesList = [...likes, userName];
@@ -77,7 +77,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
           <Button
             type="button"
             icon={IconLike}
-            onClick={toggleLikeHandle}
+            onClick={toggleLikeHandler}
             className={styles.menuButton}
           />
         </div>
