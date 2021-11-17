@@ -1,32 +1,96 @@
-import styles from "./styles.module.scss";
+import { useState } from "react";
+import { Button } from "../../elements";
 import store from "../../../MST/store";
+import styles from "./styles.module.scss";
 
 const ModalUpload = () => {
+  const [previewImages, setPreviewImages] = useState<any[]>([]);
+  const [formData, setFormData] = useState(new FormData());
   const { uploadImage } = store.imagesStoreSettings;
+  const { uploadModalToggle } = store.modalWindowsSettings;
 
-  const handleImageUpload = (e: any) => {
+  const handleImagesAdd = (e: any) => {
+    console.log("Event : ", e);
     e.preventDefault();
-    const formData = new FormData();
-    console.log("e.target.files : ", e.target.files);
-    if (e.target.files.length) {
-      for (let i = 0; i < e.target.files.length; i += 1) {
-        formData.append("images", e.target.files[i]);
+    e.stopPropagation();
+    const files = e.type === "drop" ? e.dataTransfer.files : e.target.files;
+    if (files.length && files.length < 6 && previewImages.length < 5) {
+      for (let i = 0; i < files.length; i += 1) {
+        const singleImage = files[i];
+        const reader = new FileReader();
+        reader.onload = (event: any) => {
+          setPreviewImages((prevImages) => [
+            ...prevImages,
+            { key: singleImage.name, fileSource: event!.target!.result },
+          ]);
+        };
+        reader.readAsDataURL(singleImage);
+        formData.append("images", singleImage);
       }
-      uploadImage(formData);
     }
+  };
+
+  const clearUploadModal = () => {
+    setFormData(new FormData());
+    setPreviewImages([]);
+  };
+
+  const handleImagesUpload = () => {
+    uploadImage(formData);
+    uploadModalToggle();
+    clearUploadModal();
   };
 
   return (
     <div className={styles.modalUploadWrapper}>
-      <div className={styles.modalUploadText}>Drag'n'drop your images here</div>
+      {previewImages.length < 1 && (
+        <div className={styles.modalUploadPlaceholder}>
+          Drag'n'drop your images here
+        </div>
+      )}
+      {previewImages.length > 0 && (
+        <ul className={styles.modalUploadImagesPreviewWrapper}>
+          {previewImages.map(({ key, fileSource }) => (
+            <li key={key}>
+              <img
+                src={fileSource}
+                alt="uploading item"
+                className={styles.modalUploadImagesPreview}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
       <input
         multiple
         type="file"
+        title=""
         name="uploadingFile"
-        className={styles.modalUploadArea}
         accept="image/*"
-        onChange={handleImageUpload}
+        className={styles.modalUploadArea}
+        onChange={handleImagesAdd}
+        onDragOver={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onDrop={handleImagesAdd}
       />
+      <div className={styles.modalButtonWrapper}>
+        <Button
+          type="button"
+          text="Upload"
+          disabled={!previewImages.length}
+          className={styles.modalUploadButton}
+          onClick={handleImagesUpload}
+        />
+        <Button
+          type="button"
+          text="Clear"
+          disabled={!previewImages.length}
+          className={styles.modalUploadButton}
+          onClick={clearUploadModal}
+        />
+      </div>
     </div>
   );
 };

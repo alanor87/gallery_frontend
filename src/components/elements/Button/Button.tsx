@@ -5,6 +5,7 @@ interface Props {
   text?: string;
   type: "button" | "submit" | "reset" | undefined;
   title?: string;
+  disabled?: boolean;
   style?: any;
   icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   className?: string;
@@ -15,14 +16,19 @@ function Button({
   text,
   type,
   title,
+  disabled = false,
   style,
   icon: Icon,
   className,
   onClick,
 }: Props) {
+  const buttonClassName = disabled
+    ? styles.commonButton + " " + styles.disabled + " " + className
+    : styles.commonButton + " " + className;
   return (
     <button
-      className={styles.commonButton + " " + className}
+      className={buttonClassName}
+      disabled={disabled}
       type={type}
       onClick={onClick}
       title={title}

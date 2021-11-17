@@ -1,7 +1,7 @@
 .commonButton {
   display: flex;
   align-items: center;
-  padding: 7px;
+  padding: 5px;
   margin: 5px;
   border: 1px solid var(--color-border-main);
   border-radius: 5px;
@@ -14,6 +14,15 @@
   &:hover {
     border-color: var(--color-accent);
     transition: border-color 250ms linear;
+  }
+}
+
+.disabled {
+  opacity: 0.8;
+  cursor: default;
+
+  &:hover {
+    border-color: var(--color-border-main);
   }
 }
 
