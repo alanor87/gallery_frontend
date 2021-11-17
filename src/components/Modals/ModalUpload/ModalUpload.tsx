@@ -35,8 +35,8 @@ const ModalUpload = () => {
     setPreviewImages([]);
   };
 
-  const handleImagesUpload = () => {
-    uploadImage(formData);
+  const handleImagesUpload = async () => {
+    await uploadImage(formData);
     uploadModalToggle();
     clearUploadModal();
   };
