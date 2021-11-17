@@ -79,6 +79,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
             icon={IconLike}
             onClick={toggleLikeHandler}
             className={styles.menuButton}
+            text={String(likes.length)}
           />
         </div>
       )}
@@ -113,9 +114,6 @@ const ImageCard: React.FC<Props> = ({ image }) => {
                   onDoubleClick={onTagEditOpen}
                   tagDelHandler={tagDelHandler}
                 />
-                <div className={styles.addInfo}>
-                  <span>Likes: {likes.length}</span>
-                </div>
               </>
             ) : (
               <p>is Loading</p>

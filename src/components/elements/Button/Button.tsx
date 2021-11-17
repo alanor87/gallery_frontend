@@ -1,3 +1,4 @@
+import React from "react";
 import styles from "./Button.module.scss";
 
 interface Props {
@@ -19,10 +20,6 @@ function Button({
   className,
   onClick,
 }: Props) {
-  const defaultStyle = {
-    width: `20px`,
-    height: `20px`,
-  };
   return (
     <button
       className={styles.commonButton + " " + className}
@@ -30,8 +27,13 @@ function Button({
       onClick={onClick}
       title={title}
     >
-      {Icon && <Icon style={{ ...defaultStyle, ...style }} />}
-      {text}
+      {Icon && (
+        <span className={styles.buttonIcon} style={{ ...style }}>
+          <Icon />
+        </span>
+      )}
+
+      {text && <span className={styles.buttonText}>{text}</span>}
     </button>
   );
 }

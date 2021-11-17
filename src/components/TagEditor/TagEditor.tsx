@@ -61,7 +61,6 @@ const TagEditor: React.FC<Props> = ({
           type="button"
           className={styles.tagEditorInputFormBtn}
           title="Add tag"
-          style={{ transform: "rotate(45deg)" }}
           icon={PlusIcon}
           onClick={addTag}
         />
