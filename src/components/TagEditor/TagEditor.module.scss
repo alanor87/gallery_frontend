@@ -11,16 +11,9 @@
   &InputFormBtn {
     border: none;
     border-radius: 50%;
-    background-repeat: no-repeat;
-    background-size: cover;
     background-color: var(--color-accent);
     padding: 1px;
     cursor: pointer;
-
-    & > svg {
-      width: 25px;
-      height: 25px;
-    }
   }
 }
 

@@ -9,7 +9,7 @@ interface Props {
   style?: any;
   icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   className?: string;
-  onClick?: () => void;
+  onClick?: (event: any) => void;
 }
 
 function Button({
