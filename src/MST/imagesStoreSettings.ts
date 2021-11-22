@@ -12,6 +12,7 @@ const ImageInfo = types
     tags: types.optional(types.array(types.string), []),
     likes: types.optional(types.array(types.string), []),
     isLoading: types.optional(types.boolean, false),
+    isSelected: types.optional(types.boolean, false),
     error: types.optional(types.boolean, false),
   })
 
