@@ -5,8 +5,8 @@ import userSettings from "./userSettings";
 import imagesStoreSettings from "./imagesStoreSettings";
 import { RegisterFormInterface, LoginFormInterface } from "../types/user";
 
-// axios.defaults.baseURL = "http://localhost:3030/api/v1";
-axios.defaults.baseURL = "https://gallery-app-mj.herokuapp.com/api/v1";
+axios.defaults.baseURL = "http://localhost:3030/api/v1";
+// axios.defaults.baseURL = "https://gallery-app-mj.herokuapp.com/api/v1";
 
 axios.interceptors.response.use(
   (res: AxiosResponse) => res,
@@ -56,6 +56,19 @@ const store = types
     modalWindowsSettings: types.optional(modalSettings, {}),
   })
   .actions((self) => {
+    const localTokenInit = flow(function* () {
+      try {
+        yield self.userSettings.getTokenFromLocalStorage();
+        applySnapshot(
+          self.imagesStoreSettings.images,
+          getSnapshot(self.userSettings.userOwnedImages)
+        );
+      } catch (error) {
+        popupNotice(`Error user login.
+        ${error}`);
+      }
+    });
+
     const registerInit = flow(function* (registerData: RegisterFormInterface) {
       try {
         yield self.userSettings.userRegister(registerData);
@@ -98,6 +111,7 @@ const store = types
     };
 
     return {
+      localTokenInit,
       registerInit,
       loginInit,
       logoutInit,

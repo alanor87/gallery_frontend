@@ -64,6 +64,16 @@ const userSettings = types
       self.userIsAuthenticated = false;
     });
 
+    const getTokenFromLocalStorage = flow(function* () {
+      const token = localStorage.getItem("token");
+      if (token) {
+        self.userToken = token;
+        axios.defaults.headers.common.Authorization = `Bearer ${self.userToken}`;
+        const authenticatedUser = yield axios.get("users/getUserByToken");
+        savingAuthenticatedUserData(authenticatedUser.data.body);
+      }
+    });
+
     const addUserOwnedImage = (image: ImageType) => {
       self.userOwnedImages.push(image);
     };
@@ -76,6 +86,7 @@ const userSettings = types
       userRegister,
       userLogin,
       userLogout,
+      getTokenFromLocalStorage,
       addUserOwnedImage,
       purgeStorage,
     };
