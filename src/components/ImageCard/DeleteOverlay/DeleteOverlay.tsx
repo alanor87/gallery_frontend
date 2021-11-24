@@ -1,17 +1,17 @@
-import store from "../../MST/store";
-import { Button } from "../elements";
+import store from "../../../MST/store";
+import { Button } from "../../elements";
 import styles from "./styles.module.scss";
 
 interface Props {
   _id: string;
   imageHostingId: string;
-  onCloseDeleteWindow: () => void;
+  onCloseDeleteOverlay: () => void;
 }
 
-const DeleteWindow: React.FunctionComponent<Props> = ({
+const DeleteOverlay: React.FunctionComponent<Props> = ({
   _id,
   imageHostingId,
-  onCloseDeleteWindow,
+  onCloseDeleteOverlay,
 }) => {
   const { deleteImage } = store.imagesStoreSettings;
 
@@ -19,13 +19,13 @@ const DeleteWindow: React.FunctionComponent<Props> = ({
     deleteImage(_id, imageHostingId);
   };
 
-  const closeDeleteWindowHandler = () => {
-    onCloseDeleteWindow();
+  const closeDeleteOverlayHandler = () => {
+    onCloseDeleteOverlay();
   };
 
   return (
-    <div className={styles.deleteWindow}>
-      <p className={styles.deleteWindowTitle}>
+    <div className={styles.deleteOverlay}>
+      <p className={styles.deleteOverlayTitle}>
         Sure you want to delete this item?
       </p>
       <div className={styles.buttonWrapper}>
@@ -33,11 +33,11 @@ const DeleteWindow: React.FunctionComponent<Props> = ({
         <Button
           type="button"
           text="Cancel"
-          onClick={closeDeleteWindowHandler}
+          onClick={closeDeleteOverlayHandler}
         />
       </div>
     </div>
   );
 };
 
-export default DeleteWindow;
+export default DeleteOverlay;

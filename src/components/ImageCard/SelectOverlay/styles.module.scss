@@ -1,0 +1,26 @@
+.selectOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.selectCheckbox {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 5px;
+  right: 5px;
+  margin: 0px;
+  border: 2px solid currentColor;
+
+  &.checked {
+    color: var(--color-accent);
+    border: 2px solid var(--color-accent);
+  }
+}

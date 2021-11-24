@@ -1,0 +1,39 @@
+.commonCheckbox {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 8px 5px 5px;
+  margin: 5px;
+  border: 1px solid var(--color-border-main);
+  border-radius: 5px;
+  font-size: 16px;
+  color: var(--main-text-color);
+  background-color: var(--main-background-color);
+  transition: border-color 250ms linear, background-color 250ms linear;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--color-accent);
+    transition: border-color 250ms linear;
+  }
+}
+
+.disabled {
+  opacity: 0.8;
+  cursor: default;
+
+  &:hover {
+    border-color: var(--color-border-main);
+  }
+}
+
+.checkboxIcon {
+  width: 20px;
+  height: 20px;
+  & + * {
+    margin-left: 5px;
+  }
+}

@@ -4,7 +4,8 @@ import TagList from "../TagList";
 import { Button } from "../elements";
 import store from "../../MST/store";
 import TagEditor from "../TagEditor";
-import DeleteWindow from "../DeleteWindow";
+import DeleteOverlay from "./DeleteOverlay";
+import SelectOverlay from "./SelectOverlay";
 import { ImageType } from "../../MST/imagesStoreSettings";
 import { ReactComponent as IconDelete } from "../../img/icon_delete.svg";
 import { ReactComponent as IconLike } from "../../img/icon_like.svg";
@@ -22,9 +23,10 @@ const ImageCard: React.FC<Props> = ({ image }) => {
   const { _id, imageHostingId, imageURL, imageInfo } = image;
   const { tags, likes } = imageInfo;
 
-  const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
-  const [deleteWindowIsOpen, setdeleteWindowIsOpen] = useState(false);
+  const [deleteOverlayIsOpen, setdeleteOverlayIsOpen] = useState(false);
+  const [selectOverlayIsOpen, setSelectOverlayIsOpen] = useState(false);
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
+  const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
 
   const onTagEditOpen = () => setTagEditorOpen(true);
   const onTagEditClose = () => setTagEditorOpen(false);
@@ -44,12 +46,12 @@ const ImageCard: React.FC<Props> = ({ image }) => {
     setimgInfoIsLoading(false);
   };
 
-  const deleteWindowOpenHandler = () => {
-    setdeleteWindowIsOpen(true);
+  const deleteOverlayOpenHandler = () => {
+    setdeleteOverlayIsOpen(true);
   };
 
-  const deleteWindowCloseHandler = () => {
-    setdeleteWindowIsOpen(false);
+  const deleteOverlayCloseHandler = () => {
+    setdeleteOverlayIsOpen(false);
   };
 
   const toggleLikeHandler = async () => {
@@ -66,20 +68,20 @@ const ImageCard: React.FC<Props> = ({ image }) => {
 
   return (
     <div className={styles.cardWrap}>
-      {!tagEditorIsOpen && !deleteWindowIsOpen && (
+      {!tagEditorIsOpen && !deleteOverlayIsOpen && (
         <div className={styles.menu}>
-          <Button
-            type="button"
-            icon={IconDelete}
-            onClick={deleteWindowOpenHandler}
-            className={styles.menuButton}
-          />
           <Button
             type="button"
             icon={IconLike}
             onClick={toggleLikeHandler}
             className={styles.menuButton}
             text={String(likes.length)}
+          />
+          <Button
+            type="button"
+            icon={IconDelete}
+            onClick={deleteOverlayOpenHandler}
+            className={styles.menuButton}
           />
         </div>
       )}
@@ -101,7 +103,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
         ></div>
       </NavLink>
 
-      {!tagEditorIsOpen && !deleteWindowIsOpen && (
+      {!tagEditorIsOpen && !deleteOverlayIsOpen && (
         <div className={styles.text}>
           <div className={styles.imgCardText}>
             {!imgInfoIsLoading ? (
@@ -122,13 +124,15 @@ const ImageCard: React.FC<Props> = ({ image }) => {
         </div>
       )}
 
-      {deleteWindowIsOpen && (
-        <DeleteWindow
+      {deleteOverlayIsOpen && (
+        <DeleteOverlay
           _id={_id}
           imageHostingId={imageHostingId}
-          onCloseDeleteWindow={deleteWindowCloseHandler}
+          onCloseDeleteOverlay={deleteOverlayCloseHandler}
         />
       )}
+
+      {selectOverlayIsOpen && <SelectOverlay />}
     </div>
   );
 };
