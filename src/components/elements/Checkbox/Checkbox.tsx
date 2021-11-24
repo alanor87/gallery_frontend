@@ -30,7 +30,7 @@ function Checkbox({
         type="checkbox"
         checked={isChecked}
         className="isHidden"
-        onClick={onChange}
+        onChange={onChange}
       />
       {isChecked && <IconSelect className={styles.checkboxIcon} />}
     </label>

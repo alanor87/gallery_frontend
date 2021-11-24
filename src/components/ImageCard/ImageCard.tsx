@@ -24,7 +24,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
   const { tags, likes } = imageInfo;
 
   const [deleteOverlayIsOpen, setdeleteOverlayIsOpen] = useState(false);
-  const [selectOverlayIsOpen, setSelectOverlayIsOpen] = useState(false);
+  const [selectOverlayIsOpen, setSelectOverlayIsOpen] = useState(true);
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
   const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
 
