@@ -26,6 +26,11 @@ function App() {
     if (!lightThemeIsOn) document.body.classList.remove("AppLightTheme");
   }, [lightThemeIsOn]);
 
+  // If there's a token in localStorage on the initial page load / page reload  -
+  // the next lines prevent the login page flicker, showing spinner instead.
+  if (localStorage.getItem("token") && !store.userSettings.userIsAuthenticated)
+    return <Spinner text="Checking token" side={100} />;
+
   return (
     <div className={"appMain"}>
       {userIsAuthenticated && <AppBar />}

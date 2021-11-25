@@ -1,10 +1,11 @@
 import styles from "./Spinner.module.scss";
 
 interface Props {
+  text?: string;
   side: number;
 }
 
-const Spinner: React.FC<Props> = ({ side }) => {
+const Spinner: React.FC<Props> = ({ text = "Loading", side }) => {
   const containerSize = {
     width: side,
     height: side,
@@ -18,7 +19,7 @@ const Spinner: React.FC<Props> = ({ side }) => {
           style={containerSize}
         ></div>
       </div>
-      <span className={styles.spinnerText}>Loading</span>
+      <span className={styles.spinnerText}>{text}</span>
     </div>
   );
 };
