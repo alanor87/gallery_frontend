@@ -4,7 +4,7 @@ import TagList from "../TagList";
 import { Button } from "../elements";
 import store from "../../MST/store";
 import TagEditor from "../TagEditor";
-import ImageMenu from "./ImageMenu";
+import ImageMenu from "../ImageMenu";
 import DeleteOverlay from "./DeleteOverlay";
 import SelectOverlay from "./SelectOverlay";
 import { ImageType } from "../../MST/imagesStoreSettings";
@@ -14,18 +14,18 @@ import styles from "./ImageCard.module.scss";
 
 interface Props {
   image: ImageType;
+  groupSelectMode: boolean;
 }
 
-const ImageCard: React.FC<Props> = ({ image }) => {
-  console.log("Render"); // just for debugging -  to be sure memoization works)
+const ImageCard: React.FC<Props> = ({ image, groupSelectMode }) => {
+  console.log("Image render"); // just for debugging -  to be sure memoization works)
 
-  const { editImageInfo } = store.imagesStoreSettings;
+  const { editImageInfo, groupSelectModeToggle } = store.imagesStoreSettings;
   const { userName } = store.userSettings;
   const { _id, imageHostingId, imageURL, imageInfo } = image;
   const { tags, likes } = imageInfo;
 
   const [deleteOverlayIsOpen, setdeleteOverlayIsOpen] = useState(false);
-  const [selectOverlayIsOpen, setSelectOverlayIsOpen] = useState(false);
   const [imageMenuIsOpen, setImageMenuIsOpen] = useState(false);
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
   const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
@@ -37,10 +37,12 @@ const ImageCard: React.FC<Props> = ({ image }) => {
     setImageMenuIsOpen(false);
   };
   const onTagEditClose = () => setTagEditorOpen(false);
+
   const deleteOverlayOpenHandler = () => {
     setdeleteOverlayIsOpen(true);
     setImageMenuIsOpen(false);
   };
+
   const deleteOverlayCloseHandler = () => setdeleteOverlayIsOpen(false);
 
   const tagDelHandler = (tagToDelete: string) => {
@@ -72,7 +74,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
 
   return (
     <div className={styles.cardWrap}>
-      {!tagEditorIsOpen && !deleteOverlayIsOpen && (
+      {!tagEditorIsOpen && !deleteOverlayIsOpen && !groupSelectMode && (
         <div className={styles.menu}>
           <Button
             type="button"
@@ -85,6 +87,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
             isOpened={imageMenuIsOpen}
             onDelete={deleteOverlayOpenHandler}
             onEdit={tagEditOpenHandler}
+            onSelect={groupSelectModeToggle}
           />
           <div style={{ position: "relative" }}>
             <Button
@@ -114,7 +117,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
         ></div>
       </NavLink>
 
-      {!tagEditorIsOpen && !deleteOverlayIsOpen && (
+      {!tagEditorIsOpen && !deleteOverlayIsOpen && !groupSelectMode && (
         <div className={styles.text}>
           <div className={styles.imgCardText}>
             {!imgInfoIsLoading ? (
@@ -143,15 +146,18 @@ const ImageCard: React.FC<Props> = ({ image }) => {
         />
       )}
 
-      {selectOverlayIsOpen && <SelectOverlay />}
+      {groupSelectMode && <SelectOverlay />}
     </div>
   );
 };
 
 function areEqual(prevProps: any, nextProps: any) {
-  const prevTagsLength = prevProps.image.imageInfo._id;
-  const nextTagsLength = nextProps.image.imageInfo._id;
-  return prevTagsLength === nextTagsLength;
+  console.log("Memo!");
+  const idTheSame =
+    prevProps.image.imageInfo._id === nextProps.image.imageInfo._id;
+  const groupingModeIsTheSame =
+    prevProps.groupSelectMode === nextProps.groupSelectMode;
+  return idTheSame && groupingModeIsTheSame;
 }
 
 export default memo(ImageCard, areEqual); // memiozation of image card.

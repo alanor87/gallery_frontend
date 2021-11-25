@@ -9,20 +9,31 @@ import store from "../../MST/store";
 import styles from "./Gallery.module.scss";
 
 function GalleryView() {
-  const imgArray = store.imagesStoreSettings.getAllImages;
+  console.log("GalleryView render");
+  const { getAllImages, groupSelectMode } = store.imagesStoreSettings;
   const { uploadModalIsOpen, uploadModalToggle } = store.modalWindowsSettings;
   const { sidePanelIsOpen } = store.userSettings.userInterface;
+
+  const imgArray = getAllImages;
 
   return (
     <section className={styles.sectionGallery}>
       {imgArray.length ? (
         <>
           <SideMenu galleryMenuImages={imgArray} isOpen={sidePanelIsOpen} />
-          <GroupMenu />
+          {groupSelectMode && <GroupMenu />}
           <div className={styles.galleryPage}>
-            {imgArray.map((image) => (
-              <ImageCard image={image} key={image._id} />
-            ))}
+            {imgArray.map((image) => {
+              console.log("render images");
+              console.log("groupSelectMode : ", groupSelectMode);
+              return (
+                <ImageCard
+                  image={image}
+                  key={image._id}
+                  groupSelectMode={groupSelectMode}
+                />
+              );
+            })}
           </div>
         </>
       ) : (

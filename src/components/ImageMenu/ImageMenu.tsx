@@ -1,8 +1,8 @@
-import { Button } from "../../elements";
-import { ReactComponent as IconSelect } from "../../../img/icon_select.svg";
-import { ReactComponent as IconEdit } from "../../../img/icon_edit.svg";
-import { ReactComponent as IconShare } from "../../../img/icon_share.svg";
-import { ReactComponent as IconDelete } from "../../../img/icon_delete.svg";
+import { Button } from "../elements";
+import { ReactComponent as IconSelect } from "../../img/icon_select.svg";
+import { ReactComponent as IconEdit } from "../../img/icon_edit.svg";
+import { ReactComponent as IconShare } from "../../img/icon_share.svg";
+import { ReactComponent as IconDelete } from "../../img/icon_delete.svg";
 import styles from "./ImageMenu.module.scss";
 
 interface Props {
@@ -12,7 +12,12 @@ interface Props {
   onEdit?: () => void;
   onShare?: () => void;
 }
-const ImageMenu: React.FC<Props> = ({ isOpened, onDelete, onEdit }) => {
+const ImageMenu: React.FC<Props> = ({
+  isOpened,
+  onDelete,
+  onEdit,
+  onSelect,
+}) => {
   return (
     <div
       className={
@@ -24,8 +29,9 @@ const ImageMenu: React.FC<Props> = ({ isOpened, onDelete, onEdit }) => {
       <Button
         className={styles.imageMenuButton}
         type="button"
-        title="Select"
+        title="Select mode on/off"
         icon={IconSelect}
+        onClick={onSelect}
       />
       <Button
         className={styles.imageMenuButton}
