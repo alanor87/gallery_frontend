@@ -3,7 +3,7 @@ import { Checkbox } from "../../elements";
 import styles from "./styles.module.scss";
 
 const SelectOverlay = () => {
-  const [isChecked, setIsChecked] = useState(true);
+  const [isChecked, setIsChecked] = useState(false);
 
   const toggleCheckImage = () => setIsChecked(!isChecked);
   return (
@@ -12,7 +12,11 @@ const SelectOverlay = () => {
         title="check / uncheck"
         isChecked={isChecked}
         onChange={toggleCheckImage}
-        className={styles.selectCheckbox}
+        className={
+          isChecked
+            ? styles.selectCheckbox + " " + styles.checked
+            : styles.selectCheckbox
+        }
       />
     </div>
   );
