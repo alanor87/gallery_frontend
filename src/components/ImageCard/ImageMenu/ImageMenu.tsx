@@ -7,8 +7,12 @@ import styles from "./ImageMenu.module.scss";
 
 interface Props {
   isOpened: boolean;
+  onDelete?: () => void;
+  onSelect?: () => void;
+  onEdit?: () => void;
+  onShare?: () => void;
 }
-const ImageMenu: React.FC<Props> = ({ isOpened }) => {
+const ImageMenu: React.FC<Props> = ({ isOpened, onDelete, onEdit }) => {
   return (
     <div
       className={
@@ -28,6 +32,7 @@ const ImageMenu: React.FC<Props> = ({ isOpened }) => {
         type="button"
         title="Edit tags"
         icon={IconEdit}
+        onClick={onEdit}
       />
       <Button
         className={styles.imageMenuButton}
@@ -40,6 +45,7 @@ const ImageMenu: React.FC<Props> = ({ isOpened }) => {
         type="button"
         title="Delete"
         icon={IconDelete}
+        onClick={onDelete}
       />
     </div>
   );

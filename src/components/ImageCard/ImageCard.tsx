@@ -30,8 +30,18 @@ const ImageCard: React.FC<Props> = ({ image }) => {
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
   const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
 
-  const onTagEditOpen = () => setTagEditorOpen(true);
+  const imageMenuToggleHandler = () => setImageMenuIsOpen(!imageMenuIsOpen);
+
+  const tagEditOpenHandler = () => {
+    setTagEditorOpen(true);
+    setImageMenuIsOpen(false);
+  };
   const onTagEditClose = () => setTagEditorOpen(false);
+  const deleteOverlayOpenHandler = () => {
+    setdeleteOverlayIsOpen(true);
+    setImageMenuIsOpen(false);
+  };
+  const deleteOverlayCloseHandler = () => setdeleteOverlayIsOpen(false);
 
   const tagDelHandler = (tagToDelete: string) => {
     const newTags = tags.filter((tag) => tag !== tagToDelete);
@@ -46,18 +56,6 @@ const ImageCard: React.FC<Props> = ({ image }) => {
     setimgInfoIsLoading(true);
     await editImageInfo(_id, { tags: newTags });
     setimgInfoIsLoading(false);
-  };
-
-  const imageMenuToggleHandler = () => {
-    setImageMenuIsOpen(!imageMenuIsOpen);
-  };
-
-  const deleteOverlayOpenHandler = () => {
-    setdeleteOverlayIsOpen(true);
-  };
-
-  const deleteOverlayCloseHandler = () => {
-    setdeleteOverlayIsOpen(false);
   };
 
   const toggleLikeHandler = async () => {
@@ -83,7 +81,11 @@ const ImageCard: React.FC<Props> = ({ image }) => {
             className={styles.menuButton}
             text={likes.length}
           />
-          <ImageMenu isOpened={imageMenuIsOpen} />
+          <ImageMenu
+            isOpened={imageMenuIsOpen}
+            onDelete={deleteOverlayOpenHandler}
+            onEdit={tagEditOpenHandler}
+          />
           <div style={{ position: "relative" }}>
             <Button
               type="button"
@@ -122,7 +124,7 @@ const ImageCard: React.FC<Props> = ({ image }) => {
                   title={"Double click to edit"}
                   placeholder={"Double click to add tags"}
                   isTagDeletable={false}
-                  onDoubleClick={onTagEditOpen}
+                  onDoubleClick={tagEditOpenHandler}
                   tagDelHandler={tagDelHandler}
                 />
               </>
