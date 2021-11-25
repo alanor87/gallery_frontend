@@ -45,6 +45,8 @@ export const Image = types
 const ImagesStore = types
   .model({
     images: types.array(Image),
+    groupSelectMode: types.optional(types.boolean, false),
+    selectedImagesId: types.optional(types.array(types.string), [""]),
   })
   .views((self) => ({
     get getAllImages(): ImageType[] {
@@ -108,6 +110,14 @@ const ImagesStore = types
       }
     });
 
+    const groupSelectModeToggle = () => {
+      self.groupSelectMode = !self.groupSelectMode;
+    };
+
+    const selectImage = (imageId: string) => {
+      self.selectedImagesId.push(imageId);
+    };
+
     const purgeStorage = () => {
       applySnapshot(self, initialImageStoreSettings);
     };
@@ -117,6 +127,8 @@ const ImagesStore = types
       editImageInfo,
       uploadImage,
       deleteImage,
+      groupSelectModeToggle,
+      selectImage,
       purgeStorage,
     };
   });

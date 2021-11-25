@@ -4,11 +4,12 @@ import TagList from "../TagList";
 import { Button } from "../elements";
 import store from "../../MST/store";
 import TagEditor from "../TagEditor";
+import ImageMenu from "./ImageMenu";
 import DeleteOverlay from "./DeleteOverlay";
 import SelectOverlay from "./SelectOverlay";
 import { ImageType } from "../../MST/imagesStoreSettings";
-import { ReactComponent as IconDelete } from "../../img/icon_delete.svg";
 import { ReactComponent as IconLike } from "../../img/icon_like.svg";
+import { ReactComponent as IconSettings } from "../../img/icon_settings.svg";
 import styles from "./ImageCard.module.scss";
 
 interface Props {
@@ -24,7 +25,8 @@ const ImageCard: React.FC<Props> = ({ image }) => {
   const { tags, likes } = imageInfo;
 
   const [deleteOverlayIsOpen, setdeleteOverlayIsOpen] = useState(false);
-  const [selectOverlayIsOpen, setSelectOverlayIsOpen] = useState(true);
+  const [selectOverlayIsOpen, setSelectOverlayIsOpen] = useState(false);
+  const [imageMenuIsOpen, setImageMenuIsOpen] = useState(false);
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
   const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
 
@@ -44,6 +46,10 @@ const ImageCard: React.FC<Props> = ({ image }) => {
     setimgInfoIsLoading(true);
     await editImageInfo(_id, { tags: newTags });
     setimgInfoIsLoading(false);
+  };
+
+  const imageMenuToggleHandler = () => {
+    setImageMenuIsOpen(!imageMenuIsOpen);
   };
 
   const deleteOverlayOpenHandler = () => {
@@ -75,14 +81,17 @@ const ImageCard: React.FC<Props> = ({ image }) => {
             icon={IconLike}
             onClick={toggleLikeHandler}
             className={styles.menuButton}
-            text={String(likes.length)}
+            text={likes.length}
           />
-          <Button
-            type="button"
-            icon={IconDelete}
-            onClick={deleteOverlayOpenHandler}
-            className={styles.menuButton}
-          />
+          <ImageMenu isOpened={imageMenuIsOpen} />
+          <div style={{ position: "relative" }}>
+            <Button
+              type="button"
+              icon={IconSettings}
+              onClick={imageMenuToggleHandler}
+              className={styles.menuButton}
+            />
+          </div>
         </div>
       )}
 

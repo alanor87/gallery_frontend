@@ -49,6 +49,7 @@
   opacity: 0;
   transform: translateY(-20px);
   transition: transform 250ms linear, opacity 250ms linear;
+  z-index: 2;
 }
 
 .menuButton {

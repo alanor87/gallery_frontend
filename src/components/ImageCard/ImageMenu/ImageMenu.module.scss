@@ -1,0 +1,16 @@
+.imageMenuWrapper {
+  display: flex;
+  margin-left: auto;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 250ms linear;
+}
+
+.isOpened {
+  transform: scaleX(1);
+}
+
+.imageMenuButton {
+  background-color: var(--color-accent);
+  cursor: pointer;
+}

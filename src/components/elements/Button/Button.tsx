@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./Button.module.scss";
 
 interface Props {
-  text?: string;
+  text?: string | number;
   type: "button" | "submit" | "reset" | undefined;
   title?: string;
   disabled?: boolean;
@@ -39,7 +39,7 @@ function Button({
         </span>
       )}
 
-      {text && <span className={styles.buttonText}>{text}</span>}
+      {text ? <span className={styles.buttonText}>{text}</span> : null}
     </button>
   );
 }

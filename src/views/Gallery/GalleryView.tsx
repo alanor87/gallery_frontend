@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import ImageCard from "../../components/ImageCard";
+import GroupMenu from "../../components/GroupMenu";
 import SideMenu from "../../components/SideMenu/SideMenu";
 import Modal from "../../components/Modals/Modal/Modal";
 import ModalUpload from "../../components/Modals/ModalUpload";
@@ -17,6 +18,7 @@ function GalleryView() {
       {imgArray.length ? (
         <>
           <SideMenu galleryMenuImages={imgArray} isOpen={sidePanelIsOpen} />
+          <GroupMenu />
           <div className={styles.galleryPage}>
             {imgArray.map((image) => (
               <ImageCard image={image} key={image._id} />
