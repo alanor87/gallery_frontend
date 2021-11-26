@@ -3,17 +3,20 @@ import { ReactComponent as IconSelect } from "../../img/icon_select.svg";
 import { ReactComponent as IconEdit } from "../../img/icon_edit.svg";
 import { ReactComponent as IconShare } from "../../img/icon_share.svg";
 import { ReactComponent as IconDelete } from "../../img/icon_delete.svg";
+import { ReactComponent as IconSelectAll } from "../../img/icon_select_all.svg";
 import styles from "./ImageMenu.module.scss";
 
 interface Props {
   isOpened: boolean;
+  groupMenuMode?: boolean;
   onDelete?: () => void;
   onSelect?: () => void;
   onEdit?: () => void;
   onShare?: () => void;
 }
 const ImageMenu: React.FC<Props> = ({
-  isOpened,
+  isOpened = false,
+  groupMenuMode = false,
   onDelete,
   onEdit,
   onSelect,
@@ -33,6 +36,14 @@ const ImageMenu: React.FC<Props> = ({
         icon={IconSelect}
         onClick={onSelect}
       />
+      {groupMenuMode && (
+        <Button
+          className={styles.imageMenuButton}
+          type="button"
+          title="Select / deselect all"
+          icon={IconSelectAll}
+        />
+      )}
       <Button
         className={styles.imageMenuButton}
         type="button"
