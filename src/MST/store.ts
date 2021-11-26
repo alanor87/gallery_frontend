@@ -66,6 +66,7 @@ const store = types
       } catch (error) {
         popupNotice(`Error user login.
         ${error}`);
+        localStorage.removeItem("token");
       }
     });
 
