@@ -1,13 +1,24 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Checkbox } from "../../elements";
 import styles from "./styles.module.scss";
 
 const SelectOverlay = () => {
   const [isChecked, setIsChecked] = useState(false);
 
-  const toggleCheckImage = () => setIsChecked(!isChecked);
+  const toggleCheckImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setIsChecked(!isChecked);
+  };
   return (
-    <div className={styles.selectOverlay}>
+    <div
+      className={
+        isChecked
+          ? styles.selectOverlay + " " + styles.checked
+          : styles.selectOverlay
+      }
+      onClick={toggleCheckImage}
+    >
       <Checkbox
         title="check / uncheck"
         isChecked={isChecked}

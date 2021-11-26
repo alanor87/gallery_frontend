@@ -65,8 +65,12 @@ const store = types
         );
       } catch (error) {
         popupNotice(`Error user login.
-        ${error}`);
+        ${error}.
+        Reloading page.`);
+        self.userSettings.userToken = "";
         localStorage.removeItem("token");
+        axios.defaults.headers.common.Authorization = ``;
+        setTimeout(() => window.location.reload(), 3000);
       }
     });
 

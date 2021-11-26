@@ -13,7 +13,12 @@ import { ToggleButton } from "./components/elements";
 
 function App() {
   useEffect(() => {
-    store.localTokenInit();
+    console.log("App useEffect");
+    if (
+      localStorage.getItem("token") &&
+      !store.userSettings.userIsAuthenticated
+    )
+      store.localTokenInit();
   }, []);
 
   const { userSettings, backendToggle } = store;
@@ -30,7 +35,7 @@ function App() {
   // the next lines prevent the login page flicker, showing spinner instead.
   if (localStorage.getItem("token") && !store.userSettings.userIsAuthenticated)
     return <Spinner text="Checking token" side={100} />;
-
+  console.log("App render");
   return (
     <div className={"appMain"}>
       {userIsAuthenticated && <AppBar />}

@@ -25,5 +25,4 @@ const popupNotice = (text: string) =>
     stack: defaultStack,
     delay: 4000,
   });
-console.log("asdfsad");
 export { popupNotice };
