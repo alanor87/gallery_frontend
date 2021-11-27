@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, useEffect, memo } from "react";
 import { NavLink } from "react-router-dom";
 import TagList from "../TagList";
 import { Button } from "../elements";
@@ -14,15 +14,17 @@ import styles from "./ImageCard.module.scss";
 
 interface Props {
   image: ImageType;
+  isSelected: boolean;
   groupSelectMode: boolean;
 }
 
-const ImageCard: React.FC<Props> = ({ image, groupSelectMode }) => {
+const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   console.log("Image render"); // just for debugging -  to be sure memoization works)
 
-  const { editImageInfo, groupSelectModeToggle } = store.imagesStoreSettings;
+  const { editImageInfo, groupSelectModeToggle, selectedListChange } =
+    store.imagesStoreSettings;
   const { userName } = store.userSettings;
-  const { _id, imageHostingId, imageURL, imageInfo } = image;
+  const { _id, imageHostingId, imageURL, imageInfo, toggleSelectImage } = image;
   const { tags, likes } = imageInfo;
 
   const [deleteOverlayIsOpen, setdeleteOverlayIsOpen] = useState(false);
@@ -30,7 +32,21 @@ const ImageCard: React.FC<Props> = ({ image, groupSelectMode }) => {
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
   const [tagEditorIsOpen, setTagEditorOpen] = useState(false);
 
+  useEffect(() => {
+    if (!groupSelectMode) toggleSelectImage(false);
+  }, [groupSelectMode, toggleSelectImage]);
+
   const imageMenuToggleHandler = () => setImageMenuIsOpen(!imageMenuIsOpen);
+
+  const groupSelectOnHandler = () => {
+    setImageMenuIsOpen(false);
+    groupSelectModeToggle();
+  };
+
+  const toggleImageSelect = () => {
+    toggleSelectImage(!isSelected);
+    selectedListChange(_id);
+  };
 
   const tagEditOpenHandler = () => {
     setTagEditorOpen(true);
@@ -87,7 +103,7 @@ const ImageCard: React.FC<Props> = ({ image, groupSelectMode }) => {
             isOpened={imageMenuIsOpen}
             onDelete={deleteOverlayOpenHandler}
             onEdit={tagEditOpenHandler}
-            onSelect={groupSelectModeToggle}
+            onSelect={groupSelectOnHandler}
           />
           <div style={{ position: "relative" }}>
             <Button
@@ -146,18 +162,23 @@ const ImageCard: React.FC<Props> = ({ image, groupSelectMode }) => {
         />
       )}
 
-      {groupSelectMode && <SelectOverlay />}
+      {groupSelectMode && (
+        <SelectOverlay
+          isSelected={isSelected}
+          onSelectToggle={toggleImageSelect}
+        />
+      )}
     </div>
   );
 };
 
 function areEqual(prevProps: any, nextProps: any) {
-  console.log("Memo!");
   const idTheSame =
     prevProps.image.imageInfo._id === nextProps.image.imageInfo._id;
   const groupingModeIsTheSame =
     prevProps.groupSelectMode === nextProps.groupSelectMode;
-  return idTheSame && groupingModeIsTheSame;
+  const selectStateIsTheSame = prevProps.isSelected === nextProps.isSelected;
+  return idTheSame && groupingModeIsTheSame && selectStateIsTheSame;
 }
 
 export default memo(ImageCard, areEqual); // memiozation of image card.

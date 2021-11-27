@@ -1,19 +1,25 @@
-import React, { useState } from "react";
+import React from "react";
 import { Checkbox } from "../../elements";
 import styles from "./styles.module.scss";
 
-const SelectOverlay = () => {
-  const [isChecked, setIsChecked] = useState(false);
+interface Props {
+  isSelected: boolean;
+  onSelectToggle: () => void;
+}
 
+const SelectOverlay: React.FC<Props> = ({
+  isSelected = false,
+  onSelectToggle,
+}) => {
   const toggleCheckImage = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    setIsChecked(!isChecked);
+    onSelectToggle();
   };
   return (
     <div
       className={
-        isChecked
+        isSelected
           ? styles.selectOverlay + " " + styles.checked
           : styles.selectOverlay
       }
@@ -21,10 +27,10 @@ const SelectOverlay = () => {
     >
       <Checkbox
         title="check / uncheck"
-        isChecked={isChecked}
+        isChecked={isSelected}
         onChange={toggleCheckImage}
         className={
-          isChecked
+          isSelected
             ? styles.selectCheckbox + " " + styles.checked
             : styles.selectCheckbox
         }

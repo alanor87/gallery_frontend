@@ -1,5 +1,12 @@
 import axios from "axios";
-import { types, flow, Instance, applySnapshot, destroy } from "mobx-state-tree";
+import {
+  types,
+  flow,
+  Instance,
+  applySnapshot,
+  destroy,
+  getSnapshot,
+} from "mobx-state-tree";
 import { popupNotice } from "../utils/popupNotice";
 
 const initialImageStoreSettings = {
@@ -15,7 +22,6 @@ const ImageInfo = types
     isSelected: types.optional(types.boolean, false),
     error: types.optional(types.boolean, false),
   })
-
   .actions((self) => {
     const setIsLoading = (value: boolean) => {
       self.isLoading = value;
@@ -32,21 +38,23 @@ export const Image = types
     imageInfo: types.optional(ImageInfo, {}),
     isPublic: types.optional(types.boolean, true),
     belongsTo: types.optional(types.string, ""),
+    isSelected: types.optional(types.boolean, false),
   })
   .actions((self) => {
     const updateImageInfo = (newImageInfo: ImageInfoType) => {
-      console.log("update Image info");
       self.imageInfo = newImageInfo;
     };
-
-    return { updateImageInfo };
+    const toggleSelectImage = (value: boolean) => {
+      self.isSelected = value;
+    };
+    return { updateImageInfo, toggleSelectImage };
   });
 
 const ImagesStore = types
   .model({
     images: types.array(Image),
     groupSelectMode: types.optional(types.boolean, false),
-    selectedImagesId: types.optional(types.array(types.string), [""]),
+    selectedImagesId: types.optional(types.array(types.string), []),
   })
   .views((self) => ({
     get getAllImages(): ImageType[] {
@@ -63,10 +71,11 @@ const ImagesStore = types
     const editImageInfo = flow(function* (_id, newImageInfo) {
       try {
         const imageToEdit: ImageType = getImageById(_id)!;
-        const updatedImage = {
+        const updatedImage: any = {
           ...imageToEdit,
           imageInfo: { ...imageToEdit.imageInfo, ...newImageInfo },
         };
+        delete updatedImage.isSelected;
         const updatedImageFromServer = yield axios
           .put(`/images/${_id}`, updatedImage)
           .then((res) => res.data.body);
@@ -114,8 +123,42 @@ const ImagesStore = types
       self.groupSelectMode = !self.groupSelectMode;
     };
 
-    const selectImage = (imageId: string) => {
-      self.selectedImagesId.push(imageId);
+    const selectedListChange = (imageId: string) => {
+      const indexInList = self.selectedImagesId.findIndex(
+        (id) => id === imageId
+      );
+      if (indexInList === -1) {
+        self.selectedImagesId.push(imageId);
+      } else {
+        self.selectedImagesId.forEach((id, index) => {
+          if (id === imageId) self.selectedImagesId.splice(index, 1);
+        });
+      }
+      console.log(getSnapshot(self.selectedImagesId));
+    };
+
+    const toggleSelectAllImages = () => {
+      if (self.images.length === self.selectedImagesId.length) {
+        self.images.forEach((image) => {
+          image.isSelected = false;
+        });
+        applySnapshot(self.selectedImagesId, []);
+        console.log(getSnapshot(self.selectedImagesId));
+        return;
+      }
+      self.images.forEach((image) => {
+        image.isSelected = true;
+      });
+      applySnapshot(
+        self.selectedImagesId,
+        self.images.map((image) => image._id)
+      );
+      console.log(getSnapshot(self.selectedImagesId));
+    };
+
+    const clearSelectedList = () => {
+      applySnapshot(self.selectedImagesId, []);
+      console.log(getSnapshot(self.selectedImagesId));
     };
 
     const purgeStorage = () => {
@@ -128,7 +171,9 @@ const ImagesStore = types
       uploadImage,
       deleteImage,
       groupSelectModeToggle,
-      selectImage,
+      selectedListChange,
+      toggleSelectAllImages,
+      clearSelectedList,
       purgeStorage,
     };
   });

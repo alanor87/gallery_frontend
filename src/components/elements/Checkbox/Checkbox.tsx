@@ -20,7 +20,6 @@ function Checkbox({
   onChange,
   className,
 }: Props) {
-  console.log("isChecked : ", isChecked);
   const checkboxClassName = disabled
     ? styles.commonCheckbox + " " + styles.disabled + " " + className
     : styles.commonCheckbox + " " + className;

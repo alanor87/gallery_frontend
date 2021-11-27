@@ -9,7 +9,8 @@ interface Props {
   style?: any;
   icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   className?: string;
-  onClick?: (event: any) => void;
+  onClick?: (event: React.MouseEvent) => void;
+  onHover?: (event: React.MouseEvent) => void;
 }
 
 function Button({
@@ -30,7 +31,7 @@ function Button({
       className={buttonClassName}
       disabled={disabled}
       type={type}
-      onClick={onClick}
+      onClick={onClick && onClick}
       title={title}
     >
       {Icon && (

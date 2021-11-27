@@ -1,4 +1,5 @@
 import { Button } from "../elements";
+import store from "../../MST/store";
 import { ReactComponent as IconSelect } from "../../img/icon_select.svg";
 import { ReactComponent as IconEdit } from "../../img/icon_edit.svg";
 import { ReactComponent as IconShare } from "../../img/icon_share.svg";
@@ -21,6 +22,7 @@ const ImageMenu: React.FC<Props> = ({
   onEdit,
   onSelect,
 }) => {
+  const { toggleSelectAllImages } = store.imagesStoreSettings;
   return (
     <div
       className={
@@ -42,6 +44,7 @@ const ImageMenu: React.FC<Props> = ({
           type="button"
           title="Select / deselect all"
           icon={IconSelectAll}
+          onClick={toggleSelectAllImages}
         />
       )}
       <Button

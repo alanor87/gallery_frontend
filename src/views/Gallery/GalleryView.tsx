@@ -10,12 +10,21 @@ import styles from "./Gallery.module.scss";
 
 function GalleryView() {
   console.log("GalleryView render");
-  const { getAllImages, groupSelectMode, groupSelectModeToggle } =
-    store.imagesStoreSettings;
+  const {
+    getAllImages,
+    groupSelectMode,
+    groupSelectModeToggle,
+    clearSelectedList,
+  } = store.imagesStoreSettings;
   const { uploadModalIsOpen, uploadModalToggle } = store.modalWindowsSettings;
   const { sidePanelIsOpen } = store.userSettings.userInterface;
 
   const imgArray = getAllImages;
+
+  const groupModeOffHandler = () => {
+    clearSelectedList();
+    groupSelectModeToggle();
+  };
 
   return (
     <section className={styles.sectionGallery}>
@@ -28,19 +37,18 @@ function GalleryView() {
               <ImageMenu
                 isOpened={true}
                 groupMenuMode={true}
-                onSelect={groupSelectModeToggle}
+                onSelect={groupModeOffHandler}
               />
             </div>
           )}
 
           <div className={styles.galleryPage}>
             {imgArray.map((image) => {
-              console.log("render images");
-              console.log("groupSelectMode : ", groupSelectMode);
               return (
                 <ImageCard
                   image={image}
                   key={image._id}
+                  isSelected={image.isSelected}
                   groupSelectMode={groupSelectMode}
                 />
               );
