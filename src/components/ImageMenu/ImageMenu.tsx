@@ -47,13 +47,15 @@ const ImageMenu: React.FC<Props> = ({
           onClick={toggleSelectAllImages}
         />
       )}
-      <Button
-        className={styles.imageMenuButton}
-        type="button"
-        title="Edit tags"
-        icon={IconEdit}
-        onClick={onEdit}
-      />
+      {!groupMenuMode && (
+        <Button
+          className={styles.imageMenuButton}
+          type="button"
+          title="Edit tags"
+          icon={IconEdit}
+          onClick={onEdit}
+        />
+      )}
       <Button
         className={styles.imageMenuButton}
         type="button"

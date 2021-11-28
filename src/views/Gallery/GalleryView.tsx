@@ -15,6 +15,7 @@ function GalleryView() {
     groupSelectMode,
     groupSelectModeToggle,
     clearSelectedList,
+    deleteMultipleImages,
   } = store.imagesStoreSettings;
   const { uploadModalIsOpen, uploadModalToggle } = store.modalWindowsSettings;
   const { sidePanelIsOpen } = store.userSettings.userInterface;
@@ -38,6 +39,7 @@ function GalleryView() {
                 isOpened={true}
                 groupMenuMode={true}
                 onSelect={groupModeOffHandler}
+                onDelete={deleteMultipleImages}
               />
             </div>
           )}

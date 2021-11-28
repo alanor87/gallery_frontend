@@ -119,6 +119,18 @@ const ImagesStore = types
       }
     });
 
+    const deleteMultipleImages = flow(function* () {
+      try {
+        yield axios.post("/images/deleteMultiple", {
+          imagesIdToDelete: self.selectedImagesId,
+        });
+        popupNotice(`Images deleted!`);
+      } catch (error) {
+        popupNotice(`Error while deleting images.
+           ${error}`);
+      }
+    });
+
     const groupSelectModeToggle = () => {
       self.groupSelectMode = !self.groupSelectMode;
     };
@@ -170,6 +182,7 @@ const ImagesStore = types
       editImageInfo,
       uploadImage,
       deleteImage,
+      deleteMultipleImages,
       groupSelectModeToggle,
       selectedListChange,
       toggleSelectAllImages,
