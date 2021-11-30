@@ -45,7 +45,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
 
   const toggleImageSelect = () => {
     toggleSelectImage(!isSelected);
-    selectedListChange(_id);
+    selectedListChange(_id, imageHostingId);
   };
 
   const tagEditOpenHandler = () => {

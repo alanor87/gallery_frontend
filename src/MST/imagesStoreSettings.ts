@@ -54,7 +54,12 @@ const ImagesStore = types
   .model({
     images: types.array(Image),
     groupSelectMode: types.optional(types.boolean, false),
-    selectedImagesId: types.optional(types.array(types.string), []),
+    selectedImages: types.optional(
+      types.array(
+        types.model({ selectedId: types.string, imageHostingId: types.string })
+      ),
+      []
+    ),
   })
   .views((self) => ({
     get getAllImages(): ImageType[] {
@@ -121,8 +126,9 @@ const ImagesStore = types
 
     const deleteMultipleImages = flow(function* () {
       try {
+        if (!self.selectedImages.length) return;
         yield axios.post("/images/deleteMultiple", {
-          imagesIdToDelete: self.selectedImagesId,
+          imagesToDelete: self.selectedImages,
         });
         popupNotice(`Images deleted!`);
       } catch (error) {
@@ -135,42 +141,45 @@ const ImagesStore = types
       self.groupSelectMode = !self.groupSelectMode;
     };
 
-    const selectedListChange = (imageId: string) => {
-      const indexInList = self.selectedImagesId.findIndex(
-        (id) => id === imageId
+    const selectedListChange = (selectedId: string, imageHostingId: string) => {
+      const indexInList = self.selectedImages.findIndex(
+        (image) => image.selectedId === selectedId
       );
       if (indexInList === -1) {
-        self.selectedImagesId.push(imageId);
+        self.selectedImages.push({ selectedId, imageHostingId });
       } else {
-        self.selectedImagesId.forEach((id, index) => {
-          if (id === imageId) self.selectedImagesId.splice(index, 1);
+        self.selectedImages.forEach((image, index) => {
+          if (image.selectedId === selectedId)
+            self.selectedImages.splice(index, 1);
         });
       }
-      console.log(getSnapshot(self.selectedImagesId));
+      console.log(getSnapshot(self.selectedImages));
     };
 
     const toggleSelectAllImages = () => {
-      if (self.images.length === self.selectedImagesId.length) {
+      if (self.images.length === self.selectedImages.length) {
         self.images.forEach((image) => {
           image.isSelected = false;
         });
-        applySnapshot(self.selectedImagesId, []);
-        console.log(getSnapshot(self.selectedImagesId));
+        clearSelectedList();
         return;
       }
       self.images.forEach((image) => {
         image.isSelected = true;
       });
       applySnapshot(
-        self.selectedImagesId,
-        self.images.map((image) => image._id)
+        self.selectedImages,
+        self.images.map((image) => ({
+          selectedId: image._id,
+          imageHostingId: image.imageHostingId,
+        }))
       );
-      console.log(getSnapshot(self.selectedImagesId));
+      console.log(getSnapshot(self.selectedImages));
     };
 
     const clearSelectedList = () => {
-      applySnapshot(self.selectedImagesId, []);
-      console.log(getSnapshot(self.selectedImagesId));
+      applySnapshot(self.selectedImages, []);
+      console.log(getSnapshot(self.selectedImages));
     };
 
     const purgeStorage = () => {
