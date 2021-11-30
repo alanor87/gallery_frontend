@@ -1,7 +1,12 @@
 .sectionGallery {
+  position: relative;
   overflow-y: scroll;
   height: calc(100vh - 45px);
-  transition: background-color 250ms linear;
+  transition: background-color 250ms linear, padding-top 250ms linear;
+
+  &.groupSelectMode {
+    padding-top: 50px;
+  }
 }
 
 .galleryPage {
@@ -10,8 +15,29 @@
   align-content: flex-start;
   flex-wrap: wrap;
   overflow-y: auto;
-  padding-top: 10px;
+  padding-top: 5px;
   padding-bottom: 10px;
   background-color: var(--main-background-color);
   transition: background-color 250ms linear;
+}
+
+.groupImageMenuWrapper {
+  position: fixed;
+  top: 65px;
+  width: 100%;
+  height: 0;
+  display: flex;
+  justify-content: center;
+  background-color: var(--main-background-color-alpha);
+  opacity: 0;
+  transition: height 250ms linear, opacity 200ms linear;
+  overflow: hidden;
+  z-index: 3;
+
+  &.groupSelectMode {
+    height: 52px;
+    padding-top: 3px;
+    padding-bottom: 5px;
+    opacity: 1;
+  }
 }

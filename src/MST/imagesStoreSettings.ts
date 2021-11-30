@@ -36,7 +36,7 @@ export const Image = types
     imageURL: types.optional(types.string, ""),
     smallImageURL: types.optional(types.string, ""),
     imageInfo: types.optional(ImageInfo, {}),
-    isPublic: types.optional(types.boolean, true),
+    isPublic: types.optional(types.boolean, false),
     belongsTo: types.optional(types.string, ""),
     isSelected: types.optional(types.boolean, false),
   })
@@ -91,7 +91,7 @@ const ImagesStore = types
       }
     });
 
-    const uploadImage = flow(function* (imagesToUpload) {
+    const uploadImages = flow(function* (imagesToUpload) {
       try {
         const uploadedImages = yield axios.post(
           "/images/upload",
@@ -131,7 +131,7 @@ const ImagesStore = types
           imagesToDelete: self.selectedImages,
         });
         const filteredImages = self.images.filter(
-          (image) => !response.newImagesList.includes(image._id)
+          (image) => !response.data.newImagesList.includes(image._id)
         );
         applySnapshot(self.images, filteredImages);
         popupNotice(`Images deleted!`);
@@ -193,7 +193,7 @@ const ImagesStore = types
     return {
       getImageById,
       editImageInfo,
-      uploadImage,
+      uploadImages,
       deleteImage,
       deleteMultipleImages,
       groupSelectModeToggle,

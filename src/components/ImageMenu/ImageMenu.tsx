@@ -8,7 +8,6 @@ import { ReactComponent as IconSelectAll } from "../../img/icon_select_all.svg";
 import styles from "./ImageMenu.module.scss";
 
 interface Props {
-  isOpened: boolean;
   groupMenuMode?: boolean;
   onDelete?: () => void;
   onSelect?: () => void;
@@ -16,7 +15,6 @@ interface Props {
   onShare?: () => void;
 }
 const ImageMenu: React.FC<Props> = ({
-  isOpened = false,
   groupMenuMode = false,
   onDelete,
   onEdit,
@@ -24,13 +22,7 @@ const ImageMenu: React.FC<Props> = ({
 }) => {
   const { toggleSelectAllImages } = store.imagesStoreSettings;
   return (
-    <div
-      className={
-        isOpened
-          ? styles.imageMenuWrapper + " " + styles.isOpened
-          : styles.imageMenuWrapper
-      }
-    >
+    <div className={styles.imageMenuWrapper}>
       <Button
         className={styles.imageMenuButton}
         type="button"

@@ -26,6 +26,17 @@
   }
 }
 
+.imageMenuWrapper {
+  margin-left: auto;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 250ms linear;
+
+  &.isOpened {
+    transform: scaleX(1);
+  }
+}
+
 .imgWrap {
   height: 100%;
   background-size: cover;

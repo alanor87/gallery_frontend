@@ -7,7 +7,7 @@ import styles from "./styles.module.scss";
 const ModalUpload = () => {
   const [previewImages, setPreviewImages] = useState<any[]>([]);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
-  const { uploadImage } = store.imagesStoreSettings;
+  const { uploadImages } = store.imagesStoreSettings;
   const { uploadModalToggle } = store.modalWindowsSettings;
 
   const handleImagesAdd = (e: any) => {
@@ -57,7 +57,7 @@ const ModalUpload = () => {
       formData.append("images", file);
     });
     uploadModalToggle();
-    await uploadImage(formData);
+    await uploadImages(formData);
     clearUploadModal();
   };
 

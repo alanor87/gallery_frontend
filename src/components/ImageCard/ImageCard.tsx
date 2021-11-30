@@ -99,12 +99,20 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
             className={styles.menuButton}
             text={likes.length}
           />
-          <ImageMenu
-            isOpened={imageMenuIsOpen}
-            onDelete={deleteOverlayOpenHandler}
-            onEdit={tagEditOpenHandler}
-            onSelect={groupSelectOnHandler}
-          />
+          <div
+            className={
+              imageMenuIsOpen
+                ? styles.imageMenuWrapper + " " + styles.isOpened
+                : styles.imageMenuWrapper
+            }
+          >
+            <ImageMenu
+              onDelete={deleteOverlayOpenHandler}
+              onEdit={tagEditOpenHandler}
+              onSelect={groupSelectOnHandler}
+            />
+          </div>
+
           <div style={{ position: "relative" }}>
             <Button
               type="button"

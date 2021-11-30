@@ -28,21 +28,30 @@ function GalleryView() {
   };
 
   return (
-    <section className={styles.sectionGallery}>
+    <section
+      className={
+        groupSelectMode
+          ? styles.sectionGallery + " " + styles.groupSelectMode
+          : styles.sectionGallery
+      }
+    >
       {imgArray.length ? (
         <>
           <SideMenu galleryMenuImages={imgArray} isOpen={sidePanelIsOpen} />
 
-          {groupSelectMode && (
-            <div style={{ marginTop: "10px" }}>
-              <ImageMenu
-                isOpened={true}
-                groupMenuMode={true}
-                onSelect={groupModeOffHandler}
-                onDelete={deleteMultipleImages}
-              />
-            </div>
-          )}
+          <div
+            className={
+              groupSelectMode
+                ? styles.groupImageMenuWrapper + " " + styles.groupSelectMode
+                : styles.groupImageMenuWrapper
+            }
+          >
+            <ImageMenu
+              groupMenuMode={true}
+              onSelect={groupModeOffHandler}
+              onDelete={deleteMultipleImages}
+            />
+          </div>
 
           <div className={styles.galleryPage}>
             {imgArray.map((image) => {
