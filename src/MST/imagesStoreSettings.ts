@@ -130,9 +130,10 @@ const ImagesStore = types
         const response = yield axios.post("/images/deleteMultiple", {
           imagesToDelete: self.selectedImages,
         });
-        const filteredImages = self.images.filter(
-          (image) => !response.data.newImagesList.includes(image._id)
-        );
+        const filteredImages = self.images.filter((image) => {
+          console.log(response.data.newImagesList);
+          return !response.data.newImagesList.includes(image._id);
+        });
         applySnapshot(self.images, filteredImages);
         popupNotice(`Images deleted!`);
       } catch (error) {
