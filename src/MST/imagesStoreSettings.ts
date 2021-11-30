@@ -113,11 +113,11 @@ const ImagesStore = types
 
     const deleteImage = flow(function* (imageId, imageHostingId) {
       try {
+        yield axios.delete(`/images/${imageId}/${imageHostingId}`);
         const imageToDelete: ImageType = self.images.find(
           (image) => image._id === imageId
         )!;
         destroy(imageToDelete);
-        yield axios.delete(`/images/${imageId}/${imageHostingId}`);
       } catch (error) {
         popupNotice(`Error while deleting image.
            ${error}`);
@@ -127,9 +127,13 @@ const ImagesStore = types
     const deleteMultipleImages = flow(function* () {
       try {
         if (!self.selectedImages.length) return;
-        yield axios.post("/images/deleteMultiple", {
+        const response = yield axios.post("/images/deleteMultiple", {
           imagesToDelete: self.selectedImages,
         });
+        const filteredImages = self.images.filter(
+          (image) => !response.newImagesList.includes(image._id)
+        );
+        applySnapshot(self.images, filteredImages);
         popupNotice(`Images deleted!`);
       } catch (error) {
         popupNotice(`Error while deleting images.
