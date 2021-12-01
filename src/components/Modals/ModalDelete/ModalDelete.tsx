@@ -4,11 +4,13 @@ import styles from "./styles.module.scss";
 
 const ModalDelete = () => {
   const { selectedImages, deleteMultipleImages } = store.imagesStoreSettings;
-  const { setDeleteModalOpen } = store.modalWindowsSettings;
+
+  const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 
   const deleteClickHandler = () => {
     deleteMultipleImages();
-    setDeleteModalOpen(false);
+    setModalComponentType("none");
+    setModalOpen(false);
   };
   return (
     <div className={styles.modalDeleteForm}>
@@ -18,7 +20,7 @@ const ModalDelete = () => {
       </p>
       <div className={styles.buttonWrapper}>
         <Button text="Delete" onClick={deleteClickHandler} />
-        <Button text="Cancel" onClick={() => setDeleteModalOpen(false)} />
+        <Button text="Cancel" onClick={() => setModalOpen(false)} />
       </div>
     </div>
   );

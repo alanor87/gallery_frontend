@@ -1,47 +1,68 @@
 import React, { useEffect } from "react";
+import ModalUpload from "../ModalUpload";
+import ModalDelete from "../ModalDelete";
+import ModalShare from "../ModalShare";
 import { observer } from "mobx-react-lite";
 import { createPortal } from "react-dom";
 import store from "../../../MST/store";
-import styles from "./styles.module.scss";
+import styles from "./Modal.module.scss";
 
 const modalRoot = document.querySelector("#modal-root")!;
 
 interface Props {
-  component: React.FunctionComponent;
-  closeModalHandler: () => void;
   style?: any;
 }
 
-const Modal: React.FunctionComponent<Props> = ({
-  component,
-  closeModalHandler,
-  style,
-  ...props
-}) => {
-  const ModalComponent = component;
-  const { uploadModalIsOpen, imageModalIsOpen, deleteModalIsOpen } =
-    store.modalWindowsSettings;
+const Modal: React.FunctionComponent<Props> = ({ style }) => {
+  const {
+    modalComponentType,
+    modalIsOpened,
+    setModalOpen,
+    setModalComponentType,
+  } = store.modalWindowsSettings;
 
   const modalBackdropClose = (event: any) => {
-    if (event.target === event.currentTarget || event.key === "Escape")
-      closeModalHandler();
+    if (event.target === event.currentTarget || event.key === "Escape") {
+      setModalOpen(false);
+      setModalComponentType("none");
+    }
+  };
+
+  const getCurrentModalComponent = () => {
+    switch (modalComponentType) {
+      case "image":
+        return null;
+      case "delete":
+        return <ModalDelete />;
+      case "share":
+        return <ModalShare />;
+      case "upload":
+        return <ModalUpload />;
+      case "none":
+        return null;
+      default:
+        return null;
+    }
   };
 
   useEffect(() => {
-    if (uploadModalIsOpen || imageModalIsOpen || deleteModalIsOpen)
-      window.addEventListener("keydown", modalBackdropClose);
+    if (modalIsOpened) window.addEventListener("keydown", modalBackdropClose);
     return function cleanup() {
       window.removeEventListener("keydown", modalBackdropClose);
     };
-  }, [uploadModalIsOpen, imageModalIsOpen, deleteModalIsOpen]);
+  }, [modalIsOpened, modalBackdropClose]);
 
   return createPortal(
     <div
-      className={styles.modalBackdrop}
+      className={
+        modalIsOpened
+          ? styles.modalBackdrop + " " + styles.isOpened
+          : styles.modalBackdrop
+      }
       onClick={modalBackdropClose}
       style={style}
     >
-      <ModalComponent {...props} />
+      {getCurrentModalComponent()}
     </div>,
     modalRoot
   );

@@ -6,7 +6,6 @@ const SideMenuThumb = ({ image }) => {
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
-    console.log("Open!!");
   };
   return (
     <div className={styles.thumbContainer}>

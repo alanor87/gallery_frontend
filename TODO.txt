@@ -1,0 +1,2 @@
+- work on the keyboard accessibility - tabIndex feature for all interactive elements with all the styles needed.
+- change the scheme of modal windows render - so there would not be all the modals opened at once, even invisible.

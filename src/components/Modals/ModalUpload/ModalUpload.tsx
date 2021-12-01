@@ -8,7 +8,7 @@ const ModalUpload = () => {
   const [previewImages, setPreviewImages] = useState<any[]>([]);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
   const { uploadImages } = store.imagesStoreSettings;
-  const { setUploadModalOpen } = store.modalWindowsSettings;
+  const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 
   const handleImagesAdd = (e: any) => {
     console.log("handleImagesAdd");
@@ -56,7 +56,8 @@ const ModalUpload = () => {
     filesToUpload.forEach((file) => {
       formData.append("images", file);
     });
-    setUploadModalOpen(false);
+    setModalComponentType("none");
+    setModalOpen(false);
     await uploadImages(formData);
     clearUploadModal();
   };

@@ -1,3 +1,12 @@
+@keyframes animate {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .modalBackdrop {
   position: absolute;
   display: flex;
@@ -11,5 +20,12 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 400ms linear;
+  animation-name: animate;
+  animation-delay: 2000ms;
   z-index: 10;
+}
+
+.isOpened {
+  opacity: 1;
+  pointer-events: all;
 }

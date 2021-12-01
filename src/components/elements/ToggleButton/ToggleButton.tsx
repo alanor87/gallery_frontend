@@ -19,12 +19,10 @@ const ToggleButton: React.FC<Props> = ({
   };
 
   const onFocusHandler = (e: React.FocusEvent) => {
-    console.log(e);
     setIsFocused(true);
   };
 
   const onBlurHandler = (e: React.FocusEvent) => {
-    console.log(e);
     setIsFocused(false);
   };
 

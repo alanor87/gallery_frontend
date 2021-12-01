@@ -22,7 +22,6 @@ const formInitialValues: LoginFormInterface = {
 function LoginForm() {
   const { loginInit } = store;
   const formSubmitHandler = (values: LoginFormInterface) => {
-    console.log(values);
     loginInit(values);
   };
 

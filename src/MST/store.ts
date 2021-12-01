@@ -31,26 +31,26 @@ const initialUserSettings = {
   },
 };
 
+type modalWindowTypes = "image" | "delete" | "share" | "upload" | "none";
+
 const modalSettings = types
   .model({
-    uploadModalIsOpen: types.optional(types.boolean, false),
-    imageModalIsOpen: types.optional(types.boolean, false),
-    deleteModalIsOpen: types.optional(types.boolean, false),
+    modalComponentType: types.optional(
+      types.enumeration(["image", "delete", "share", "upload", "none"]),
+      "none"
+    ),
+    modalIsOpened: types.optional(types.boolean, false),
   })
   .actions((self) => {
-    const setUploadModalOpen = (value: boolean) => {
-      self.uploadModalIsOpen = value;
+    const setModalOpen = (value: boolean) => {
+      self.modalIsOpened = value;
     };
-    const setImageModalOpen = (value: boolean) => {
-      self.imageModalIsOpen = value;
-    };
-    const setDeleteModalOpen = (value: boolean) => {
-      self.deleteModalIsOpen = value;
+    const setModalComponentType = (value: modalWindowTypes) => {
+      self.modalComponentType = value;
     };
     return {
-      setUploadModalOpen,
-      setImageModalOpen,
-      setDeleteModalOpen,
+      setModalOpen,
+      setModalComponentType,
     };
   });
 

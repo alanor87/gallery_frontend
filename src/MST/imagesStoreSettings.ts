@@ -158,7 +158,6 @@ const ImagesStore = types
             self.selectedImages.splice(index, 1);
         });
       }
-      console.log(getSnapshot(self.selectedImages));
     };
 
     const toggleSelectAllImages = () => {
@@ -179,12 +178,10 @@ const ImagesStore = types
           imageHostingId: image.imageHostingId,
         }))
       );
-      console.log(getSnapshot(self.selectedImages));
     };
 
     const clearSelectedList = () => {
       applySnapshot(self.selectedImages, []);
-      console.log(getSnapshot(self.selectedImages));
     };
 
     const purgeStorage = () => {
