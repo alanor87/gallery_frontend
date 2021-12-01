@@ -18,11 +18,11 @@
 }
 
 .disabled {
-  opacity: 0.8;
-  cursor: default;
+  opacity: 0.5;
 
   &:hover {
     border-color: var(--color-border-main);
+    cursor: default;
   }
 }
 

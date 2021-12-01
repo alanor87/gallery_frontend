@@ -35,17 +35,22 @@ const modalSettings = types
   .model({
     uploadModalIsOpen: types.optional(types.boolean, false),
     imageModalIsOpen: types.optional(types.boolean, false),
+    deleteModalIsOpen: types.optional(types.boolean, false),
   })
   .actions((self) => {
-    const uploadModalToggle = () => {
-      self.uploadModalIsOpen = !self.uploadModalIsOpen;
+    const setUploadModalOpen = (value: boolean) => {
+      self.uploadModalIsOpen = value;
     };
-    const imageModalToggle = () => {
-      self.imageModalIsOpen = !self.imageModalIsOpen;
+    const setImageModalOpen = (value: boolean) => {
+      self.imageModalIsOpen = value;
+    };
+    const setDeleteModalOpen = (value: boolean) => {
+      self.deleteModalIsOpen = value;
     };
     return {
-      uploadModalToggle,
-      imageModalToggle,
+      setUploadModalOpen,
+      setImageModalOpen,
+      setDeleteModalOpen,
     };
   });
 

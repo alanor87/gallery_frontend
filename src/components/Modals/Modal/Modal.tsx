@@ -19,7 +19,8 @@ const Modal: React.FunctionComponent<Props> = ({
   ...props
 }) => {
   const ModalComponent = component;
-  const { uploadModalIsOpen, imageModalIsOpen } = store.modalWindowsSettings;
+  const { uploadModalIsOpen, imageModalIsOpen, deleteModalIsOpen } =
+    store.modalWindowsSettings;
 
   const modalBackdropClose = (event: any) => {
     if (event.target === event.currentTarget || event.key === "Escape")
@@ -27,12 +28,12 @@ const Modal: React.FunctionComponent<Props> = ({
   };
 
   useEffect(() => {
-    if (uploadModalIsOpen || imageModalIsOpen)
+    if (uploadModalIsOpen || imageModalIsOpen || deleteModalIsOpen)
       window.addEventListener("keydown", modalBackdropClose);
     return function cleanup() {
       window.removeEventListener("keydown", modalBackdropClose);
     };
-  }, [uploadModalIsOpen, imageModalIsOpen]);
+  }, [uploadModalIsOpen, imageModalIsOpen, deleteModalIsOpen]);
 
   return createPortal(
     <div

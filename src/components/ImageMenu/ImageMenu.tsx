@@ -20,7 +20,7 @@ const ImageMenu: React.FC<Props> = ({
   onEdit,
   onSelect,
 }) => {
-  const { toggleSelectAllImages } = store.imagesStoreSettings;
+  const { toggleSelectAllImages, selectedImages } = store.imagesStoreSettings;
   return (
     <div className={styles.imageMenuWrapper}>
       <Button
@@ -59,6 +59,7 @@ const ImageMenu: React.FC<Props> = ({
         type="button"
         title="Delete"
         icon={IconDelete}
+        disabled={groupMenuMode && !selectedImages.length}
         onClick={onDelete}
       />
     </div>

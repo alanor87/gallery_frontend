@@ -3,7 +3,7 @@ import styles from "./Button.module.scss";
 
 interface Props {
   text?: string | number;
-  type: "button" | "submit" | "reset" | undefined;
+  type?: "button" | "submit" | "reset" | undefined;
   title?: string;
   disabled?: boolean;
   style?: any;
@@ -15,7 +15,7 @@ interface Props {
 
 function Button({
   text,
-  type,
+  type = "button",
   title,
   disabled = false,
   style,
@@ -24,7 +24,7 @@ function Button({
   onClick,
 }: Props) {
   const buttonClassName = disabled
-    ? styles.commonButton + " " + styles.disabled + " " + className
+    ? styles.commonButton + " " + className + " " + styles.disabled
     : styles.commonButton + " " + className;
   return (
     <button

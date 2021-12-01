@@ -4,6 +4,7 @@ import ImageMenu from "../../components/ImageMenu";
 import SideMenu from "../../components/SideMenu/SideMenu";
 import Modal from "../../components/Modals/Modal/Modal";
 import ModalUpload from "../../components/Modals/ModalUpload";
+import ModalDelete from "../../components/Modals/ModalDelete";
 import { Spinner } from "../../components/elements";
 import store from "../../MST/store";
 import styles from "./Gallery.module.scss";
@@ -15,9 +16,9 @@ function GalleryView() {
     groupSelectMode,
     groupSelectModeToggle,
     clearSelectedList,
-    deleteMultipleImages,
   } = store.imagesStoreSettings;
-  const { uploadModalIsOpen, uploadModalToggle } = store.modalWindowsSettings;
+  const { uploadModalIsOpen, setUploadModalOpen } = store.modalWindowsSettings;
+  const { deleteModalIsOpen, setDeleteModalOpen } = store.modalWindowsSettings;
   const { sidePanelIsOpen } = store.userSettings.userInterface;
 
   const imgArray = getAllImages;
@@ -49,7 +50,7 @@ function GalleryView() {
             <ImageMenu
               groupMenuMode={true}
               onSelect={groupModeOffHandler}
-              onDelete={deleteMultipleImages}
+              onDelete={() => setDeleteModalOpen(true)}
             />
           </div>
 
@@ -71,8 +72,13 @@ function GalleryView() {
       )}
       <Modal
         component={ModalUpload}
-        closeModalHandler={uploadModalToggle}
+        closeModalHandler={() => setUploadModalOpen(false)}
         style={uploadModalIsOpen ? { opacity: 1, pointerEvents: "all" } : {}}
+      />
+      <Modal
+        component={ModalDelete}
+        closeModalHandler={() => setDeleteModalOpen(false)}
+        style={deleteModalIsOpen ? { opacity: 1, pointerEvents: "all" } : {}}
       />
     </section>
   );
