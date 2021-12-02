@@ -12,7 +12,8 @@ const initialFormValues = {
 
 const ModalShare = () => {
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
-  const { selectedImages, groupSelectMode } = store.imagesStoreSettings;
+  const { selectedImages, groupSelectMode, clearSelectedList } =
+    store.imagesStoreSettings;
 
   const acceptShareHandler = () => {
     setModalComponentType("none");
@@ -20,6 +21,7 @@ const ModalShare = () => {
   };
 
   const cancelHandler = () => {
+    clearSelectedList();
     setModalComponentType("none");
     setModalOpen(false);
   };
