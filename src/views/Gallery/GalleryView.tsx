@@ -20,13 +20,18 @@ function GalleryView() {
 
   const imgArray = getAllImages;
 
-  const groupModeOffHandler = () => {
+  const groupModeHandler = () => {
     clearSelectedList();
     groupSelectModeToggle();
   };
 
   const groupDeleteHandler = () => {
     setModalComponentType("delete");
+    setModalOpen(true);
+  };
+
+  const groupShareHandler = () => {
+    setModalComponentType("share");
     setModalOpen(true);
   };
 
@@ -51,8 +56,9 @@ function GalleryView() {
           >
             <ImageMenu
               groupMenuMode={true}
-              onSelect={groupModeOffHandler}
+              onSelect={groupModeHandler}
               onDelete={groupDeleteHandler}
+              onShare={groupShareHandler}
             />
           </div>
 

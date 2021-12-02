@@ -18,6 +18,7 @@ const ImageMenu: React.FC<Props> = ({
   groupMenuMode = false,
   onDelete,
   onEdit,
+  onShare,
   onSelect,
 }) => {
   const { toggleSelectAllImages, selectedImages } = store.imagesStoreSettings;
@@ -53,6 +54,8 @@ const ImageMenu: React.FC<Props> = ({
         type="button"
         title="Share"
         icon={IconShare}
+        disabled={groupMenuMode && !selectedImages.length}
+        onClick={onShare}
       />
       <Button
         className={styles.imageMenuButton}

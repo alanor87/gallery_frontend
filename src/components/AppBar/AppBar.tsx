@@ -19,13 +19,6 @@ function AppBar() {
   return (
     <header className={styles.sectionHeader}>
       {userIsAuthenticated && (
-        <ToggleButton
-          toggleHandler={toggleSidePanel}
-          hint="Show/hide side menu"
-          isChecked={sidePanelIsOpen}
-        />
-      )}
-      {userIsAuthenticated && (
         <>
           <input
             type="text"
