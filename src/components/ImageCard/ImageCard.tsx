@@ -24,6 +24,8 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   const { editImageInfo, groupSelectModeToggle, selectedListChange } =
     store.imagesStoreSettings;
   const { userName } = store.userSettings;
+  const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
+
   const { _id, imageHostingId, imageURL, imageInfo, toggleSelectImage } = image;
   const { tags, likes } = imageInfo;
 
@@ -88,6 +90,12 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
     setimgInfoIsLoading(false);
   };
 
+  const shareSingleImageHandler = () => {
+    selectedListChange(_id);
+    setModalComponentType("share");
+    setModalOpen(true);
+  };
+
   return (
     <div className={styles.cardWrap}>
       {!tagEditorIsOpen && !deleteOverlayIsOpen && !groupSelectMode && (
@@ -110,6 +118,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
               onDelete={deleteOverlayOpenHandler}
               onEdit={tagEditOpenHandler}
               onSelect={groupSelectOnHandler}
+              onShare={shareSingleImageHandler}
             />
           </div>
 

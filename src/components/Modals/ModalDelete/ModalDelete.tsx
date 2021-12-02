@@ -12,6 +12,7 @@ const ModalDelete = () => {
     setModalComponentType("none");
     setModalOpen(false);
   };
+
   return (
     <div className={styles.modalDeleteForm}>
       <h2>Group delete</h2>

@@ -24,7 +24,7 @@ function Checkbox({
     ? styles.commonCheckbox + " " + styles.disabled + " " + className
     : styles.commonCheckbox + " " + className;
   return (
-    <label className={checkboxClassName}>
+    <label className={checkboxClassName} title={title}>
       <input
         type="checkbox"
         checked={isChecked}

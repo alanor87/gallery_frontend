@@ -59,7 +59,6 @@ const ModalUpload = () => {
     setModalComponentType("none");
     setModalOpen(false);
     await uploadImages(formData);
-    clearUploadModal();
   };
 
   return (

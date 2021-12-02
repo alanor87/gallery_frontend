@@ -38,6 +38,7 @@ export const Image = types
     imageInfo: types.optional(ImageInfo, {}),
     isPublic: types.optional(types.boolean, false),
     belongsTo: types.optional(types.string, ""),
+    openedTo: types.optional(types.array(types.string), []),
     isSelected: types.optional(types.boolean, false),
   })
   .actions((self) => {
@@ -56,7 +57,11 @@ const ImagesStore = types
     groupSelectMode: types.optional(types.boolean, false),
     selectedImages: types.optional(
       types.array(
-        types.model({ selectedId: types.string, imageHostingId: types.string })
+        types.model({
+          selectedId: types.string,
+          imageHostingId: types.string,
+          isPublic: types.boolean,
+        })
       ),
       []
     ),
@@ -146,12 +151,16 @@ const ImagesStore = types
       self.groupSelectMode = !self.groupSelectMode;
     };
 
-    const selectedListChange = (selectedId: string, imageHostingId: string) => {
+    const selectedListChange = (
+      selectedId: string,
+      imageHostingId = "",
+      isPublic = false
+    ) => {
       const indexInList = self.selectedImages.findIndex(
         (image) => image.selectedId === selectedId
       );
       if (indexInList === -1) {
-        self.selectedImages.push({ selectedId, imageHostingId });
+        self.selectedImages.push({ selectedId, imageHostingId, isPublic });
       } else {
         self.selectedImages.forEach((image, index) => {
           if (image.selectedId === selectedId)
@@ -176,6 +185,7 @@ const ImagesStore = types
         self.images.map((image) => ({
           selectedId: image._id,
           imageHostingId: image.imageHostingId,
+          isPublic: image.isPublic,
         }))
       );
     };
