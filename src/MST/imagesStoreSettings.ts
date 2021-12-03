@@ -59,7 +59,7 @@ const ImagesStore = types
         types.model({
           selectedId: types.string,
           imageHostingId: types.string,
-          isPublic: types.boolean,
+          isPublic: types.optional(types.boolean, false),
         })
       ),
       []

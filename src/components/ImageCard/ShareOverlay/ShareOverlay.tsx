@@ -1,3 +1,4 @@
+import { useState } from "react";
 import store from "../../../MST/store";
 import { Checkbox, Button, Input } from "../../elements";
 import styles from "./ShareOverlay.module.scss";
@@ -15,20 +16,32 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
   openedTo,
   onCloseShareOverlay,
 }) => {
+  const [isPublicState, setisPublicState] = useState(isPublic);
+  const [openedToList, selOpenedToList] = useState(openedTo);
   const { editImageInfo } = store.imagesStoreSettings;
+  console.log("isPublic : ", isPublic);
+
+  const handlePublicState = () => {
+    setisPublicState(!isPublicState);
+  };
+
   return (
-    <div className="imageCardOverlay">
+    <div className={`imageCardOverlay ${styles.shareOverlay}`}>
       <p className={`imageCardOverlay-title ${styles.shareOverlayTitle}`}>
         Image share options
       </p>
       <div className={styles.option}>
         <label>
+          Make the image public.
           <Checkbox
-            isChecked={isPublic}
+            isChecked={isPublicState}
+            onChange={handlePublicState}
             className={styles.shareOverlayCheckbox}
           />
         </label>
-        Make the image public.
+      </div>
+      <div className={styles.option}>
+        <p>Is opened to users : </p>
       </div>
       <div className="imageCardOverlay-buttonWrapper">
         <Button type="button" text="Accept" />

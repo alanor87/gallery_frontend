@@ -8,7 +8,6 @@ interface Props {
   isChecked: boolean;
   title?: string;
   disabled?: boolean;
-  style?: any;
   icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   className?: string;
   onChange?: (event: any) => void;
@@ -20,7 +19,6 @@ function Checkbox({
   isChecked,
   title,
   disabled = false,
-  style,
   onChange,
   className,
 }: Props) {
