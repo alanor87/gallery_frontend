@@ -1,12 +1,8 @@
 .tagEditor {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+  display: block;
   height: 100%;
   padding: 3px;
   background-color: rgba(22, 22, 22, 0.6);
-  z-index: 10;
 
   &InputFormBtn {
     border: none;

@@ -40,7 +40,7 @@ const TagEditor: React.FC<Props> = ({
   };
 
   return (
-    <div className={styles.tagEditor}>
+    <div className={`imageCardOverlay ${styles.tagEditor}`}>
       <div className={styles.tagInputForm}>
         <Button
           type="button"

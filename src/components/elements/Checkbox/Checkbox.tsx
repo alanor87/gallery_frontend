@@ -3,6 +3,8 @@ import { ReactComponent as IconSelect } from "../../../img/icon_select.svg";
 import styles from "./Checkbox.module.scss";
 
 interface Props {
+  name?: string;
+  id?: string;
   isChecked: boolean;
   title?: string;
   disabled?: boolean;
@@ -13,6 +15,8 @@ interface Props {
 }
 
 function Checkbox({
+  name,
+  id,
   isChecked,
   title,
   disabled = false,
@@ -26,6 +30,8 @@ function Checkbox({
   return (
     <label className={checkboxClassName} title={title}>
       <input
+        id={id}
+        name={name}
         type="checkbox"
         checked={isChecked}
         className="isHidden"

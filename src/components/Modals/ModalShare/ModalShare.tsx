@@ -1,6 +1,5 @@
-import { Button } from "../../elements";
 import { Formik, Form } from "formik";
-import { Checkbox, Input } from "../../elements";
+import { Checkbox, Button, Input } from "../../elements";
 import store from "../../../MST/store";
 import styles from "./ModalShare.module.scss";
 

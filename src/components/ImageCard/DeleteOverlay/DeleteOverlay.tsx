@@ -1,6 +1,5 @@
 import store from "../../../MST/store";
 import { Button } from "../../elements";
-import styles from "./styles.module.scss";
 
 interface Props {
   _id: string;
@@ -24,11 +23,11 @@ const DeleteOverlay: React.FunctionComponent<Props> = ({
   };
 
   return (
-    <div className={styles.deleteOverlay}>
-      <p className={styles.deleteOverlayTitle}>
+    <div className="imageCardOverlay">
+      <p className="imageCardOverlay-title">
         Sure you want to delete this item?
       </p>
-      <div className={styles.buttonWrapper}>
+      <div className="imageCardOverlay-buttonWrapper">
         <Button type="button" text="Delete" onClick={deleteImageHandler} />
         <Button
           type="button"

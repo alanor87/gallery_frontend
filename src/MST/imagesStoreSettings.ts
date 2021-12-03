@@ -20,7 +20,9 @@ const ImageInfo = types
     likes: types.optional(types.array(types.string), []),
     isLoading: types.optional(types.boolean, false),
     isSelected: types.optional(types.boolean, false),
-    error: types.optional(types.boolean, false),
+    isPublic: types.optional(types.boolean, false),
+    belongsTo: types.optional(types.string, ""),
+    openedTo: types.optional(types.array(types.string), []),
   })
   .actions((self) => {
     const setIsLoading = (value: boolean) => {
@@ -36,9 +38,6 @@ export const Image = types
     imageURL: types.optional(types.string, ""),
     smallImageURL: types.optional(types.string, ""),
     imageInfo: types.optional(ImageInfo, {}),
-    isPublic: types.optional(types.boolean, false),
-    belongsTo: types.optional(types.string, ""),
-    openedTo: types.optional(types.array(types.string), []),
     isSelected: types.optional(types.boolean, false),
   })
   .actions((self) => {
@@ -185,7 +184,7 @@ const ImagesStore = types
         self.images.map((image) => ({
           selectedId: image._id,
           imageHostingId: image.imageHostingId,
-          isPublic: image.isPublic,
+          isPublic: image.imageInfo.isPublic,
         }))
       );
     };
