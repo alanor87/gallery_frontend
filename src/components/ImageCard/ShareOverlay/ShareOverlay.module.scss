@@ -1,5 +1,4 @@
 .shareOverlay {
-  display: block;
   padding: 3px;
 }
 
@@ -39,4 +38,9 @@
     height: auto;
     width: auto;
   }
+}
+
+.buttonWrapper {
+  display: flex;
+  margin-top: auto;
 }

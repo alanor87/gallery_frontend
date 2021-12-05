@@ -30,14 +30,8 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
   const openToOverlayOpenHandler = () => {
     setOpenedToOverlayIsOpen(true);
   };
-
   const openToOverlayCloseHandler = () => {
     setOpenedToOverlayIsOpen(false);
-  };
-
-  const acceptChangesHandler = () => {
-    editImageInfo(_id, { isPublic: isPublicState, openedTo: openedToList });
-    onCloseShareOverlay();
   };
 
   const userDelHandler = (userToDelete: string) => {
@@ -46,6 +40,11 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
   };
   const userAddHandler = (userToAdd: string) => {
     setOpenedToList([...openedToList, userToAdd]);
+  };
+
+  const acceptChangesHandler = () => {
+    editImageInfo(_id, { isPublic: isPublicState, openedTo: openedToList });
+    onCloseShareOverlay();
   };
 
   return !openedToOverlayIsOpen ? (
@@ -76,7 +75,7 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
           onClick={openToOverlayOpenHandler}
         />
       </div>
-      <div className="imageCardOverlay-buttonWrapper">
+      <div className={styles.buttonWrapper}>
         <Button type="button" text="Accept" onClick={acceptChangesHandler} />
         <Button type="button" text="Cancel" onClick={onCloseShareOverlay} />
       </div>
