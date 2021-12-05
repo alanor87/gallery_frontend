@@ -79,6 +79,7 @@ const ImagesStore = types
 
     const editImageInfo = flow(function* (_id, newImageInfo) {
       try {
+        console.log(newImageInfo);
         const imageToEdit: ImageType = getImageById(_id)!;
         const updatedImage: any = {
           ...imageToEdit,

@@ -6,6 +6,7 @@
 .option {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 
   & > label {
     width: 100%;
@@ -23,4 +24,19 @@
   height: 22px;
   margin-left: 20px;
   padding: 0 3px 0 0;
+}
+
+.openedTo {
+  margin-right: 10px;
+}
+
+.addUserBtn {
+  margin-left: 10px;
+  padding: 2px;
+  font-size: 12px;
+
+  & span {
+    height: auto;
+    width: auto;
+  }
 }

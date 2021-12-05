@@ -62,13 +62,6 @@ img {
   transform: translateX(-50%);
 }
 
-.isHidden {
-  position: absolute;
-  width: 0px;
-  height: 0px;
-  margin: -1px;
-}
-
 .AppLightTheme {
   --main-background-color: rgba(219, 219, 219);
   --main-background-color-alpha: rgba(219, 219, 219, 0.9);
@@ -97,4 +90,13 @@ img {
     display: flex;
     justify-content: space-between;
   }
+}
+
+.isHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
 }

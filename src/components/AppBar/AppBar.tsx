@@ -7,9 +7,8 @@ import styles from "./AppBar.module.scss";
 function AppBar() {
   const { logoutInit } = store;
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
-  const { userIsAuthenticated } = store.userSettings;
-  const { lightThemeIsOn, sidePanelIsOpen, toggleSidePanel, toggleTheme } =
-    store.userSettings.userInterface;
+  const { userIsAuthenticated, userName, userEmail } = store.userSettings;
+  const { lightThemeIsOn, toggleTheme } = store.userSettings.userInterface;
 
   const uploadModalHandler = () => {
     setModalComponentType("upload");
@@ -28,6 +27,9 @@ function AppBar() {
           />
           <Button type="button" text="Logout" onClick={logoutInit} />
           <Button type="button" text="Upload" onClick={uploadModalHandler} />
+          <p>
+            {userName}, {userEmail}
+          </p>
           <ToggleButton
             toggleHandler={toggleTheme}
             isChecked={lightThemeIsOn}

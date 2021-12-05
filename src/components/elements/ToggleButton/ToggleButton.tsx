@@ -37,7 +37,7 @@ const ToggleButton: React.FC<Props> = ({
     >
       <input
         type="checkbox"
-        className={`${styles.sideMenuCheckbox} ${styles.toggleCheckbox} ${styles.isHidden}`}
+        className={`${styles.sideMenuCheckbox} ${styles.toggleCheckbox} isHidden`}
         autoComplete="off"
         onChange={onToggle}
         checked={isChecked}

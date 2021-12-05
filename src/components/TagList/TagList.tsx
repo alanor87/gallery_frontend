@@ -5,6 +5,7 @@ interface Props {
   tags: string[];
   title?: string;
   placeholder?: string;
+  addOptionOn?: boolean;
   isTagDeletable?: boolean;
   onDoubleClick?: () => void;
   tagDelHandler: (tagValue: string) => void;

@@ -1,5 +1,6 @@
 import { Formik, Form } from "formik";
 import { Checkbox, Button, Input } from "../../elements";
+import TagList from "../../TagList";
 import store from "../../../MST/store";
 import styles from "./ModalShare.module.scss";
 
@@ -25,6 +26,8 @@ const ModalShare = () => {
     setModalOpen(false);
   };
 
+  const removeUserFromList = () => {};
+
   return (
     <div className={styles.modalShareForm}>
       <h2>Sharing options</h2>
@@ -37,6 +40,10 @@ const ModalShare = () => {
                 isChecked={groupSelectMode ? false : selectedImages[0].isPublic}
               />
               Make the image public.
+            </div>
+            <div className={styles.option}>
+              <p>Is opened to users : </p>
+              <TagList tags={[]} tagDelHandler={removeUserFromList} />
             </div>
           </div>
           <div className={styles.buttonWrapper}>

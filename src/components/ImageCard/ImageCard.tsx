@@ -26,7 +26,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
     store.imagesStoreSettings;
   const { userName } = store.userSettings;
   const { _id, imageHostingId, imageURL, imageInfo, toggleSelectImage } = image;
-  const { tags, likes } = imageInfo;
+  const { tags, likes, openedTo, isPublic } = imageInfo;
 
   const [deleteOverlayIsOpen, setDeleteOverlayIsOpen] = useState(false);
   const [shareOverlayIsOpen, setShareOverlayIsOpen] = useState(false);
@@ -58,14 +58,12 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
     setDeleteOverlayIsOpen(true);
     setImageMenuIsOpen(false);
   };
-
   const shareOverlayOpenHandler = () => {
     setShareOverlayIsOpen(true);
     setImageMenuIsOpen(false);
   };
 
-  const onTagEditClose = () => setTagEditorOpen(false);
-
+  const onTagEditCloseHandler = () => setTagEditorOpen(false);
   const deleteOverlayCloseHandler = () => setDeleteOverlayIsOpen(false);
   const shareOverlayCloseHandler = () => setShareOverlayIsOpen(false);
 
@@ -73,11 +71,9 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
     const newTags = tags.filter((tag) => tag !== tagToDelete);
     tagsUpdateHandler(newTags);
   };
-
   const tagAddHandler = (tagToAdd: string) => {
     tagsUpdateHandler([...tags, tagToAdd]);
   };
-
   const tagsUpdateHandler = async (newTags: string[]) => {
     setimgInfoIsLoading(true);
     await editImageInfo(_id, { tags: newTags });
@@ -167,7 +163,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
       {tagEditorOverlayIsOpen && (
         <TagEditor
           tags={tags}
-          closeHandle={onTagEditClose}
+          closeHandle={onTagEditCloseHandler}
           onTagDelete={tagDelHandler}
           onAddTag={tagAddHandler}
           isLoading={imgInfoIsLoading}
@@ -185,8 +181,8 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
       {shareOverlayIsOpen && (
         <ShareOverlay
           _id={_id}
-          isPublic={imageInfo.isPublic}
-          openedTo={imageInfo.openedTo}
+          isPublic={isPublic}
+          openedTo={openedTo}
           onCloseShareOverlay={shareOverlayCloseHandler}
         />
       )}
