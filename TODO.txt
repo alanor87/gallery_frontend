@@ -1,4 +1,6 @@
 - DONE - change the scheme of modal windows render - so there would not be all the modals opened at once, even invisible.
 - work on the keyboard accessibility - tabIndex feature for all interactive elements with all the styles needed.
 - add input filter to the group menu in gallery so that user can choose groups of images by tags.
-- CURRENT - create the scheme of sharing images.
+- CURRENT - create the scheme of sharing images. The front end part was created, also save of the new openedTo list in one image. 
+  Need to create methods on front and back for editing the corresponding User objects userOpenedToImages property - 
+  for a single image openTo list edit as well as for multiple images in group mode.
