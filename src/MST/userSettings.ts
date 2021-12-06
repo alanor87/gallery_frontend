@@ -74,6 +74,11 @@ const userSettings = types
       }
     });
 
+    const checkIfUserExistsByName = flow(function* (name) {
+      const userExists = yield axios.get("users/getUserByName");
+      return userExists;
+    });
+
     const addUserOwnedImage = (image: ImageType) => {
       self.userOwnedImages.push(image);
     };
@@ -88,6 +93,7 @@ const userSettings = types
       userLogout,
       getTokenFromLocalStorage,
       addUserOwnedImage,
+      checkIfUserExistsByName,
       purgeStorage,
     };
   });

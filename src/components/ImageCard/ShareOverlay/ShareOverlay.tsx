@@ -39,7 +39,9 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
     setOpenedToList(newTags);
   };
   const userAddHandler = (userToAdd: string) => {
-    setOpenedToList([...openedToList, userToAdd]);
+    if (!openedToList.includes(userToAdd)) {
+      setOpenedToList([...openedToList, userToAdd]);
+    }
   };
 
   const acceptChangesHandler = () => {
