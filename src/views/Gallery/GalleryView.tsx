@@ -45,8 +45,6 @@ function GalleryView() {
     >
       {imgArray.length ? (
         <>
-          <SideMenu galleryMenuImages={imgArray} isOpen={sidePanelIsOpen} />
-
           <div
             className={
               groupSelectMode

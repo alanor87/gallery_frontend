@@ -3,12 +3,12 @@ import store from "../../../MST/store";
 import styles from "./styles.module.scss";
 
 const ModalDelete = () => {
-  const { selectedImages, deleteMultipleImages } = store.imagesStoreSettings;
+  const { selectedImages, deleteImages } = store.imagesStoreSettings;
 
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 
   const deleteClickHandler = () => {
-    deleteMultipleImages();
+    deleteImages();
     setModalComponentType("none");
     setModalOpen(false);
   };

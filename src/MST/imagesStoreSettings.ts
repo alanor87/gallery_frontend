@@ -116,23 +116,10 @@ const ImagesStore = types
       }
     });
 
-    const deleteImage = flow(function* (imageId, imageHostingId) {
-      try {
-        yield axios.delete(`/images/${imageId}/${imageHostingId}`);
-        const imageToDelete: ImageType = self.images.find(
-          (image) => image._id === imageId
-        )!;
-        destroy(imageToDelete);
-      } catch (error) {
-        popupNotice(`Error while deleting image.
-           ${error}`);
-      }
-    });
-
-    const deleteMultipleImages = flow(function* () {
+    const deleteImages = flow(function* () {
       try {
         if (!self.selectedImages.length) return;
-        const response = yield axios.post("/images/deleteMultiple", {
+        const response = yield axios.post("/images/deleteImages", {
           imagesToDelete: self.selectedImages,
         });
         const filteredImages = self.images.filter((image) => {
@@ -202,8 +189,7 @@ const ImagesStore = types
       getImageById,
       editImageInfo,
       uploadImages,
-      deleteImage,
-      deleteMultipleImages,
+      deleteImages,
       groupSelectModeToggle,
       selectedListChange,
       toggleSelectAllImages,

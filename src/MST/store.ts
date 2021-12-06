@@ -5,12 +5,13 @@ import userSettings from "./userSettings";
 import imagesStoreSettings from "./imagesStoreSettings";
 import { RegisterFormInterface, LoginFormInterface } from "../types/user";
 
-// axios.defaults.baseURL = "http://localhost:3030/api/v1";
-axios.defaults.baseURL = "https://gallery-app-mj.herokuapp.com/api/v1";
+axios.defaults.baseURL = "http://localhost:3030/api/v1";
+// axios.defaults.baseURL = "https://gallery-app-mj.herokuapp.com/api/v1";
 
 axios.interceptors.response.use(
   (res: AxiosResponse) => res,
   (err: AxiosError) => {
+    console.log(err);
     const errorMsg = err.response?.data.message || "Unknown error.";
     throw new Error(errorMsg);
   }

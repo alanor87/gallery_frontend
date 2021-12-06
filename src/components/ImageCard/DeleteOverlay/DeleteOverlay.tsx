@@ -12,10 +12,13 @@ const DeleteOverlay: React.FunctionComponent<Props> = ({
   imageHostingId,
   onCloseDeleteOverlay,
 }) => {
-  const { deleteImage } = store.imagesStoreSettings;
+  const { deleteImages, selectedListChange, clearSelectedList } =
+    store.imagesStoreSettings;
 
-  const deleteImageHandler = () => {
-    deleteImage(_id, imageHostingId);
+  const deleteImageHandler = async () => {
+    selectedListChange(_id, imageHostingId);
+    await deleteImages();
+    clearSelectedList();
   };
 
   const closeDeleteOverlayHandler = () => {

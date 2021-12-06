@@ -4,6 +4,7 @@ import { Image } from "./imagesStoreSettings";
 import { ImageType } from "./imagesStoreSettings";
 import { interfaceSettings } from "./interfaceSettings";
 import { UserInterfaceSettings } from "../types/user";
+import { popupNotice } from "../utils/popupNotice";
 import AuthenticatedUserType, {
   RegisterFormInterface,
   LoginFormInterface,
@@ -46,23 +47,27 @@ const userSettings = types
       self.userIsAuthenticated = true;
     };
 
-    // Error processing for possible exception in register/login/logout takes place a level higher -
-    // in the store.loginInit()/store.logoutInit() actions.
+    /*
+     * Error processing for possible exception in register/login/logout takes place a level higher -
+     * in the store.loginInit()/store.logoutInit() actions.
+     */
     const userRegister = flow(function* (newUser: RegisterFormInterface) {
       const registeredUser = yield axios.post("/auth/register", newUser);
       savingAuthenticatedUserData(registeredUser.data.body);
     });
-
     const userLogin = flow(function* (userLoginData: LoginFormInterface) {
       const authenticatedUser = yield axios.post("/auth/login", userLoginData);
       savingAuthenticatedUserData(authenticatedUser.data.body);
     });
-
     const userLogout = flow(function* () {
       yield axios.get("/users/logout");
       self.userToken = "";
       self.userIsAuthenticated = false;
     });
+
+    /*
+     *
+     */
 
     const getTokenFromLocalStorage = flow(function* () {
       const token = localStorage.getItem("token");
@@ -75,8 +80,16 @@ const userSettings = types
     });
 
     const checkIfUserExistsByName = flow(function* (name) {
-      const userExists = yield axios.get("users/getUserByName");
-      return userExists;
+      try {
+        const response = yield axios.post("users/getUserByName", {
+          userName: name,
+        });
+        if (!response.data.userDoesExist)
+          popupNotice(`User with the name "${name}" does not exist.`);
+        return response.data.userDoesExist;
+      } catch (error: any) {
+        popupNotice(`${error.message}`);
+      }
     });
 
     const addUserOwnedImage = (image: ImageType) => {

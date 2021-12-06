@@ -6,6 +6,7 @@ import axios from "axios";
 import PrivateRoute from "./components/_routes/PrivateRoute";
 import PublicRoute from "./components/_routes/PublicRoute";
 import AppBar from "./components/AppBar";
+import SideMenu from "./components/SideMenu";
 import { Spinner } from "./components/elements";
 import routes from "./routes";
 import store from "./MST/store";
@@ -23,7 +24,7 @@ function App() {
 
   const { userSettings, backendToggle } = store;
 
-  const { lightThemeIsOn } = userSettings.userInterface;
+  const { lightThemeIsOn, sidePanelIsOpen } = userSettings.userInterface;
   const { userIsAuthenticated } = userSettings;
 
   useEffect(() => {
@@ -41,7 +42,12 @@ function App() {
   console.log("App render");
   return (
     <div className={"appMain"}>
-      {userIsAuthenticated && <AppBar />}
+      {userIsAuthenticated && (
+        <>
+          <AppBar />
+          <SideMenu isOpen={sidePanelIsOpen} />{" "}
+        </>
+      )}
       <main className="mainSection">
         <Suspense fallback={<Spinner side={100} />}>
           {" "}

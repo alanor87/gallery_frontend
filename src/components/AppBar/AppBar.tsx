@@ -8,7 +8,8 @@ function AppBar() {
   const { logoutInit } = store;
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
   const { userIsAuthenticated, userName, userEmail } = store.userSettings;
-  const { lightThemeIsOn, toggleTheme } = store.userSettings.userInterface;
+  const { lightThemeIsOn, toggleTheme, toggleSidePanel, sidePanelIsOpen } =
+    store.userSettings.userInterface;
 
   const uploadModalHandler = () => {
     setModalComponentType("upload");
@@ -19,6 +20,11 @@ function AppBar() {
     <header className={styles.sectionHeader}>
       {userIsAuthenticated && (
         <>
+          <ToggleButton
+            toggleHandler={toggleSidePanel}
+            isChecked={sidePanelIsOpen}
+            hint="Dark/light theme"
+          />
           <input
             type="text"
             className={styles.searchInput}

@@ -22,10 +22,7 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
   const [openedToList, setOpenedToList] = useState(openedTo);
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
   const { editImageInfo } = store.imagesStoreSettings;
-
-  const publicStateChangeHandler = () => {
-    setisPublicState(!isPublicState);
-  };
+  const { checkIfUserExistsByName } = store.userSettings;
 
   const openToOverlayOpenHandler = () => {
     setOpenedToOverlayIsOpen(true);
@@ -34,14 +31,18 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
     setOpenedToOverlayIsOpen(false);
   };
 
+  const publicStateChangeHandler = () => {
+    setisPublicState(!isPublicState);
+  };
+
   const userDelHandler = (userToDelete: string) => {
     const newTags = openedToList.filter((user) => user !== userToDelete);
     setOpenedToList(newTags);
   };
-  const userAddHandler = (userToAdd: string) => {
-    if (!openedToList.includes(userToAdd)) {
-      setOpenedToList([...openedToList, userToAdd]);
-    }
+  const userAddHandler = async (name: string) => {
+    const userDoesExist = await checkIfUserExistsByName(name);
+    if (userDoesExist && !openedToList.includes(name))
+      setOpenedToList([...openedToList, name]);
   };
 
   const acceptChangesHandler = () => {

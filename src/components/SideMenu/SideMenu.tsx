@@ -1,24 +1,15 @@
-import SideMenuThumb from "./SideMenuThumb";
-import { ImageType } from "../../MST/imagesStoreSettings";
 import styles from "./SideMenu.module.scss";
 
 interface Props {
-  galleryMenuImages: ImageType[];
-  isOpen: boolean;
+  isOpen?: boolean;
 }
 
-const SideMenu: React.FC<Props> = ({ galleryMenuImages, isOpen }) => {
+const SideMenu: React.FC<Props> = ({ isOpen }) => {
   const menuClassList = isOpen
     ? `${styles.galleryMenu} ${styles.isOpen}`
     : styles.galleryMenu;
 
-  return (
-    <section className={menuClassList}>
-      {galleryMenuImages.map((image, idx) => {
-        return <SideMenuThumb image={image} key={image._id} />;
-      })}
-    </section>
-  );
+  return <section className={menuClassList}></section>;
 };
 
 export default SideMenu;

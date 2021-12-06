@@ -31,6 +31,15 @@ const routes = [
     component: GalleryView,
     label: "GalleryView",
   },
+  {
+    isPublic: false,
+    path: "/shared-gallery",
+    redirectTo: "/login",
+    exact: false,
+    restricted: false,
+    component: GalleryView,
+    label: "SharedGalleryView",
+  },
   // {
   //   isPublic: false,
   //   path: "/image/:id",
