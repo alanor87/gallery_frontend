@@ -1,7 +1,7 @@
 import { useState, useEffect, memo } from "react";
 import { NavLink } from "react-router-dom";
 import TagList from "../TagList";
-import { Button } from "../elements";
+import { Button, Spinner } from "../elements";
 import store from "../../MST/store";
 import TagEditor from "../TagEditor";
 import ImageMenu from "../ImageMenu";
@@ -26,7 +26,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
     store.imagesStoreSettings;
   const { userName } = store.userSettings;
   const { _id, imageHostingId, imageURL, imageInfo, toggleSelectImage } = image;
-  const { tags, likes, openedTo, isPublic } = imageInfo;
+  const { tags, likes, openedTo, isPublic, isLoading } = imageInfo;
 
   const [deleteOverlayIsOpen, setDeleteOverlayIsOpen] = useState(false);
   const [shareOverlayIsOpen, setShareOverlayIsOpen] = useState(false);
@@ -142,20 +142,14 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
       {overlaysAreClosedCheck() && !groupSelectMode && (
         <div className={styles.text}>
           <div className={styles.imgCardText}>
-            {!imgInfoIsLoading ? (
-              <>
-                <TagList
-                  tags={tags}
-                  title={"Double click to edit"}
-                  placeholder={"Double click to add tags"}
-                  isTagDeletable={false}
-                  onDoubleClick={tagEditOpenHandler}
-                  tagDelHandler={tagDelHandler}
-                />
-              </>
-            ) : (
-              <p>is Loading</p>
-            )}
+            <TagList
+              tags={tags}
+              title={"Double click to edit"}
+              placeholder={"Double click to add tags"}
+              isTagDeletable={false}
+              onDoubleClick={tagEditOpenHandler}
+              tagDelHandler={tagDelHandler}
+            />
           </div>
         </div>
       )}
@@ -192,6 +186,9 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
           isSelected={isSelected}
           onSelectToggle={toggleImageSelect}
         />
+      )}
+      {imgInfoIsLoading && (
+        <Spinner side={30} className={styles.imageCardSpinner} />
       )}
     </div>
   );
