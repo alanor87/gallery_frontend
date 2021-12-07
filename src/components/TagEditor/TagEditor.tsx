@@ -28,7 +28,7 @@ const TagEditor: React.FC<Props> = ({
   };
 
   const parseInput = (inputValue: string) => {
-    const tags = inputValue.split(/[,]|[ ]|, /);
+    const tags = inputValue.split(/[,]|[ ]|/);
     console.log(tags);
   };
 
