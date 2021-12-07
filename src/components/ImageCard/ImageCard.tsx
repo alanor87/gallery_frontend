@@ -22,7 +22,7 @@ interface Props {
 const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   console.log("Image render"); // just for debugging -  to be sure memoization works)
 
-  const { editImageInfo, groupSelectModeToggle, selectedListChange } =
+  const { editImagesInfo, groupSelectModeToggle, selectedListChange } =
     store.imagesStoreSettings;
   const { userName } = store.userSettings;
   const { _id, imageHostingId, imageURL, imageInfo, toggleSelectImage } = image;
@@ -76,7 +76,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   };
   const tagsUpdateHandler = async (newTags: string[]) => {
     setimgInfoIsLoading(true);
-    await editImageInfo(_id, { tags: newTags });
+    await editImagesInfo([{ _id, imageInfo: { tags: newTags } }]);
     setimgInfoIsLoading(false);
   };
 
@@ -84,10 +84,10 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
     setimgInfoIsLoading(true);
     if (!likes.includes(userName)) {
       const newLikesList = [...likes, userName];
-      await editImageInfo(_id, { likes: newLikesList });
+      await editImagesInfo([{ _id, imageInfo: { likes: newLikesList } }]);
     } else {
       const newLikesList = likes.filter((name) => name !== userName);
-      await editImageInfo(_id, { likes: newLikesList });
+      await editImagesInfo([{ _id, imageInfo: { likes: newLikesList } }]);
     }
     setimgInfoIsLoading(false);
   };

@@ -21,7 +21,7 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
   const [isPublicState, setisPublicState] = useState(isPublic);
   const [openedToList, setOpenedToList] = useState(openedTo);
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
-  const { editImageInfo } = store.imagesStoreSettings;
+  const { editImagesInfo } = store.imagesStoreSettings;
   const { checkIfUserExistsByName } = store.userSettings;
 
   const openToOverlayOpenHandler = () => {
@@ -46,7 +46,9 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
   };
 
   const acceptChangesHandler = () => {
-    editImageInfo(_id, { isPublic: isPublicState, openedTo: openedToList });
+    editImagesInfo([
+      { _id, imageInfo: { isPublic: isPublicState, openedTo: openedToList } },
+    ]);
     onCloseShareOverlay();
   };
 

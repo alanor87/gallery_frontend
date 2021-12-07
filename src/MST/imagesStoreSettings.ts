@@ -9,6 +9,11 @@ import {
 } from "mobx-state-tree";
 import { popupNotice } from "../utils/popupNotice";
 
+interface NewImageInfo {
+  _id: string;
+  imageInfo: any;
+}
+
 const initialImageStoreSettings = {
   images: [],
   imagesPerPage: 10,
@@ -77,19 +82,25 @@ const ImagesStore = types
     const getImageById = (id: string) =>
       self.images.find((image) => image._id === id);
 
-    const editImageInfo = flow(function* (_id, newImageInfo) {
+    const editImagesInfo = flow(function* (updatedImageInfo: NewImageInfo[]) {
       try {
-        console.log(newImageInfo);
-        const imageToEdit: ImageType = getImageById(_id)!;
-        const updatedImage: any = {
-          ...imageToEdit,
-          imageInfo: { ...imageToEdit.imageInfo, ...newImageInfo },
-        };
-        delete updatedImage.isSelected;
-        const updatedImageFromServer = yield axios
-          .put(`/images/${_id}`, updatedImage)
-          .then((res) => res.data.body);
-        imageToEdit.updateImageInfo(updatedImageFromServer.imageInfo);
+        const updatedImagesToSend = updatedImageInfo.map(
+          (image: NewImageInfo) => {
+            const imageToEdit: ImageType = getImageById(image._id)!;
+            const updatedImageInfo: NewImageInfo = {
+              _id: image._id,
+              imageInfo: { ...imageToEdit.imageInfo, ...image.imageInfo },
+            };
+            return updatedImageInfo;
+          }
+        );
+        const updatedImagesFromServer: NewImageInfo[] = yield axios
+          .put(`/images/updateImages`, { imagesToUpdate: updatedImagesToSend })
+          .then((res) => res.data.body.updatedImages);
+        updatedImagesFromServer.forEach((updatedImage) => {
+          const imageToEdit: ImageType = getImageById(updatedImage._id)!;
+          imageToEdit.updateImageInfo(updatedImage.imageInfo);
+        });
       } catch (error: any) {
         popupNotice(`Error while updating image info.
         ${error}`);
@@ -187,7 +198,7 @@ const ImagesStore = types
 
     return {
       getImageById,
-      editImageInfo,
+      editImagesInfo,
       uploadImages,
       deleteImages,
       groupSelectModeToggle,

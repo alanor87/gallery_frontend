@@ -27,15 +27,23 @@ const TagEditor: React.FC<Props> = ({
     setTagName(event.target.value);
   };
 
+  const parseInput = (inputValue: string) => {
+    const tags = inputValue.split(/[,]|[ ]|, /);
+    console.log(tags);
+  };
+
   const handleEnterPress = (event: React.KeyboardEvent) => {
     if (event.code === "Enter") {
+      parseInput(tagName);
       onAddTag(tagName);
       setTagName("");
     }
   };
 
   const addTag = () => {
-    if (tagName) onAddTag(tagName);
+    if (tagName) {
+      onAddTag(tagName);
+    }
     setTagName("");
   };
 
@@ -65,15 +73,7 @@ const TagEditor: React.FC<Props> = ({
           onClick={addTag}
         />
       </div>
-      {!isLoading ? (
-        <TagList
-          tags={tags}
-          tagDelHandler={onTagDelete}
-          isTagDeletable={true}
-        />
-      ) : (
-        <p>is loading</p>
-      )}
+      <TagList tags={tags} tagDelHandler={onTagDelete} isTagDeletable={true} />
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Checkbox, Button } from "../../elements";
 import TagEditor from "../../TagEditor";
-import { popupNotice } from "../../../utils/popupNotice";
 import store from "../../../MST/store";
 import styles from "./ModalShare.module.scss";
 
@@ -10,7 +9,7 @@ const ModalShare = () => {
   const [openedToList, setOpenedToList] = useState<string[]>([]);
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
-  const { selectedImages, groupSelectMode, clearSelectedList } =
+  const { selectedImages, groupSelectMode, clearSelectedList, editImagesInfo } =
     store.imagesStoreSettings;
   const { checkIfUserExistsByName } = store.userSettings;
 
@@ -38,7 +37,8 @@ const ModalShare = () => {
     setModalComponentType("none");
     setModalOpen(false);
   };
-  const acceptShareHandler = () => {
+  const acceptShareHandler = async () => {
+    // await editImagesInfo();
     setModalComponentType("none");
     setModalOpen(false);
     clearSelectedList();
