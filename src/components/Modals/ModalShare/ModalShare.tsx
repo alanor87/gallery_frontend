@@ -2,14 +2,15 @@ import { useState } from "react";
 import { Checkbox, Button } from "../../elements";
 import TagEditor from "../../TagEditor";
 import store from "../../../MST/store";
+import { NewImageInfo } from "../../../MST/imagesStoreSettings";
 import styles from "./ModalShare.module.scss";
 
 const ModalShare = () => {
   const [isPublicState, setisPublicState] = useState(false);
-  const [openedToList, setOpenedToList] = useState<string[]>([]);
+  const [usersOpenedToList, setUsersOpenedToList] = useState<string[]>([]);
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
-  const { selectedImages, groupSelectMode, clearSelectedList, editImagesInfo } =
+  const { selectedImages, clearSelectedList, editImagesInfo, getImageById } =
     store.imagesStoreSettings;
   const { checkIfUserExistsByName } = store.userSettings;
 
@@ -25,11 +26,13 @@ const ModalShare = () => {
   };
   const userAddHandler = async (name: string) => {
     const userDoesExist = await checkIfUserExistsByName(name);
-    if (userDoesExist && !openedToList.includes(name))
-      setOpenedToList([...openedToList, name]);
+    if (userDoesExist && !usersOpenedToList.includes(name))
+      setUsersOpenedToList([...usersOpenedToList, name]);
   };
   const userRemoveHandler = (name: string) => {
-    setOpenedToList(openedToList.filter((userName) => userName !== name));
+    setUsersOpenedToList(
+      usersOpenedToList.filter((userName) => userName !== name)
+    );
   };
 
   const cancelHandler = () => {
@@ -37,8 +40,30 @@ const ModalShare = () => {
     setModalComponentType("none");
     setModalOpen(false);
   };
+
+  /*
+   * Iterating through selectedImages, taking openedTolist - and merging with the usersOpenedToList
+   * without duplications - using an intermediate Set object, since we have an empty initial usersOpenedToList,
+   * single for all the selected images. Was told that this way has Big O(n) complexity ))
+   */
+
   const acceptShareHandler = async () => {
-    // await editImagesInfo();
+    const updatedImagesInfo: NewImageInfo[] = selectedImages.map(
+      ({ selectedId }) => {
+        const currentImage = getImageById(selectedId)!;
+        const oldOpenedToList = currentImage.imageInfo.openedTo;
+        const newOpenedList = [
+          ...new Set([...oldOpenedToList, ...usersOpenedToList]),
+        ];
+        const newImageInfo: NewImageInfo = {
+          _id: selectedId,
+          imageInfo: { isPublic: isPublicState, openedTo: newOpenedList },
+        };
+        return newImageInfo;
+      }
+    );
+
+    await editImagesInfo(updatedImagesInfo);
     setModalComponentType("none");
     setModalOpen(false);
     clearSelectedList();
@@ -54,7 +79,7 @@ const ModalShare = () => {
               <Checkbox
                 className={styles.shareModalCheckbox}
                 onChange={publicStateChangeHandler}
-                isChecked={groupSelectMode ? false : selectedImages[0].isPublic}
+                isChecked={isPublicState}
               />
               Make the image public.
             </div>
@@ -75,9 +100,9 @@ const ModalShare = () => {
 
       {openedToOverlayIsOpen && (
         <TagEditor
-          tags={openedToList}
+          tags={usersOpenedToList}
           closeHandle={openToOverlayCloseHandler}
-          onAddTag={userAddHandler}
+          onAddTags={userAddHandler}
           onTagDelete={userRemoveHandler}
         />
       )}

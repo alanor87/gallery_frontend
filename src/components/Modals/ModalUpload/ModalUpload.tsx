@@ -11,12 +11,11 @@ const ModalUpload = () => {
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 
   const handleImagesAdd = (e: any) => {
-    console.log("handleImagesAdd");
     e.preventDefault();
     e.stopPropagation();
     // defining if we added file through dialogue window - or drag'ndrop
     const files = e.type === "drop" ? e.dataTransfer.files : e.target.files;
-    if (files.length && files.length < 6 && previewImages.length < 5) {
+    if (files.length && files.length < 50 && previewImages.length < 49) {
       for (let i = 0; i < files.length; i += 1) {
         const singleImage = files[i];
         const reader = new FileReader();

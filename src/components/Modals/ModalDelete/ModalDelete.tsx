@@ -3,12 +3,14 @@ import store from "../../../MST/store";
 import styles from "./styles.module.scss";
 
 const ModalDelete = () => {
-  const { selectedImages, deleteImages } = store.imagesStoreSettings;
+  const { selectedImages, deleteImages, groupSelectModeToggle } =
+    store.imagesStoreSettings;
 
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 
-  const deleteClickHandler = () => {
-    deleteImages();
+  const deleteClickHandler = async () => {
+    await deleteImages();
+    groupSelectModeToggle();
     setModalComponentType("none");
     setModalOpen(false);
   };

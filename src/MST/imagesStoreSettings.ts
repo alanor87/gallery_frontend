@@ -1,15 +1,8 @@
 import axios from "axios";
-import {
-  types,
-  flow,
-  Instance,
-  applySnapshot,
-  destroy,
-  getSnapshot,
-} from "mobx-state-tree";
+import { types, flow, Instance, applySnapshot } from "mobx-state-tree";
 import { popupNotice } from "../utils/popupNotice";
 
-interface NewImageInfo {
+export interface NewImageInfo {
   _id: string;
   imageInfo: any;
 }
@@ -82,14 +75,17 @@ const ImagesStore = types
     const getImageById = (id: string) =>
       self.images.find((image) => image._id === id);
 
-    const editImagesInfo = flow(function* (updatedImageInfo: NewImageInfo[]) {
+    const editImagesInfo = flow(function* (updatedImagesInfo: NewImageInfo[]) {
       try {
-        const updatedImagesToSend = updatedImageInfo.map(
-          (image: NewImageInfo) => {
-            const imageToEdit: ImageType = getImageById(image._id)!;
+        const updatedImagesToSend = updatedImagesInfo.map(
+          (updatedImage: NewImageInfo) => {
+            const imageToEdit: ImageType = getImageById(updatedImage._id)!;
             const updatedImageInfo: NewImageInfo = {
-              _id: image._id,
-              imageInfo: { ...imageToEdit.imageInfo, ...image.imageInfo },
+              _id: updatedImage._id,
+              imageInfo: {
+                ...imageToEdit.imageInfo,
+                ...updatedImage.imageInfo,
+              },
             };
             return updatedImageInfo;
           }

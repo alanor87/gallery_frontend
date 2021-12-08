@@ -71,8 +71,9 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
     const newTags = tags.filter((tag) => tag !== tagToDelete);
     tagsUpdateHandler(newTags);
   };
-  const tagAddHandler = (tagToAdd: string) => {
-    tagsUpdateHandler([...tags, tagToAdd]);
+  const tagAddHandler = (tagsToAdd: string) => {
+    const parsedTags = tagsToAdd.split(/, | |,/);
+    tagsUpdateHandler([...tags, ...parsedTags]);
   };
   const tagsUpdateHandler = async (newTags: string[]) => {
     setimgInfoIsLoading(true);
@@ -159,7 +160,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
           tags={tags}
           closeHandle={onTagEditCloseHandler}
           onTagDelete={tagDelHandler}
-          onAddTag={tagAddHandler}
+          onAddTags={tagAddHandler}
           isLoading={imgInfoIsLoading}
         />
       )}

@@ -90,7 +90,7 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
       tags={openedToList}
       closeHandle={openToOverlayCloseHandler}
       onTagDelete={userDelHandler}
-      onAddTag={userAddHandler}
+      onAddTags={userAddHandler}
       isLoading={false}
     />
   );

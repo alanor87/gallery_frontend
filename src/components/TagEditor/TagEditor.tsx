@@ -10,7 +10,7 @@ interface Props {
   tags: string[];
   closeHandle: () => void;
   onTagDelete: (tagToDelete: string) => void;
-  onAddTag: (newTag: string) => void;
+  onAddTags: (newTag: string) => void;
   isLoading?: boolean;
 }
 
@@ -18,7 +18,7 @@ const TagEditor: React.FC<Props> = ({
   tags,
   closeHandle,
   onTagDelete,
-  onAddTag,
+  onAddTags,
   isLoading = false,
 }) => {
   const [tagName, setTagName] = useState("");
@@ -28,21 +28,21 @@ const TagEditor: React.FC<Props> = ({
   };
 
   const parseInput = (inputValue: string) => {
-    const tags = inputValue.split(/[,]|[ ]|/);
+    const tags = inputValue.split(/, | |,/);
     console.log(tags);
   };
 
   const handleEnterPress = (event: React.KeyboardEvent) => {
     if (event.code === "Enter") {
       parseInput(tagName);
-      onAddTag(tagName);
+      onAddTags(tagName);
       setTagName("");
     }
   };
 
   const addTag = () => {
     if (tagName) {
-      onAddTag(tagName);
+      onAddTags(tagName);
     }
     setTagName("");
   };

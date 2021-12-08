@@ -1,7 +1,6 @@
 import { observer } from "mobx-react-lite";
 import ImageCard from "../../components/ImageCard";
 import ImageMenu from "../../components/ImageMenu";
-import SideMenu from "../../components/SideMenu/SideMenu";
 import Modal from "../../components/Modals/Modal/Modal";
 import { Spinner } from "../../components/elements";
 import store from "../../MST/store";
@@ -15,7 +14,6 @@ function GalleryView() {
     groupSelectModeToggle,
     clearSelectedList,
   } = store.imagesStoreSettings;
-  const { sidePanelIsOpen } = store.userSettings.userInterface;
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 
   const imgArray = getAllImages;
