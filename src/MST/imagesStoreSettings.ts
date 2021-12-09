@@ -75,6 +75,26 @@ const ImagesStore = types
     const getImageById = (id: string) =>
       self.images.find((image) => image._id === id);
 
+    const uploadImages = flow(function* (imagesToUpload) {
+      try {
+        const uploadedImages = yield axios.post(
+          "/images/upload",
+          imagesToUpload,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        uploadedImages.data.newImages.forEach((image: ImageType) => {
+          self.images.push(image);
+        });
+      } catch (error) {
+        popupNotice(`Error while uploading images.
+             ${error}`);
+      }
+    });
+
     const editImagesInfo = flow(function* (updatedImagesInfo: NewImageInfo[]) {
       try {
         const updatedImagesToSend = updatedImagesInfo.map(
@@ -103,26 +123,6 @@ const ImagesStore = types
       }
     });
 
-    const uploadImages = flow(function* (imagesToUpload) {
-      try {
-        const uploadedImages = yield axios.post(
-          "/images/upload",
-          imagesToUpload,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        uploadedImages.data.newImages.forEach((image: ImageType) => {
-          self.images.push(image);
-        });
-      } catch (error) {
-        popupNotice(`Error while uploading images.
-           ${error}`);
-      }
-    });
-
     const deleteImages = flow(function* () {
       try {
         if (!self.selectedImages.length) return;
@@ -138,6 +138,21 @@ const ImagesStore = types
       } catch (error) {
         popupNotice(`Error while deleting images.
            ${error}`);
+      }
+    });
+
+    const imagesMultiuserShare = flow(function* (
+      imagesIdList: string[],
+      usersNamesList: string[]
+    ) {
+      try {
+        yield axios.post("images/multiuserShare", {
+          imagesIdList,
+          usersNamesList,
+        });
+      } catch (error) {
+        popupNotice(`Error while sharing image group.
+        ${error}`);
       }
     });
 
@@ -165,10 +180,7 @@ const ImagesStore = types
 
     const toggleSelectAllImages = () => {
       if (self.images.length === self.selectedImages.length) {
-        self.images.forEach((image) => {
-          image.isSelected = false;
-        });
-        clearSelectedList();
+        deselectAllImages();
         return;
       }
       self.images.forEach((image) => {
@@ -182,6 +194,13 @@ const ImagesStore = types
           isPublic: image.imageInfo.isPublic,
         }))
       );
+    };
+
+    const deselectAllImages = () => {
+      self.images.forEach((image) => {
+        image.isSelected = false;
+      });
+      clearSelectedList();
     };
 
     const clearSelectedList = () => {
@@ -198,7 +217,9 @@ const ImagesStore = types
       uploadImages,
       deleteImages,
       groupSelectModeToggle,
+      imagesMultiuserShare,
       selectedListChange,
+      deselectAllImages,
       toggleSelectAllImages,
       clearSelectedList,
       purgeStorage,

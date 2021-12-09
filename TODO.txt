@@ -2,7 +2,7 @@ Global aim is to create an image hosting that would be targeting the sharing if 
  with not only sharing between the members of the service itself - bu also all the populat social networks, 
  also - options to generate the QR code for the image link.
 
-- DONE - change the scheme of modal windows render - so there would not be all the modals opened at once, even invisible.
+- add spinners in all places with async functions.
 - work on the keyboard accessibility - tabIndex feature for all interactive elements with all the styles needed.
 - add input filter to the group menu in gallery so that user can choose groups of images by tags.
 - CURRENT - create the scheme of sharing images. The front end part was created, also save of the new openedTo list in one image. 
@@ -13,5 +13,4 @@ Global aim is to create an image hosting that would be targeting the sharing if 
 
 BUGS work
 
- - on the backend - make a GOOD duplication-proof way for creating temporary filenames for uploaded images.
  - handle duplication resilience in tags and openedToUsers lists - in share components especially.

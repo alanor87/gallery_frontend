@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Checkbox, Button } from "../../elements";
+import { Checkbox, Button, Tag } from "../../elements";
 import TagEditor from "../../TagEditor";
+import { ReactComponent as EditIcon } from "../../../img/icon_edit.svg";
 import store from "../../../MST/store";
 import { NewImageInfo } from "../../../MST/imagesStoreSettings";
 import styles from "./ModalShare.module.scss";
@@ -10,9 +11,15 @@ const ModalShare = () => {
   const [usersOpenedToList, setUsersOpenedToList] = useState<string[]>([]);
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
-  const { selectedImages, clearSelectedList, editImagesInfo, getImageById } =
-    store.imagesStoreSettings;
-  const { checkIfUserExistsByName } = store.userSettings;
+  const {
+    selectedImages,
+    editImagesInfo,
+    getImageById,
+    deselectAllImages,
+    groupSelectModeToggle,
+    imagesMultiuserShare,
+  } = store.imagesStoreSettings;
+  const { userName, checkIfUserExistsByName } = store.userSettings;
 
   const openToOverlayOpenHandler = () => {
     setOpenedToOverlayIsOpen(true);
@@ -25,6 +32,8 @@ const ModalShare = () => {
     setisPublicState(!isPublicState);
   };
   const userAddHandler = async (name: string) => {
+    console.log(name === userName);
+    if (name === userName) return;
     const userDoesExist = await checkIfUserExistsByName(name);
     if (userDoesExist && !usersOpenedToList.includes(name))
       setUsersOpenedToList([...usersOpenedToList, name]);
@@ -36,7 +45,8 @@ const ModalShare = () => {
   };
 
   const cancelHandler = () => {
-    clearSelectedList();
+    deselectAllImages();
+    groupSelectModeToggle();
     setModalComponentType("none");
     setModalOpen(false);
   };
@@ -47,9 +57,10 @@ const ModalShare = () => {
    * single for all the selected images. Was told that this way has Big O(n) complexity ))
    */
 
-  const acceptShareHandler = async () => {
-    const updatedImagesInfo: NewImageInfo[] = selectedImages.map(
-      ({ selectedId }) => {
+  const acceptChangesHandler = async () => {
+    const selectedImagesId = selectedImages.map((image) => image.selectedId);
+    const updatedImagesInfo: NewImageInfo[] = selectedImagesId.map(
+      (selectedId) => {
         const currentImage = getImageById(selectedId)!;
         const oldOpenedToList = currentImage.imageInfo.openedTo;
         const newOpenedList = [
@@ -64,9 +75,11 @@ const ModalShare = () => {
     );
 
     await editImagesInfo(updatedImagesInfo);
+    await imagesMultiuserShare(selectedImagesId, usersOpenedToList);
     setModalComponentType("none");
     setModalOpen(false);
-    clearSelectedList();
+    deselectAllImages();
+    groupSelectModeToggle();
   };
 
   return (
@@ -84,15 +97,25 @@ const ModalShare = () => {
               Make the image public.
             </div>
             <div className={styles.option}>
+              <p className={styles.openedTo}>Is opened to users : </p>
+              {usersOpenedToList.map((entry, index) => (
+                <Tag key={index} tagValue={entry} />
+              ))}
               <Button
-                text="Edit shared users list"
-                title="Edit shared users list"
+                className={styles.addUserBtn}
+                text="Edit"
+                title="Edit list of users with acces to this image"
+                icon={EditIcon}
                 onClick={openToOverlayOpenHandler}
               />
             </div>
           </div>
           <div className={styles.buttonWrapper}>
-            <Button text="Accept" type="submit" onClick={acceptShareHandler} />
+            <Button
+              text="Accept"
+              type="submit"
+              onClick={acceptChangesHandler}
+            />
             <Button text="Cancel" onClick={cancelHandler} />
           </div>
         </>

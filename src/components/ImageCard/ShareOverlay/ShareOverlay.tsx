@@ -22,7 +22,7 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
   const [openedToList, setOpenedToList] = useState(openedTo);
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
   const { editImagesInfo } = store.imagesStoreSettings;
-  const { checkIfUserExistsByName } = store.userSettings;
+  const { userName, checkIfUserExistsByName } = store.userSettings;
 
   const openToOverlayOpenHandler = () => {
     setOpenedToOverlayIsOpen(true);
@@ -40,6 +40,7 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
     setOpenedToList(newTags);
   };
   const userAddHandler = async (name: string) => {
+    if (name === userName) return;
     const userDoesExist = await checkIfUserExistsByName(name);
     if (userDoesExist && !openedToList.includes(name))
       setOpenedToList([...openedToList, name]);
