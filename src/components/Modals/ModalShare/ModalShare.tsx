@@ -32,7 +32,6 @@ const ModalShare = () => {
     setisPublicState(!isPublicState);
   };
   const userAddHandler = async (name: string) => {
-    console.log(name === userName);
     if (name === userName) return;
     const userDoesExist = await checkIfUserExistsByName(name);
     if (userDoesExist && !usersOpenedToList.includes(name))
@@ -56,7 +55,6 @@ const ModalShare = () => {
    * without duplications - using an intermediate Set object, since we have an empty initial usersOpenedToList,
    * single for all the selected images. Was told that this way has Big O(n) complexity ))
    */
-
   const acceptChangesHandler = async () => {
     const selectedImagesId = selectedImages.map((image) => image.selectedId);
     const updatedImagesInfo: NewImageInfo[] = selectedImagesId.map(
@@ -74,7 +72,15 @@ const ModalShare = () => {
       }
     );
 
+    /*
+     * Writing the updated images info from the backend to the corresponding images in store.
+     */
     await editImagesInfo(updatedImagesInfo);
+
+    /*
+     * Updating each users imagesOpenedToUser list with the list of selectedImagesId.
+     * Performing this operation on the backend.
+     */
     await imagesMultiuserShare(selectedImagesId, usersOpenedToList);
     setModalComponentType("none");
     setModalOpen(false);
