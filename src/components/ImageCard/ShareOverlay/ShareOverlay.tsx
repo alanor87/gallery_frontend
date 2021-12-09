@@ -3,6 +3,7 @@ import store from "../../../MST/store";
 import TagEditor from "../../TagEditor";
 import { Checkbox, Button, Tag } from "../../elements";
 import { ReactComponent as EditIcon } from "../../../img/icon_edit.svg";
+import { ImageOpenedToUserEntry } from "types/common";
 import styles from "./ShareOverlay.module.scss";
 
 interface Props {
@@ -19,9 +20,12 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
   onCloseShareOverlay,
 }) => {
   const [isPublicState, setisPublicState] = useState(isPublic);
-  const [openedToList, setOpenedToList] = useState(openedTo);
+  const [openedToList, setOpenedToList] = useState(openedTo); // For the editImagesInfo - only the users names.
+  const [openedToEntriesList, setOpenedToEntriesList] = useState<
+    ImageOpenedToUserEntry[]
+  >([]); // For the imagesMultiuserShare - user names and action - to add or to remove the imagesOpenedToUser user property.
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
-  const { editImagesInfo } = store.imagesStoreSettings;
+  const { editImagesInfo, imagesMultiuserShare } = store.imagesStoreSettings;
   const { userName, checkIfUserExistsByName } = store.userSettings;
 
   const openToOverlayOpenHandler = () => {
@@ -36,8 +40,8 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
   };
 
   const userDelHandler = (userToDelete: string) => {
-    const newTags = openedToList.filter((user) => user !== userToDelete);
-    setOpenedToList(newTags);
+    const newList = openedToList.filter((user) => user !== userToDelete);
+    setOpenedToList(newList);
   };
   const userAddHandler = async (name: string) => {
     if (name === userName) return;

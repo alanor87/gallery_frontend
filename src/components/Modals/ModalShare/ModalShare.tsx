@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Checkbox, Button, Tag } from "../../elements";
-import TagEditor from "../../TagEditor";
-import { ReactComponent as EditIcon } from "../../../img/icon_edit.svg";
-import store from "../../../MST/store";
-import { NewImageInfo } from "../../../MST/imagesStoreSettings";
+import { Checkbox, Button, Tag } from "components/elements";
+import TagEditor from "components/TagEditor";
+import { ReactComponent as EditIcon } from "img/icon_edit.svg";
+import store from "MST/store";
+import { NewImageInfo } from "MST/imagesStoreSettings";
+import { ImageOpenedToUserEntry } from "types/common";
 import styles from "./ModalShare.module.scss";
 
 const ModalShare = () => {
@@ -78,10 +79,20 @@ const ModalShare = () => {
     await editImagesInfo(updatedImagesInfo);
 
     /*
-     * Updating each users imagesOpenedToUser list with the list of selectedImagesId.
+     * Creating the object for imagesMultiuserShare. In this case we only use action: 'add', since
+     * we are only adding users to each image openedTo List from the group edit modal - to delete those -
+     * we have to do that manually in each image shareOverlay. For now its that way.
+     */
+
+    const usersList: ImageOpenedToUserEntry[] = usersOpenedToList.map(
+      (name) => ({ name, action: "add" })
+    );
+
+    /*
+     * Updating each users selectedUsersList list with the list of selectedImagesId.
      * Performing this operation on the backend.
      */
-    await imagesMultiuserShare(selectedImagesId, usersOpenedToList);
+    await imagesMultiuserShare(selectedImagesId, usersList);
     setModalComponentType("none");
     setModalOpen(false);
     deselectAllImages();

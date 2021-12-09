@@ -1,5 +1,6 @@
 import axios from "axios";
 import { types, flow, Instance, applySnapshot } from "mobx-state-tree";
+import { ImageOpenedToUserEntry } from "types/common";
 import { popupNotice } from "../utils/popupNotice";
 
 export interface NewImageInfo {
@@ -143,12 +144,12 @@ const ImagesStore = types
 
     const imagesMultiuserShare = flow(function* (
       imagesIdList: string[],
-      usersNamesList: string[]
+      usersList: ImageOpenedToUserEntry[]
     ) {
       try {
         yield axios.post("images/multiuserShare", {
           imagesIdList,
-          usersNamesList,
+          usersList,
         });
       } catch (error) {
         popupNotice(`Error while sharing image group.
