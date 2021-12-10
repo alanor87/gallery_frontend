@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { observer } from "mobx-react-lite";
 import ImageCard from "../../components/ImageCard";
 import ImageMenu from "../../components/ImageMenu";
@@ -18,20 +19,21 @@ function GalleryView() {
 
   const imgArray = getAllImages;
 
-  const groupModeHandler = () => {
+  const groupModeHandler = useCallback(() => {
+    console.log("groupModeHandler");
     clearSelectedList();
     groupSelectModeToggle();
-  };
+  }, [clearSelectedList, groupSelectModeToggle]);
 
-  const groupDeleteHandler = () => {
+  const groupDeleteHandler = useCallback(() => {
     setModalComponentType("delete");
     setModalOpen(true);
-  };
+  }, [setModalComponentType, setModalOpen]);
 
-  const groupShareHandler = () => {
+  const groupShareHandler = useCallback(() => {
     setModalComponentType("share");
     setModalOpen(true);
-  };
+  }, [setModalComponentType, setModalOpen]);
 
   return (
     <section

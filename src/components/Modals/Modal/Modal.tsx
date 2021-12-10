@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import ModalUpload from "../ModalUpload";
 import ModalDelete from "../ModalDelete";
 import ModalShare from "../ModalShare";
@@ -21,12 +21,15 @@ const Modal: React.FunctionComponent<Props> = ({ style }) => {
     setModalComponentType,
   } = store.modalWindowsSettings;
 
-  const modalBackdropClose = (event: any) => {
-    if (event.target === event.currentTarget || event.key === "Escape") {
-      setModalOpen(false);
-      setModalComponentType("none");
-    }
-  };
+  const modalBackdropClose = useCallback(
+    (event: any) => {
+      if (event.target === event.currentTarget || event.key === "Escape") {
+        setModalOpen(false);
+        setModalComponentType("none");
+      }
+    },
+    [setModalOpen, setModalComponentType]
+  );
 
   const getCurrentModalComponent = () => {
     switch (modalComponentType) {

@@ -1,4 +1,4 @@
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { NavLink } from "react-router-dom";
 import TagList from "../TagList";
 import { Button, Spinner } from "../elements";
@@ -40,28 +40,28 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
 
   const imageMenuToggleHandler = () => setImageMenuIsOpen(!imageMenuIsOpen);
 
-  const groupSelectOnHandler = () => {
-    setImageMenuIsOpen(false);
-    groupSelectModeToggle();
-  };
-
   const toggleImageSelect = () => {
     toggleSelectImage(!isSelected);
     selectedListChange(_id, imageHostingId);
   };
 
-  const tagEditOpenHandler = () => {
+  const groupSelectOnHandler = useCallback(() => {
+    setImageMenuIsOpen(false);
+    groupSelectModeToggle();
+  }, [groupSelectModeToggle]);
+
+  const tagEditOpenHandler = useCallback(() => {
     setTagEditorOpen(true);
     setImageMenuIsOpen(false);
-  };
-  const deleteOverlayOpenHandler = () => {
+  }, []);
+  const deleteOverlayOpenHandler = useCallback(() => {
     setDeleteOverlayIsOpen(true);
     setImageMenuIsOpen(false);
-  };
-  const shareOverlayOpenHandler = () => {
+  }, []);
+  const shareOverlayOpenHandler = useCallback(() => {
     setShareOverlayIsOpen(true);
     setImageMenuIsOpen(false);
-  };
+  }, []);
 
   const onTagEditCloseHandler = () => setTagEditorOpen(false);
   const deleteOverlayCloseHandler = () => setDeleteOverlayIsOpen(false);

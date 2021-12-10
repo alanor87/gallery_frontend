@@ -40,6 +40,7 @@ function App() {
     return <Spinner text="Checking token" side={100} />;
 
   console.log("App render");
+
   return (
     <div className={"appMain"}>
       {userIsAuthenticated && (

@@ -21,6 +21,7 @@ const ImageMenu: React.FC<Props> = ({
   onShare,
   onSelect,
 }) => {
+  console.log("Image menu render");
   const { toggleSelectAllImages, selectedImages } = store.imagesStoreSettings;
   return (
     <div className={styles.imageMenuWrapper}>

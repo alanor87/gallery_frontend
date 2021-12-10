@@ -19,7 +19,7 @@ const ModalUpload = () => {
       for (let i = 0; i < files.length; i += 1) {
         const singleImage = files[i];
         const reader = new FileReader();
-        reader.onload = (event: any) => {
+        reader.onload = (event: ProgressEvent<FileReader>) => {
           setPreviewImages((previousImages) => [
             ...previousImages,
             {
