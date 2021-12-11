@@ -19,11 +19,16 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
   openedTo,
   onCloseShareOverlay,
 }) => {
+  const initialOpenedToEntries: ImageOpenedToUserEntry[] = openedTo.map(
+    (name) => ({ name, action: "none" })
+  );
+
   const [isPublicState, setisPublicState] = useState(isPublic);
-  const [openedToList, setOpenedToList] = useState(openedTo); // For the editImagesInfo - only the users names.
+  // const [openedToNamesList, setOpenedToNamesList] = useState(openedTo); // For the editImagesInfo - only the users names.
   const [openedToEntriesList, setOpenedToEntriesList] = useState<
     ImageOpenedToUserEntry[]
-  >([]); // For the imagesMultiuserShare - user names and action - to add or to remove the imagesOpenedToUser user property.
+  >(initialOpenedToEntries); // For the imagesMultiuserShare - user names and action - to add or to remove the imagesOpenedToUser user property.
+
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
   const { editImagesInfo, imagesMultiuserShare } = store.imagesStoreSettings;
   const { userName, checkIfUserExistsByName } = store.userSettings;
@@ -39,23 +44,68 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
     setisPublicState(!isPublicState);
   };
 
-  const userDelHandler = (userToDelete: string) => {
-    const newList = openedToList.filter((user) => user !== userToDelete);
-    setOpenedToList(newList);
-  };
-  const userAddHandler = async (name: string) => {
-    if (name === userName) return;
-    const userDoesExist = await checkIfUserExistsByName(name);
-    if (userDoesExist && !openedToList.includes(name))
-      setOpenedToList([...openedToList, name]);
+  const userAddHandler = async (nameToAdd: string) => {
+    const userDoesExist = await checkIfUserExistsByName(nameToAdd);
+    if (nameToAdd === userName || !userDoesExist) return;
+
+    const indexOfEntry = openedToEntriesList.findIndex(
+      (entry) => entry.name === nameToAdd
+    );
+
+    if (indexOfEntry !== -1) {
+      const updatedEntriesList: ImageOpenedToUserEntry[] = [
+        ...openedToEntriesList,
+      ];
+      updatedEntriesList[indexOfEntry].action = "add";
+      setOpenedToEntriesList(updatedEntriesList);
+    } else {
+      setOpenedToEntriesList([
+        ...openedToEntriesList,
+        { name: nameToAdd, action: "add" },
+      ]);
+    }
+
+    // if (userDoesExist && !openedToNamesList.includes(nameToAdd))
+    //   setOpenedToNamesList([...openedToNamesList, nameToAdd]);
   };
 
-  const acceptChangesHandler = () => {
-    editImagesInfo([
-      { _id, imageInfo: { isPublic: isPublicState, openedTo: openedToList } },
+  const userDelHandler = (nameToRemove: string) => {
+    const updatedEntriesList: ImageOpenedToUserEntry[] =
+      openedToEntriesList.map((entry) => {
+        if (entry.name === nameToRemove)
+          return { name: entry.name, action: "remove" };
+        return entry;
+      });
+    setOpenedToEntriesList(updatedEntriesList);
+    // const newList = openedToNamesList.filter((user) => user !== nameToRemove);
+    // setOpenedToNamesList(newList);
+  };
+
+  const acceptChangesHandler = async () => {
+    /*
+     *  Mapping the array of just user names for the iamge object openedTo property
+     *  and writing the updated image info from the backend to the corresponding images in store.
+     */
+    const openedToNamesList = getOpenegToNamesList();
+    await editImagesInfo([
+      {
+        _id,
+        imageInfo: { isPublic: isPublicState, openedTo: openedToNamesList },
+      },
     ]);
+
+    /*
+     * Updating each users selectedUsersList list with the current image id.
+     * Performing this operation on the backend.
+     */
+    await imagesMultiuserShare([_id], openedToEntriesList);
     onCloseShareOverlay();
   };
+
+  const getOpenegToNamesList = () =>
+    openedToEntriesList
+      .filter((entry) => entry.action !== "remove")
+      .map((entry) => entry.name);
 
   return !openedToOverlayIsOpen ? (
     <div className={`imageCardOverlay ${styles.shareOverlay}`}>
@@ -74,9 +124,10 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
       </div>
       <div className={styles.option}>
         <p className={styles.openedTo}>Is opened to users : </p>
-        {openedToList.map((entry, index) => (
-          <Tag key={index} tagValue={entry} />
-        ))}
+        {openedToEntriesList.map((entry) => {
+          if (entry.action === "remove") return null;
+          return <Tag key={entry.name} tagValue={entry.name} />;
+        })}
         <Button
           className={styles.addUserBtn}
           text="Edit"
@@ -92,7 +143,7 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
     </div>
   ) : (
     <TagEditor
-      tags={openedToList}
+      tags={getOpenegToNamesList()}
       closeHandle={openToOverlayCloseHandler}
       onTagDelete={userDelHandler}
       onAddTags={userAddHandler}

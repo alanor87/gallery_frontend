@@ -1,4 +1,4 @@
 export interface ImageOpenedToUserEntry {
   name: string;
-  action: "add";
+  action: "add" | "remove" | "none";
 }
