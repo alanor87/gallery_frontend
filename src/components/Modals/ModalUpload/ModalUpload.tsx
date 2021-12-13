@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../../elements";
+import { Button, Spinner } from "../../elements";
 import { ReactComponent as CloseIcon } from "../../../img/icon_close.svg";
 import store from "../../../MST/store";
 import styles from "./styles.module.scss";
@@ -7,6 +7,7 @@ import styles from "./styles.module.scss";
 const ModalUpload = () => {
   const [previewImages, setPreviewImages] = useState<any[]>([]);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { uploadImages } = store.imagesStoreSettings;
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 
@@ -51,13 +52,15 @@ const ModalUpload = () => {
   };
 
   const handleImagesUpload = async () => {
+    setIsLoading(true);
     const formData = new FormData();
     filesToUpload.forEach((file) => {
       formData.append("images", file);
     });
-    setModalComponentType("none");
-    setModalOpen(false);
     await uploadImages(formData);
+    setModalComponentType("none");
+    setIsLoading(false);
+    setModalOpen(false);
   };
 
   return (
@@ -118,18 +121,21 @@ const ModalUpload = () => {
         <Button
           type="button"
           text="Upload"
-          disabled={!previewImages.length}
+          disabled={!previewImages.length || isLoading}
           className={styles.modalUploadButton}
           onClick={handleImagesUpload}
         />
         <Button
           type="button"
           text="Clear"
-          disabled={!previewImages.length}
+          disabled={!previewImages.length || isLoading}
           className={styles.modalUploadButton}
           onClick={clearUploadModal}
         />
       </div>
+      {isLoading && (
+        <Spinner side={20} backdropClassName={styles.spinnerBackdrop} />
+      )}
     </div>
   );
 };

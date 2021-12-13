@@ -1,8 +1,10 @@
-import { Button } from "../../elements";
+import { useState } from "react";
+import { Button, Spinner } from "../../elements";
 import store from "../../../MST/store";
 import styles from "./styles.module.scss";
 
 const ModalDelete = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const {
     selectedImages,
     deleteImages,
@@ -13,9 +15,11 @@ const ModalDelete = () => {
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 
   const deleteClickHandler = async () => {
+    setIsLoading(true);
     await deleteImages();
     groupSelectModeToggle();
     clearSelectedList();
+    setIsLoading(false);
     setModalComponentType("none");
     setModalOpen(false);
   };
@@ -30,6 +34,7 @@ const ModalDelete = () => {
         <Button text="Delete" onClick={deleteClickHandler} />
         <Button text="Cancel" onClick={() => setModalOpen(false)} />
       </div>
+      {isLoading && <Spinner side={20} />}
     </div>
   );
 };

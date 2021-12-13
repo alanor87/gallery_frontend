@@ -179,6 +179,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
           isPublic={isPublic}
           openedTo={openedTo}
           onCloseShareOverlay={shareOverlayCloseHandler}
+          setIsLoading={setimgInfoIsLoading}
         />
       )}
 

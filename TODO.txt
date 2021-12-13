@@ -7,7 +7,6 @@ Global aim is to create an image hosting that would be targeting the sharing if 
 - add input filter to the group menu in gallery so that user can choose groups of images by tags.
 - generating QR code for the image link.
 - store all types and interfaces in a single place
- - CURRENT - ShareOverlay implementation of imagesMultiuserShare.
 
 BUGS work
 

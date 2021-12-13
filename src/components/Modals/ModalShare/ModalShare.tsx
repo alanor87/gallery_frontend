@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Checkbox, Button, Tag } from "components/elements";
+import { Checkbox, Button, Tag, Spinner } from "components/elements";
 import TagEditor from "components/TagEditor";
 import { ReactComponent as EditIcon } from "img/icon_edit.svg";
 import store from "MST/store";
@@ -11,6 +11,7 @@ const ModalShare = () => {
   const [isPublicState, setisPublicState] = useState(false);
   const [usersOpenedToList, setUsersOpenedToList] = useState<string[]>([]);
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
   const {
     selectedImages,
@@ -57,6 +58,8 @@ const ModalShare = () => {
    * single for all the selected images. Was told that this way has Big O(n) complexity ))
    */
   const acceptChangesHandler = async () => {
+    setIsLoading(true);
+
     const selectedImagesId = selectedImages.map((image) => image.selectedId);
     const updatedImagesInfo: NewImageInfo[] = selectedImagesId.map(
       (selectedId) => {
@@ -94,6 +97,7 @@ const ModalShare = () => {
      */
     await imagesMultiuserShare(selectedImagesId, usersList);
     setModalComponentType("none");
+    setIsLoading(false);
     setModalOpen(false);
     deselectAllImages();
     groupSelectModeToggle();
@@ -101,7 +105,7 @@ const ModalShare = () => {
 
   return (
     <div className={styles.modalShareForm}>
-      {!openedToOverlayIsOpen && (
+      {!openedToOverlayIsOpen && !isLoading && (
         <>
           <h2>Sharing options</h2>
           <div className={styles.optionsWrapper}>
@@ -138,7 +142,7 @@ const ModalShare = () => {
         </>
       )}
 
-      {openedToOverlayIsOpen && (
+      {openedToOverlayIsOpen && !isLoading && (
         <TagEditor
           tags={usersOpenedToList}
           closeHandle={openToOverlayCloseHandler}
@@ -146,6 +150,7 @@ const ModalShare = () => {
           onTagDelete={userRemoveHandler}
         />
       )}
+      {isLoading && <Spinner side={50} />}
     </div>
   );
 };

@@ -11,6 +11,7 @@ interface Props {
   isPublic: boolean;
   openedTo: string[];
   onCloseShareOverlay: () => void;
+  setIsLoading: (value: boolean) => void;
 }
 
 const ShareOverlay: React.FunctionComponent<Props> = ({
@@ -18,13 +19,13 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
   isPublic,
   openedTo,
   onCloseShareOverlay,
+  setIsLoading,
 }) => {
   const initialOpenedToEntries: ImageOpenedToUserEntry[] = openedTo.map(
     (name) => ({ name, action: "none" })
   );
 
   const [isPublicState, setisPublicState] = useState(isPublic);
-  // const [openedToNamesList, setOpenedToNamesList] = useState(openedTo); // For the editImagesInfo - only the users names.
   const [openedToEntriesList, setOpenedToEntriesList] = useState<
     ImageOpenedToUserEntry[]
   >(initialOpenedToEntries); // For the imagesMultiuserShare - user names and action - to add or to remove the imagesOpenedToUser user property.
@@ -64,9 +65,6 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
         { name: nameToAdd, action: "add" },
       ]);
     }
-
-    // if (userDoesExist && !openedToNamesList.includes(nameToAdd))
-    //   setOpenedToNamesList([...openedToNamesList, nameToAdd]);
   };
 
   const userDelHandler = (nameToRemove: string) => {
@@ -77,11 +75,10 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
         return entry;
       });
     setOpenedToEntriesList(updatedEntriesList);
-    // const newList = openedToNamesList.filter((user) => user !== nameToRemove);
-    // setOpenedToNamesList(newList);
   };
 
   const acceptChangesHandler = async () => {
+    setIsLoading(true);
     /*
      *  Mapping the array of just user names for the iamge object openedTo property
      *  and writing the updated image info from the backend to the corresponding images in store.
@@ -100,6 +97,7 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
      */
     await imagesMultiuserShare([_id], openedToEntriesList);
     onCloseShareOverlay();
+    setIsLoading(false);
   };
 
   const getOpenegToNamesList = () =>

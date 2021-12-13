@@ -1,5 +1,6 @@
+import { useState } from "react";
 import store from "../../../MST/store";
-import { Button } from "../../elements";
+import { Button, Spinner } from "../../elements";
 
 interface Props {
   _id: string;
@@ -12,10 +13,12 @@ const DeleteOverlay: React.FunctionComponent<Props> = ({
   imageHostingId,
   onCloseDeleteOverlay,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const { deleteImages, selectedListChange, clearSelectedList } =
     store.imagesStoreSettings;
 
   const deleteImageHandler = async () => {
+    setIsLoading(true);
     selectedListChange(_id, imageHostingId);
     await deleteImages();
     clearSelectedList();
@@ -38,6 +41,7 @@ const DeleteOverlay: React.FunctionComponent<Props> = ({
           onClick={closeDeleteOverlayHandler}
         />
       </div>
+      {isLoading && <Spinner side={20} />}
     </div>
   );
 };

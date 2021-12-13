@@ -2,25 +2,33 @@ import styles from "./Spinner.module.scss";
 
 interface Props {
   className?: string;
+  backdropClassName?: string;
   text?: string;
   side: number;
 }
 
-const Spinner: React.FC<Props> = ({ text = "Loading", side, className }) => {
+const Spinner: React.FC<Props> = ({
+  text = "Loading",
+  side,
+  className,
+  backdropClassName,
+}) => {
   const containerSize = {
     width: side,
     height: side,
   };
 
   return (
-    <div className={`${styles.spinnerContainerWrapper} ${className}`}>
-      <div className={styles.spinnerContainer} style={containerSize}>
-        <div
-          className={styles.spinnerInnerContainer}
-          style={containerSize}
-        ></div>
+    <div className={`${styles.spinnerBackdrop} ${backdropClassName}`}>
+      <div className={`${styles.spinnerContainerWrapper} ${className}`}>
+        <div className={styles.spinnerContainer} style={containerSize}>
+          <div
+            className={styles.spinnerInnerContainer}
+            style={containerSize}
+          ></div>
+        </div>
+        <span className={styles.spinnerText}>{text}</span>
       </div>
-      <span className={styles.spinnerText}>{text}</span>
     </div>
   );
 };
