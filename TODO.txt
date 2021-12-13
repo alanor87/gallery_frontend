@@ -2,11 +2,12 @@ Global aim is to create an image hosting that would be targeting the sharing if 
  with not only sharing between the members of the service itself - bu also all the populat social networks, 
  also - options to generate the QR code for the image link.
 
-- add spinners in all places with async functions.
 - work on the keyboard accessibility - tabIndex feature for all interactive elements with all the styles needed.
 - add input filter to the group menu in gallery so that user can choose groups of images by tags.
 - generating QR code for the image link.
 - store all types and interfaces in a single place
+- add pagination
+-add routes for the gallery of images shared with the user -  and public images
 
 BUGS work
 
