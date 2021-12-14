@@ -6,21 +6,26 @@ import Modal from "../../components/Modals/Modal/Modal";
 import { Spinner } from "../../components/elements";
 import store from "../../MST/store";
 import styles from "./Gallery.module.scss";
+import { RouteComponentProps } from "react-router";
 
-function GalleryView() {
-  console.log("GalleryView render");
+// interface Props {
+//   path: string;
+// }
+
+function GalleryView(props: RouteComponentProps) {
+  const { history, location, match } = props;
+  console.log(location.pathname);
   const {
-    getAllImages,
+    getUserImages,
     groupSelectMode,
     groupSelectModeToggle,
     clearSelectedList,
   } = store.imagesStoreSettings;
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 
-  const imgArray = getAllImages;
+  const imgArray = getUserImages;
 
   const groupModeHandler = useCallback(() => {
-    console.log("groupModeHandler");
     clearSelectedList();
     groupSelectModeToggle();
   }, [clearSelectedList, groupSelectModeToggle]);
