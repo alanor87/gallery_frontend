@@ -1,9 +1,16 @@
-import { types, flow, getSnapshot, applySnapshot } from "mobx-state-tree";
+import {
+  types,
+  flow,
+  getSnapshot,
+  applySnapshot,
+  destroy,
+} from "mobx-state-tree";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { popupNotice } from "../utils/popupNotice";
 import userSettings from "./userSettings";
 import imagesStoreSettings from "./imagesStoreSettings";
-import { RegisterFormInterface, LoginFormInterface } from "../types/user";
+import { RegisterFormInterface, LoginFormInterface } from "types/user";
+import { modalWindowTypes } from "types/interface";
 
 axios.defaults.baseURL = "http://localhost:3030/api/v1";
 // axios.defaults.baseURL = "https://gallery-app-mj.herokuapp.com/api/v1";
@@ -30,8 +37,6 @@ const initialUserSettings = {
     sidePanelIsOpen: false,
   },
 };
-
-type modalWindowTypes = "image" | "delete" | "share" | "upload" | "none";
 
 const modalSettings = types
   .model({
@@ -61,13 +66,30 @@ const store = types
     modalWindowsSettings: types.optional(modalSettings, {}),
   })
   .actions((self) => {
+    const registerInit = flow(function* (registerData: RegisterFormInterface) {
+      try {
+        yield self.userSettings.userRegister(registerData);
+      } catch (error) {
+        popupNotice(`Error user register.
+            ${error}`);
+      }
+    });
+
+    // The userSettings.userOwnedImages get all the images objects of user. Then we transfer all those
+    // to the imageStore - and delete the .userOwnedImages in userSettings store. This is done to have only one
+    // request instead of two -  and to avoid storing of duplicated objects in two stores.
+    const imagesStoreInitFromUser = () => {
+      applySnapshot(
+        self.imagesStoreSettings.images,
+        getSnapshot(self.userSettings.userOwnedImages)
+      );
+      destroy(self.userSettings.userOwnedImages);
+    };
+
     const localTokenInit = flow(function* () {
       try {
         yield self.userSettings.getTokenFromLocalStorage();
-        applySnapshot(
-          self.imagesStoreSettings.images,
-          getSnapshot(self.userSettings.userOwnedImages)
-        );
+        imagesStoreInitFromUser();
       } catch (error) {
         popupNotice(`Error user login.
         ${error}.
@@ -79,22 +101,10 @@ const store = types
       }
     });
 
-    const registerInit = flow(function* (registerData: RegisterFormInterface) {
-      try {
-        yield self.userSettings.userRegister(registerData);
-      } catch (error) {
-        popupNotice(`Error user register.
-        ${error}`);
-      }
-    });
-
     const loginInit = flow(function* (loginData: LoginFormInterface) {
       try {
         yield self.userSettings.userLogin(loginData);
-        applySnapshot(
-          self.imagesStoreSettings.images,
-          getSnapshot(self.userSettings.userOwnedImages)
-        );
+        imagesStoreInitFromUser();
       } catch (error) {
         popupNotice(`Error user login.
         ${error}`);

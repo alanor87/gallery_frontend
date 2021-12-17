@@ -1,14 +1,9 @@
 import axios from "axios";
 import { types, flow, Instance, applySnapshot } from "mobx-state-tree";
 import { ImageOpenedToUserEntry } from "types/common";
+import { NewImageInfoType, GalleryType } from "types/images";
 import { popupNotice } from "../utils/popupNotice";
 
-export interface NewImageInfo {
-  _id: string;
-  imageInfo: any;
-}
-
-type GalleryType = "userGallery" | "sharedGallery" | "publicGallery";
 interface InitialImageStoreSettings {
   galleryType: GalleryType;
   images: ImageType[];
@@ -38,6 +33,8 @@ const ImageInfo = types
     return { setIsLoading };
   });
 
+// ######################## Single image store object ####################### //
+
 export const Image = types
   .model({
     _id: types.string,
@@ -56,6 +53,8 @@ export const Image = types
     };
     return { updateImageInfo, toggleSelectImage };
   });
+
+// ######################## General images store object ####################### //
 
 const ImagesStore = types
   .model({
@@ -108,12 +107,14 @@ const ImagesStore = types
       }
     });
 
-    const editImagesInfo = flow(function* (updatedImagesInfo: NewImageInfo[]) {
+    const editImagesInfo = flow(function* (
+      updatedImagesInfo: NewImageInfoType[]
+    ) {
       try {
         const updatedImagesToSend = updatedImagesInfo.map(
-          (updatedImage: NewImageInfo) => {
+          (updatedImage: NewImageInfoType) => {
             const imageToEdit: ImageType = getImageById(updatedImage._id)!;
-            const updatedImageInfo: NewImageInfo = {
+            const updatedImageInfo: NewImageInfoType = {
               _id: updatedImage._id,
               imageInfo: {
                 ...imageToEdit.imageInfo,
@@ -123,7 +124,7 @@ const ImagesStore = types
             return updatedImageInfo;
           }
         );
-        const updatedImagesFromServer: NewImageInfo[] = yield axios
+        const updatedImagesFromServer: NewImageInfoType[] = yield axios
           .put(`/images/updateImages`, { imagesToUpdate: updatedImagesToSend })
           .then((res) => res.data.body.updatedImages);
         updatedImagesFromServer.forEach((updatedImage) => {
