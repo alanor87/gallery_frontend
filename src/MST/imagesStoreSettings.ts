@@ -90,6 +90,35 @@ const ImagesStore = types
     const setGalleryMode = (value: GalleryType) => {
       self.galleryMode = value;
     };
+
+    const imageStoreInit = flow(function* () {
+      try {
+        switch (self.galleryMode) {
+          case "userGallery": {
+            const response = yield axios.get("/images/userOwnedImages");
+            const { userOwnedImages } = response.data.body;
+            applySnapshot(self.images, userOwnedImages);
+            break;
+          }
+          case "sharedGallery": {
+            const response = yield axios.get("/images/openedToImages");
+            const { userOpenedToImages } = response.data.body;
+            applySnapshot(self.images, userOpenedToImages);
+            break;
+          }
+          case "publicGallery": {
+            const response = yield axios.get("/images/publicImages");
+            const { publicImages } = response.data.body;
+            applySnapshot(self.images, publicImages);
+            break;
+          }
+        }
+      } catch (error) {
+        popupNotice(`Error while initializing gallery.
+             ${error}`);
+      }
+    });
+
     const getImageById = (id: string) =>
       self.images.find((image) => image._id === id);
 
@@ -233,6 +262,7 @@ const ImagesStore = types
 
     return {
       setGalleryMode,
+      imageStoreInit,
       getImageById,
       editImagesInfo,
       uploadImages,

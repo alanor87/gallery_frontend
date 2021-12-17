@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom";
-import { Button } from "components/elements";
 import styles from "./SideMenu.module.scss";
 
 interface Props {

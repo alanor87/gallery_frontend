@@ -96,8 +96,8 @@ const ModalShare = () => {
      * Performing this operation on the backend.
      */
     await imagesMultiuserShare(selectedImagesId, usersList);
-    setModalComponentType("none");
     setIsLoading(false);
+    setModalComponentType("none");
     setModalOpen(false);
     deselectAllImages();
     groupSelectModeToggle();

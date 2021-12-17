@@ -1,20 +1,21 @@
-import { useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { observer } from "mobx-react-lite";
 import ImageCard from "../../components/ImageCard";
 import ImageMenu from "../../components/ImageMenu";
 import Modal from "../../components/Modals/Modal/Modal";
 import { Spinner } from "../../components/elements";
 import store from "../../MST/store";
-import { GalleryModeType } from "MST/imagesStoreSettings";
+import { GalleryType } from "types/images";
 import styles from "./Gallery.module.scss";
 
 interface Props {
-  label: GalleryModeType;
+  label: GalleryType;
 }
 
 function GalleryView({ label }: Props) {
   const {
     setGalleryMode,
+    imageStoreInit,
     getUserImages,
     groupSelectMode,
     groupSelectModeToggle,
@@ -23,8 +24,11 @@ function GalleryView({ label }: Props) {
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 
   setGalleryMode(label);
-
   const imgArray = getUserImages;
+
+  useEffect(() => {
+    imageStoreInit();
+  }, [imageStoreInit, label]);
 
   const groupModeHandler = useCallback(() => {
     clearSelectedList();
