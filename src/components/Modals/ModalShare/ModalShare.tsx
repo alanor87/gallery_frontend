@@ -3,7 +3,7 @@ import { Checkbox, Button, Tag, Spinner } from "components/elements";
 import TagEditor from "components/TagEditor";
 import { ReactComponent as EditIcon } from "img/icon_edit.svg";
 import store from "MST/store";
-import { NewImageInfo } from "MST/imagesStoreSettings";
+import { NewImageInfoType } from "types/images";
 import { ImageOpenedToUserEntry } from "types/common";
 import styles from "./ModalShare.module.scss";
 
@@ -61,14 +61,14 @@ const ModalShare = () => {
     setIsLoading(true);
 
     const selectedImagesId = selectedImages.map((image) => image.selectedId);
-    const updatedImagesInfo: NewImageInfo[] = selectedImagesId.map(
+    const updatedImagesInfo: NewImageInfoType[] = selectedImagesId.map(
       (selectedId) => {
         const currentImage = getImageById(selectedId)!;
         const oldOpenedToList = currentImage.imageInfo.openedTo;
         const newOpenedList = [
           ...new Set([...oldOpenedToList, ...usersOpenedToList]),
         ];
-        const newImageInfo: NewImageInfo = {
+        const newImageInfo: NewImageInfoType = {
           _id: selectedId,
           imageInfo: { isPublic: isPublicState, openedTo: newOpenedList },
         };

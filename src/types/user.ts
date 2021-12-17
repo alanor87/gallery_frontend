@@ -16,7 +16,7 @@ export interface UserInterfaceSettings {
   sidePanelIsOpen: boolean;
 }
 
-type AuthenticatedUserType =
+export type AuthenticatedUserType =
   | LoginFormInterface
   | RegisterFormInterface
   | {
@@ -24,5 +24,3 @@ type AuthenticatedUserType =
       userIsAuthenticated: boolean;
       userInterface: UserInterfaceSettings;
     };
-
-export default AuthenticatedUserType;

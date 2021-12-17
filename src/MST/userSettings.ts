@@ -1,11 +1,11 @@
 import axios from "axios";
 import { types, flow, applySnapshot } from "mobx-state-tree";
 import { Image } from "./imagesStoreSettings";
-import { ImageType } from "./imagesStoreSettings";
 import { interfaceSettings } from "./interfaceSettings";
-import { UserInterfaceSettings } from "../types/user";
 import { popupNotice } from "../utils/popupNotice";
-import AuthenticatedUserType, {
+import {
+  AuthenticatedUserType,
+  UserInterfaceSettings,
   RegisterFormInterface,
   LoginFormInterface,
 } from "../types/user";
@@ -92,10 +92,6 @@ const userSettings = types
       }
     });
 
-    const addUserOwnedImage = (image: ImageType) => {
-      self.userOwnedImages.push(image);
-    };
-
     const purgeStorage = () => {
       applySnapshot(self, initialUserSettings);
     };
@@ -105,7 +101,6 @@ const userSettings = types
       userLogin,
       userLogout,
       getTokenFromLocalStorage,
-      addUserOwnedImage,
       checkIfUserExistsByName,
       purgeStorage,
     };
