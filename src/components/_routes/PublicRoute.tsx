@@ -8,6 +8,7 @@ const PublicRoute: React.FC<RouterPropsType> = ({
   component: Component,
   redirectTo,
   children,
+  label,
   ...routeProps
 }) => {
   const { userIsAuthenticated } = store.userSettings;
@@ -16,7 +17,7 @@ const PublicRoute: React.FC<RouterPropsType> = ({
       {...routeProps}
       render={(props) => {
         return !userIsAuthenticated || !routeProps.restricted ? (
-          <Component {...props} path={routeProps.path} />
+          <Component label={label} path={routeProps.path} />
         ) : (
           <Redirect to={redirectTo} />
         );

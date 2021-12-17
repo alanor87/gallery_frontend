@@ -5,23 +5,24 @@ import ImageMenu from "../../components/ImageMenu";
 import Modal from "../../components/Modals/Modal/Modal";
 import { Spinner } from "../../components/elements";
 import store from "../../MST/store";
+import { GalleryModeType } from "MST/imagesStoreSettings";
 import styles from "./Gallery.module.scss";
-import { RouteComponentProps } from "react-router";
 
-// interface Props {
-//   path: string;
-// }
+interface Props {
+  label: GalleryModeType;
+}
 
-function GalleryView(props: RouteComponentProps) {
-  const { history, location, match } = props;
-  console.log(location.pathname);
+function GalleryView({ label }: Props) {
   const {
+    setGalleryMode,
     getUserImages,
     groupSelectMode,
     groupSelectModeToggle,
     clearSelectedList,
   } = store.imagesStoreSettings;
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
+
+  setGalleryMode(label);
 
   const imgArray = getUserImages;
 

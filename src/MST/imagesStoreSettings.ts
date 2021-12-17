@@ -8,15 +8,15 @@ export interface NewImageInfo {
   imageInfo: any;
 }
 
-type GalleryType = "userGallery" | "sharedGallery" | "publicGallery";
+export type GalleryModeType = "userGallery" | "sharedGallery" | "publicGallery";
 interface InitialImageStoreSettings {
-  galleryType: GalleryType;
+  galleryMode: GalleryModeType;
   images: ImageType[];
   imagesPerPage: number;
 }
 
 const initialImageStoreSettings: InitialImageStoreSettings = {
-  galleryType: "userGallery",
+  galleryMode: "userGallery",
   images: [],
   imagesPerPage: 10,
 };
@@ -59,7 +59,7 @@ export const Image = types
 
 const ImagesStore = types
   .model({
-    galleryType: types.optional(
+    galleryMode: types.optional(
       types.enumeration(["userGallery", "sharedGallery", "publicGallery"]),
       "userGallery"
     ),
@@ -77,6 +77,9 @@ const ImagesStore = types
     ),
   })
   .views((self) => ({
+    get getCurrentGalleryMode(): GalleryModeType {
+      return self.galleryMode;
+    },
     get getUserImages(): ImageType[] {
       return self.images;
     },
@@ -85,6 +88,9 @@ const ImagesStore = types
     },
   }))
   .actions((self) => {
+    const setGalleryMode = (value: GalleryModeType) => {
+      self.galleryMode = value;
+    };
     const getImageById = (id: string) =>
       self.images.find((image) => image._id === id);
 
@@ -225,6 +231,7 @@ const ImagesStore = types
     };
 
     return {
+      setGalleryMode,
       getImageById,
       editImagesInfo,
       uploadImages,

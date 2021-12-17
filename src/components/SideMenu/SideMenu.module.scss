@@ -30,3 +30,17 @@
     opacity: 1;
   }
 }
+
+.navLinksList {
+  list-style: none;
+
+  & li {
+    margin-bottom: 20px;
+  }
+}
+
+.navLink {
+  font-size: 25px;
+  text-decoration: none;
+  color: var(--color-accent);
+}

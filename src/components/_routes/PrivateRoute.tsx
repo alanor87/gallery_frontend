@@ -8,6 +8,7 @@ const PrivateRoute: React.FC<RouterPropsType> = ({
   component: Component,
   redirectTo,
   children,
+  label,
   ...routeProps
 }) => {
   const { userIsAuthenticated } = store.userSettings;
@@ -16,7 +17,7 @@ const PrivateRoute: React.FC<RouterPropsType> = ({
       {...routeProps}
       render={(props) => {
         return userIsAuthenticated ? (
-          <Component {...props} />
+          <Component label={label} />
         ) : (
           <Redirect to={redirectTo} />
         );

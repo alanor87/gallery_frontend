@@ -23,7 +23,7 @@ function AppBar() {
           <ToggleButton
             toggleHandler={toggleSidePanel}
             isChecked={sidePanelIsOpen}
-            hint="Dark/light theme"
+            hint="Toggle side panel"
           />
           <input
             type="text"

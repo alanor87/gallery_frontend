@@ -22,8 +22,12 @@ interface Props {
 const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   console.log("Image render"); // just for debugging -  to be sure memoization works)
 
-  const { editImagesInfo, groupSelectModeToggle, selectedListChange } =
-    store.imagesStoreSettings;
+  const {
+    getCurrentGalleryMode,
+    editImagesInfo,
+    groupSelectModeToggle,
+    selectedListChange,
+  } = store.imagesStoreSettings;
   const { userName } = store.userSettings;
   const { _id, imageHostingId, imageURL, imageInfo, toggleSelectImage } = image;
   const { tags, likes, openedTo, isPublic } = imageInfo;
@@ -37,6 +41,8 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   useEffect(() => {
     if (!groupSelectMode) toggleSelectImage(false);
   }, [groupSelectMode, toggleSelectImage]);
+
+  const isUserMode = getCurrentGalleryMode === "userGallery";
 
   const imageMenuToggleHandler = () => setImageMenuIsOpen(!imageMenuIsOpen);
 
@@ -107,29 +113,33 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
             className={styles.menuButton}
             text={likes.length}
           />
-          <div
-            className={
-              imageMenuIsOpen
-                ? styles.imageMenuWrapper + " " + styles.isOpened
-                : styles.imageMenuWrapper
-            }
-          >
-            <ImageMenu
-              onDelete={deleteOverlayOpenHandler}
-              onEdit={tagEditOpenHandler}
-              onSelect={groupSelectOnHandler}
-              onShare={shareOverlayOpenHandler}
-            />
-          </div>
+          {isUserMode && (
+            <>
+              <div
+                className={
+                  imageMenuIsOpen
+                    ? styles.imageMenuWrapper + " " + styles.isOpened
+                    : styles.imageMenuWrapper
+                }
+              >
+                <ImageMenu
+                  onDelete={deleteOverlayOpenHandler}
+                  onEdit={tagEditOpenHandler}
+                  onSelect={groupSelectOnHandler}
+                  onShare={shareOverlayOpenHandler}
+                />
+              </div>
 
-          <div style={{ position: "relative" }}>
-            <Button
-              type="button"
-              icon={IconSettings}
-              onClick={imageMenuToggleHandler}
-              className={styles.menuButton}
-            />
-          </div>
+              <div style={{ position: "relative" }}>
+                <Button
+                  type="button"
+                  icon={IconSettings}
+                  onClick={imageMenuToggleHandler}
+                  className={styles.menuButton}
+                />
+              </div>
+            </>
+          )}
         </div>
       )}
 
@@ -145,10 +155,10 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
           <div className={styles.imgCardText}>
             <TagList
               tags={tags}
-              title={"Double click to edit"}
-              placeholder={"Double click to add tags"}
+              title={isUserMode ? "Double click to edit" : "No tags"}
+              placeholder={isUserMode ? "Double click to add tags" : "No tags"}
               isTagDeletable={false}
-              onDoubleClick={tagEditOpenHandler}
+              onDoubleClick={isUserMode ? tagEditOpenHandler : () => null}
               tagDelHandler={tagDelHandler}
             />
           </div>

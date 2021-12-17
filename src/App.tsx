@@ -71,6 +71,7 @@ function App() {
                     exact={exact}
                     restricted={restricted}
                     component={component}
+                    label={label}
                   />
                 ) : (
                   <PrivateRoute
@@ -80,10 +81,11 @@ function App() {
                     exact={exact}
                     restricted={restricted}
                     component={component}
+                    label={label}
                   />
                 )
             )}
-            <Redirect to={userIsAuthenticated ? "/gallery" : "/login"} />
+            <Redirect to={userIsAuthenticated ? "/userGallery" : "/login"} />
           </Switch>
         </Suspense>
         <ToggleButton
