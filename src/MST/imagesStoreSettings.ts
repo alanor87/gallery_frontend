@@ -95,19 +95,22 @@ const ImagesStore = types
       try {
         switch (self.galleryMode) {
           case "userGallery": {
+            purgeStorage();
             const response = yield axios.get("/images/userOwnedImages");
             const { userOwnedImages } = response.data.body;
             applySnapshot(self.images, userOwnedImages);
             break;
           }
           case "sharedGallery": {
+            purgeStorage();
             const response = yield axios.get("/images/openedToImages");
             const { userOpenedToImages } = response.data.body;
             applySnapshot(self.images, userOpenedToImages);
             break;
           }
           case "publicGallery": {
-            const response = yield axios.get("/images/publicImages");
+            purgeStorage();
+            const response = yield axios.get("/public/publicImages");
             const { publicImages } = response.data.body;
             applySnapshot(self.images, publicImages);
             break;

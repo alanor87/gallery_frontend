@@ -7,6 +7,7 @@ import styles from "./AppBar.module.scss";
 function AppBar() {
   const { logoutInit } = store;
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
+  const { getCurrentGalleryMode } = store.imagesStoreSettings;
   const { userIsAuthenticated, userName, userEmail } = store.userSettings;
   const { lightThemeIsOn, toggleTheme, toggleSidePanel, sidePanelIsOpen } =
     store.userSettings.userInterface;
@@ -32,7 +33,12 @@ function AppBar() {
             autoComplete="off"
           />
           <Button type="button" text="Logout" onClick={logoutInit} />
-          <Button type="button" text="Upload" onClick={uploadModalHandler} />
+          <Button
+            type="button"
+            text="Upload"
+            onClick={uploadModalHandler}
+            disabled={getCurrentGalleryMode !== "userGallery"}
+          />
           <p>
             {userName}, {userEmail}
           </p>
