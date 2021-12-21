@@ -28,7 +28,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
     groupSelectModeToggle,
     selectedListChange,
   } = store.imagesStoreSettings;
-  const { userName } = store.userSettings;
+  const { userName, userIsAuthenticated } = store.userSettings;
   const { _id, imageHostingId, imageURL, imageInfo, toggleSelectImage } = image;
   const { tags, likes, openedTo, isPublic } = imageInfo;
 
@@ -112,6 +112,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
             onClick={toggleLikeHandler}
             className={styles.menuButton}
             text={likes.length}
+            disabled={!userIsAuthenticated}
           />
           {isUserMode && (
             <>

@@ -38,7 +38,7 @@ const ImageInfo = types
 export const Image = types
   .model({
     _id: types.string,
-    imageHostingId: types.string,
+    imageHostingId: types.optional(types.string, ""),
     imageURL: types.optional(types.string, ""),
     smallImageURL: types.optional(types.string, ""),
     imageInfo: types.optional(ImageInfo, {}),
