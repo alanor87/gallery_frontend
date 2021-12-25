@@ -74,9 +74,11 @@ const ImagesStore = types
       ),
       []
     ),
+    isLoading: types.optional(types.boolean, true),
   })
   .views((self) => ({
     get getCurrentGalleryMode(): GalleryType {
+      console.log(" self.galleryMode in store getter : ", self.galleryMode);
       return self.galleryMode;
     },
     get getUserImages(): ImageType[] {
@@ -88,28 +90,31 @@ const ImagesStore = types
   }))
   .actions((self) => {
     const setGalleryMode = (value: GalleryType) => {
+      console.log("value: ", value);
       self.galleryMode = value;
     };
 
-    const imageStoreInit = flow(function* () {
+    const imageStoreInit = flow(function* (galleryMode: GalleryType) {
+      purgeStorage();
+      self.isLoading = true;
       try {
-        switch (self.galleryMode) {
+        switch (galleryMode) {
           case "userGallery": {
-            purgeStorage();
+            setGalleryMode(galleryMode);
             const response = yield axios.get("/images/userOwnedImages");
             const { userOwnedImages } = response.data.body;
             applySnapshot(self.images, userOwnedImages);
             break;
           }
           case "sharedGallery": {
-            purgeStorage();
+            setGalleryMode(galleryMode);
             const response = yield axios.get("/images/openedToImages");
             const { userOpenedToImages } = response.data.body;
             applySnapshot(self.images, userOpenedToImages);
             break;
           }
           case "publicGallery": {
-            purgeStorage();
+            setGalleryMode(galleryMode);
             const response = yield axios.get("/public/publicImages");
             const { publicImages } = response.data.body;
             applySnapshot(self.images, publicImages);
@@ -119,6 +124,8 @@ const ImagesStore = types
       } catch (error) {
         popupNotice(`Error while initializing gallery.
              ${error}`);
+      } finally {
+        self.isLoading = false;
       }
     });
 

@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { observer } from "mobx-react-lite";
 import ImageCard from "../../components/ImageCard";
 import ImageMenu from "../../components/ImageMenu";
@@ -6,6 +6,7 @@ import Modal from "../../components/Modals/Modal/Modal";
 import { Spinner } from "../../components/elements";
 import store from "../../MST/store";
 import { GalleryType } from "types/images";
+import { ImageType } from "MST/imagesStoreSettings";
 import styles from "./Gallery.module.scss";
 
 interface Props {
@@ -13,6 +14,7 @@ interface Props {
 }
 
 function GalleryView({ label }: Props) {
+  const [imgArray, setImgArray] = useState<ImageType[]>([]);
   const {
     setGalleryMode,
     imageStoreInit,
@@ -20,15 +22,13 @@ function GalleryView({ label }: Props) {
     groupSelectMode,
     groupSelectModeToggle,
     clearSelectedList,
+    isLoading,
   } = store.imagesStoreSettings;
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 
-  setGalleryMode(label);
-  const imgArray = getUserImages;
-
   useEffect(() => {
-    imageStoreInit();
-  }, [imageStoreInit, label]);
+    imageStoreInit(label).then(() => setImgArray(getUserImages));
+  }, [imageStoreInit, setGalleryMode, getUserImages, label]);
 
   const groupModeHandler = useCallback(() => {
     clearSelectedList();
@@ -45,7 +45,10 @@ function GalleryView({ label }: Props) {
     setModalOpen(true);
   }, [setModalComponentType, setModalOpen]);
 
-  return (
+  console.log("isLoading gallery : ", isLoading);
+  return isLoading ? (
+    <Spinner side={100} />
+  ) : (
     <section
       className={
         groupSelectMode

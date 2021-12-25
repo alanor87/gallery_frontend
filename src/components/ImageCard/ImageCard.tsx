@@ -41,7 +41,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   useEffect(() => {
     if (!groupSelectMode) toggleSelectImage(false);
   }, [groupSelectMode, toggleSelectImage]);
-
+  console.log("getCurrentGalleryMode : ", getCurrentGalleryMode);
   const isUserMode = getCurrentGalleryMode === "userGallery";
 
   const imageMenuToggleHandler = () => setImageMenuIsOpen(!imageMenuIsOpen);
