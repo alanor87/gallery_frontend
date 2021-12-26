@@ -3,7 +3,10 @@ import LoginForm from "../../components/LoginForm";
 import RegisterForm from "../../components/RegisterForm";
 import styles from "./LoginRegisterView.module.scss";
 
-const LoginView = ({ path }: { path: string }) => {
+interface Props {
+  path: string;
+}
+const LoginRegisterView: React.FC<Props> = ({ path }) => {
   const backgroundImage = store.userSettings.userInterface.backgroundImage;
   return (
     <div
@@ -17,4 +20,4 @@ const LoginView = ({ path }: { path: string }) => {
   );
 };
 
-export default LoginView;
+export default LoginRegisterView;

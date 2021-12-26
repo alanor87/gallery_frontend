@@ -43,12 +43,8 @@ function App() {
 
   return (
     <div className={"appMain"}>
-      {userIsAuthenticated && (
-        <>
-          <AppBar />
-          <SideMenu isOpen={sidePanelIsOpen} />{" "}
-        </>
-      )}
+      <AppBar />
+      {userIsAuthenticated && <SideMenu isOpen={sidePanelIsOpen} />}
       <main className="mainSection">
         <Suspense fallback={<Spinner side={100} />}>
           {" "}

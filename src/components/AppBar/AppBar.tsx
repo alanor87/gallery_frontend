@@ -17,22 +17,31 @@ function AppBar() {
     setModalOpen(true);
   };
 
+  const loginLogoutButtonProps = {
+    text: userIsAuthenticated ? "Logout" : "Login",
+    onClick: userIsAuthenticated
+      ? logoutInit
+      : () => (window.location.pathname = "/login"),
+  };
+
   return (
     <header className={styles.sectionHeader}>
       {userIsAuthenticated && (
+        <ToggleButton
+          toggleHandler={toggleSidePanel}
+          isChecked={sidePanelIsOpen}
+          hint="Toggle side panel"
+        />
+      )}
+      <input
+        type="text"
+        className={styles.searchInput}
+        placeholder="Search"
+        autoComplete="off"
+      />
+      <Button type="button" {...loginLogoutButtonProps} />
+      {userIsAuthenticated && (
         <>
-          <ToggleButton
-            toggleHandler={toggleSidePanel}
-            isChecked={sidePanelIsOpen}
-            hint="Toggle side panel"
-          />
-          <input
-            type="text"
-            className={styles.searchInput}
-            placeholder="Search"
-            autoComplete="off"
-          />
-          <Button type="button" text="Logout" onClick={logoutInit} />
           <Button
             type="button"
             text="Upload"

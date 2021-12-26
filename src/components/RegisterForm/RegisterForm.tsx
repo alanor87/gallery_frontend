@@ -27,7 +27,7 @@ function RegisterForm() {
     registerInit(values);
   };
   return (
-    <div className={styles.registerForm}>
+    <div className={styles.authForm}>
       <h2>Register</h2>
       <Formik
         initialValues={formInitialValues}
@@ -50,11 +50,17 @@ function RegisterForm() {
           <div className={styles.btnWrapper}>
             <Button type="submit" text="Register" />
           </div>
-          <NavLink to="/login" className="navLink">
-            Login
-          </NavLink>
         </Form>
       </Formik>
+      <div className={styles.bottomLinksWrapper}>
+        {" "}
+        <NavLink to="/login" className="navLink">
+          Login
+        </NavLink>
+        <NavLink to="/publicGallery" className="navLink">
+          To public gallery
+        </NavLink>
+      </div>
     </div>
   );
 }
