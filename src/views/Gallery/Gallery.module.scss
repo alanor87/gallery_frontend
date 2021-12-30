@@ -41,3 +41,21 @@
     opacity: 1;
   }
 }
+
+.paginationWrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: var(--main-background-color);
+  box-shadow: 0px 0px 12px 5px var(--main-background-color);
+  opacity: 0.8;
+  // transform: translateY(40px);
+  transition: transform 250ms linear, opacity 250ms linear;
+
+  &:hover {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

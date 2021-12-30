@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Redirect } from "react-router";
 import { observer } from "mobx-react-lite";
-import { RouterPropsType } from "../../routes";
+import { RouterPropsType } from "../../types/common";
 import store from "../../MST/store";
 
 const PublicRoute: React.FC<RouterPropsType> = ({

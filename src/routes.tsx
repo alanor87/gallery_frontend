@@ -60,14 +60,4 @@ const routes = [
   // },
 ];
 
-export interface RouterPropsType {
-  component: any;
-  redirectTo: string;
-  children?: JSX.Element | React.FC;
-  path: string;
-  restricted: boolean;
-  exact: boolean;
-  label: string;
-}
-
 export default routes;

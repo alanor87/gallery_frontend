@@ -1,4 +1,4 @@
-import { types, flow } from "mobx-state-tree";
+import { types, flow, applySnapshot } from "mobx-state-tree";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { popupNotice } from "../utils/popupNotice";
 import userSettings from "./userSettings";
@@ -53,11 +53,16 @@ const modalSettings = types
     };
   });
 
+const publicSettings = types.model({
+  publicImagesList: types.optional(types.array(types.string), []),
+});
+
 const store = types
   .model({
     userSettings: types.optional(userSettings, initialUserSettings),
     imagesStoreSettings: types.optional(imagesStoreSettings, {}),
     modalWindowsSettings: types.optional(modalSettings, {}),
+    publicSettings: types.optional(publicSettings, {}),
   })
   .actions((self) => {
     const registerInit = flow(function* (registerData: RegisterFormInterface) {
@@ -66,6 +71,17 @@ const store = types
       } catch (error) {
         popupNotice(`Error user register.
             ${error}`);
+      }
+    });
+
+    const publicSettingsInit = flow(function* () {
+      try {
+        const response = yield axios("/public/publicSettings");
+        applySnapshot(self.publicSettings, response.data.body.publicSettings);
+      } catch (error) {
+        popupNotice(`Error getting public settings.
+        ${error}.
+        `);
       }
     });
 
@@ -112,6 +128,7 @@ const store = types
     };
 
     return {
+      publicSettingsInit,
       localTokenInit,
       registerInit,
       loginInit,

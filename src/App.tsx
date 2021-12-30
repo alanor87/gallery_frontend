@@ -7,14 +7,14 @@ import PrivateRoute from "./components/_routes/PrivateRoute";
 import PublicRoute from "./components/_routes/PublicRoute";
 import AppBar from "./components/AppBar";
 import SideMenu from "./components/SideMenu";
-import { Spinner } from "./components/elements";
+import { ToggleButton, Spinner } from "./components/elements";
 import routes from "./routes";
 import store from "./MST/store";
-import { ToggleButton } from "./components/elements";
 
 function App() {
   useEffect(() => {
     console.log("App useEffect");
+    store.publicSettingsInit();
     if (
       localStorage.getItem("token") &&
       !store.userSettings.userIsAuthenticated
@@ -40,7 +40,6 @@ function App() {
     return <Spinner text="Checking token" side={100} />;
 
   console.log("App render");
-
   return (
     <div className={"appMain"}>
       <AppBar />
