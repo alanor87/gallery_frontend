@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router";
 import { Suspense } from "react";
 import { Switch, Redirect } from "react-router-dom";
 import { observer } from "mobx-react-lite";
@@ -6,6 +7,7 @@ import axios from "axios";
 import PrivateRoute from "./components/_routes/PrivateRoute";
 import PublicRoute from "./components/_routes/PublicRoute";
 import AppBar from "./components/AppBar";
+import Pagination from "./components/Pagination";
 import SideMenu from "./components/SideMenu";
 import { ToggleButton, Spinner } from "./components/elements";
 import routes from "./routes";
@@ -21,6 +23,16 @@ function App() {
     )
       store.localTokenInit();
   }, []);
+
+  const location = useLocation();
+
+  const [isAuthRoute, setIsAuthRoute] = useState(true);
+
+  useEffect(() => {
+    setIsAuthRoute(["/login", "/register"].includes(location.pathname));
+    console.log("location : ", location.pathname);
+    console.log("isAuthRoute : ", isAuthRoute);
+  }, [location]);
 
   const { userSettings, backendToggle } = store;
 
@@ -42,7 +54,7 @@ function App() {
   console.log("App render");
   return (
     <div className={"appMain"}>
-      <AppBar />
+      {!isAuthRoute && <AppBar />}
       {userIsAuthenticated && <SideMenu isOpen={sidePanelIsOpen} />}
       <main className="mainSection">
         <Suspense fallback={<Spinner side={100} />}>
@@ -88,6 +100,7 @@ function App() {
           style={{ position: "absolute", bottom: "10px", right: "10px" }}
           toggleHandler={backendToggle}
         />
+        {!isAuthRoute && <Pagination />}
       </main>
     </div>
   );

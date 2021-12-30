@@ -1,11 +1,51 @@
+.paginationContainer {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: var(--main-background-color);
+  box-shadow: 0px 0px 12px 5px var(--main-background-color);
+  opacity: 0.8;
+  transform: translateY(40px);
+  transition: transform 250ms linear, opacity 250ms linear;
+
+  &:hover {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.selectWrapper {
+  display: flex;
+}
+
+.imagesPerPageSelect {
+  margin: 0 20px;
+  border-radius: 5px;
+}
+
 .pagesList {
   display: flex;
   list-style: none;
 
   & li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 20px;
     height: 20px;
     margin-right: 2px;
     border: 1px solid var(--main-text-color);
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .currentPageNumber {
+    border: 1px solid var(--color-accent);
   }
 }

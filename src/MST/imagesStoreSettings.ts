@@ -240,6 +240,7 @@ const ImagesStore = types
 
     const setImagesPerPage = (value: number) => {
       self.imagesPerPage = value;
+      self.currentPage = 0;
       fetchImages();
     };
 

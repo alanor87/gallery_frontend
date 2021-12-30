@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import { observer } from "mobx-react-lite";
 import ImageCard from "../../components/ImageCard";
 import ImageMenu from "../../components/ImageMenu";
-import Pagination from "../../components/Pagination";
 import Modal from "../../components/Modals/Modal/Modal";
 import { Spinner } from "../../components/elements";
 import store from "../../MST/store";
@@ -89,9 +88,6 @@ function GalleryView({ label }: Props) {
                 />
               );
             })}
-          </div>
-          <div className={styles.paginationWrapper}>
-            <Pagination />
           </div>
         </>
       ) : (

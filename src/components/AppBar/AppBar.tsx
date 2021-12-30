@@ -13,13 +13,13 @@ function AppBar() {
   const { lightThemeIsOn, toggleTheme, toggleSidePanel, sidePanelIsOpen } =
     store.userSettings.userInterface;
 
-  const [appBarVisible, setAppBarVisible] = useState(true);
   const [filterValue, setFilterValue] = useState("");
 
-  const location = useLocation();
-  useEffect(() => {
-    setAppBarVisible(!["/login", "/register"].includes(location.pathname));
-  }, [location]);
+  //   const [appBarVisible, setAppBarVisible] = useState(true);
+  // const location = useLocation();
+  // useEffect(() => {
+  //   setAppBarVisible(!["/login", "/register"].includes(location.pathname));
+  // }, [location]);
 
   const searchQueryHandler = (e: any) => {
     if (e.type === "click") {
@@ -52,7 +52,7 @@ function AppBar() {
       : () => (window.location.pathname = "/login"),
   };
 
-  return appBarVisible ? (
+  return (
     <header className={styles.sectionHeader}>
       {userIsAuthenticated && (
         <ToggleButton
@@ -97,7 +97,7 @@ function AppBar() {
         </>
       )}
     </header>
-  ) : null;
+  );
 }
 
 export default observer(AppBar);
