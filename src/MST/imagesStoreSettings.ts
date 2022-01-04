@@ -1,6 +1,11 @@
 import axios from "axios";
-import { types, flow, Instance, applySnapshot } from "mobx-state-tree";
-import { number, string } from "prop-types";
+import {
+  types,
+  flow,
+  Instance,
+  applySnapshot,
+  getParent,
+} from "mobx-state-tree";
 import { ImageOpenedToUserEntry } from "types/common";
 import { NewImageInfoType, GalleryType } from "types/images";
 import { popupNotice } from "../utils/popupNotice";
@@ -88,7 +93,6 @@ const ImagesStore = types
   })
   .views((self) => ({
     get getCurrentGalleryMode(): GalleryType {
-      console.log(" self.galleryMode in store getter : ", self.galleryMode);
       return self.galleryMode;
     },
     get getUserImages(): ImageType[] {
@@ -108,6 +112,7 @@ const ImagesStore = types
   }))
   .actions((self) => {
     const imageStoreInit = flow(function* (galleryMode: GalleryType) {
+      console.log("imageStoreInit");
       purgeStorage();
       setGalleryMode(galleryMode);
       try {
@@ -132,6 +137,9 @@ const ImagesStore = types
             break;
           }
           case "publicGallery": {
+            const { publicSettingsInit } = getParent(self, 1);
+            publicSettingsInit();
+
             requestRoute = `/public/publicImages?currentPage=${self.currentPage}&imagesPerPage=${self.imagesPerPage}`;
             break;
           }
@@ -158,9 +166,15 @@ const ImagesStore = types
             },
           }
         );
-        uploadedImages.data.newImages.forEach((image: ImageType) => {
-          self.images.push(image);
-        });
+        const newImages: ImageType[] = uploadedImages.data.newImages;
+        const newImagesIdList = newImages.map((image) => image._id);
+        const { userSettings } = getParent(self, 1);
+        updateUserOwnedImagesLocal([
+          ...userSettings.userOwnedImages,
+          ...newImagesIdList,
+        ]);
+        setCurrentPage(0);
+        popupNotice(`Images uploaded!`);
       } catch (error) {
         popupNotice(`Error while uploading images.
              ${error}`);
@@ -203,11 +217,9 @@ const ImagesStore = types
         const response = yield axios.post("/images/deleteImages", {
           imagesToDelete: self.selectedImages,
         });
-        const filteredImages = self.images.filter((image) => {
-          return response.data.newImagesList.includes(image._id);
-        });
-        applySnapshot(self.images, filteredImages);
-        applySnapshot(self.selectedImages, []);
+        clearSelectedList();
+        updateUserOwnedImagesLocal(response.data.newImagesList);
+        setCurrentPage(0);
         popupNotice(`Images deleted!`);
       } catch (error) {
         popupNotice(`Error while deleting images.
@@ -230,7 +242,6 @@ const ImagesStore = types
       }
     });
     const setGalleryMode = (value: GalleryType) => {
-      console.log("value: ", value);
       self.galleryMode = value;
     };
 
@@ -301,6 +312,11 @@ const ImagesStore = types
 
     const clearSelectedList = () => {
       applySnapshot(self.selectedImages, []);
+    };
+
+    const updateUserOwnedImagesLocal = (newImagesIdList: string[]) => {
+      const { userSettings } = getParent(self, 1);
+      userSettings.updateUserOwnedImages(newImagesIdList);
     };
 
     const purgeStorage = () => {

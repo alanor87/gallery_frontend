@@ -13,25 +13,28 @@ const Pagination = () => {
   const { userOwnedImages, userOpenedToImages } = store.userSettings;
   const { publicImagesList } = store.publicSettings;
 
-  const getPagesNumbers = () => {
-    let pagesNumber;
+  const getGalleryImagesNumber = () => {
     switch (galleryMode) {
       case "userGallery": {
-        pagesNumber = Math.ceil(userOwnedImages.length / imagesPerPage);
-        break;
+        return userOwnedImages.length;
       }
       case "sharedGallery": {
-        pagesNumber = Math.ceil(userOpenedToImages.length / imagesPerPage);
-        break;
+        return userOpenedToImages.length;
       }
       case "publicGallery": {
-        pagesNumber = Math.ceil(publicImagesList.length / imagesPerPage);
-        break;
+        return publicImagesList.length;
       }
     }
+  };
+
+  const getPagesNumber = () => {
+    return Math.ceil(getGalleryImagesNumber() / imagesPerPage);
+  };
+
+  const getPagesList = () => {
     const pageNumbersButtonsArray = [];
 
-    for (let i = 0; i < pagesNumber; i += 1) {
+    for (let i = 0; i < getPagesNumber(); i += 1) {
       pageNumbersButtonsArray.push(
         <li
           key={i}
@@ -55,8 +58,9 @@ const Pagination = () => {
 
   return (
     <div className={styles.paginationContainer}>
+      <p>Total images in gallery section : {getGalleryImagesNumber()}</p>
+      <p>Number of images per page</p>
       <div className={styles.selectWrapper}>
-        <p>Number of images per page</p>
         <select
           className={styles.imagesPerPageSelect}
           name="imagesPerPage"
@@ -69,7 +73,7 @@ const Pagination = () => {
         </select>
       </div>
 
-      <ul className={styles.pagesList}>{getPagesNumbers()}</ul>
+      <ul className={styles.pagesList}>{getPagesList()}</ul>
     </div>
   );
 };

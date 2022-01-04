@@ -5,12 +5,8 @@ import styles from "./styles.module.scss";
 
 const ModalDelete = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const {
-    selectedImages,
-    deleteImages,
-    groupSelectModeToggle,
-    clearSelectedList,
-  } = store.imagesStoreSettings;
+  const { selectedImages, deleteImages, groupSelectModeToggle } =
+    store.imagesStoreSettings;
 
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 
@@ -18,8 +14,6 @@ const ModalDelete = () => {
     setIsLoading(true);
     await deleteImages();
     groupSelectModeToggle();
-    clearSelectedList();
-    setIsLoading(false);
     setModalComponentType("none");
     setModalOpen(false);
   };

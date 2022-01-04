@@ -93,6 +93,10 @@ const userSettings = types
       }
     });
 
+    const updateUserOwnedImages = (newImagesIdList: string[]) => {
+      applySnapshot(self.userOwnedImages, newImagesIdList);
+    };
+
     const purgeStorage = () => {
       applySnapshot(self, initialUserSettings);
     };
@@ -103,6 +107,7 @@ const userSettings = types
       userLogout,
       getTokenFromLocalStorage,
       checkIfUserExistsByName,
+      updateUserOwnedImages,
       purgeStorage,
     };
   });

@@ -2,7 +2,6 @@ Global aim is to create an image hosting that would be targeting the sharing if 
  with not only sharing between the members of the service itself - bu also all the populat social networks, 
  also - options to generate the QR code for the image link.
 
-- CURRENT - SWAGGER
 - work on the keyboard accessibility - tabIndex feature for all interactive elements with all the styles needed.
 - generating QR code for the image link.
 - add pagination
@@ -10,3 +9,4 @@ Global aim is to create an image hosting that would be targeting the sharing if 
 BUGS work
 
  - handle duplication resilience in tags and openedToUsers lists - in share components especially.
+ - pagination debugging

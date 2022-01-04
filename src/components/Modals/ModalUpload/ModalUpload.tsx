@@ -58,7 +58,6 @@ const ModalUpload = () => {
       formData.append("images", file);
     });
     await uploadImages(formData);
-    setIsLoading(false);
     setModalComponentType("none");
     setModalOpen(false);
   };
