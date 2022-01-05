@@ -144,9 +144,6 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
                     ? styles.imageMenuWrapper + " " + styles.isOpened
                     : styles.imageMenuWrapper
                 }
-                onFocus={() => {
-                  console.log("ref focus");
-                }}
               >
                 <ImageMenu
                   isOpened={imageMenuIsOpen}
@@ -171,7 +168,12 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
         </div>
       )}
 
-      <NavLink to={`/image/${_id}`} tabIndex={-1} className={styles.imageLink}>
+      <NavLink
+        to={`/image/${_id}`}
+        tabIndex={-1}
+        className={styles.imageLink}
+        title={imageInfo.tags.join(" ")}
+      >
         <div
           className={styles.imgWrap}
           style={{ backgroundImage: `url(${imageURL})` }}
