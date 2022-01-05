@@ -14,17 +14,32 @@ const SideMenu: React.FC<Props> = ({ isOpen }) => {
     <section className={menuClassList}>
       <ul className={styles.navLinksList}>
         <li>
-          <NavLink to={"/userGallery"} className={styles.navLink} exact>
+          <NavLink
+            to={"/userGallery"}
+            className={styles.navLink}
+            exact
+            tabIndex={isOpen ? 0 : -1}
+          >
             Your gallery
           </NavLink>
         </li>
         <li>
-          <NavLink to={"/sharedGallery"} className={styles.navLink} exact>
+          <NavLink
+            to={"/sharedGallery"}
+            className={styles.navLink}
+            exact
+            tabIndex={isOpen ? 0 : -1}
+          >
             Shared images
           </NavLink>
         </li>
         <li>
-          <NavLink to={"/publicGallery"} className={styles.navLink} exact>
+          <NavLink
+            to={"/publicGallery"}
+            className={styles.navLink}
+            exact
+            tabIndex={isOpen ? 0 : -1}
+          >
             Public images
           </NavLink>
         </li>

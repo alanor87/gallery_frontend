@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
-import { useLocation } from "react-router";
 import { ToggleButton, Button } from "../elements";
 import store from "../../MST/store";
 import styles from "./AppBar.module.scss";
@@ -15,11 +14,10 @@ function AppBar() {
 
   const [filterValue, setFilterValue] = useState("");
 
-  //   const [appBarVisible, setAppBarVisible] = useState(true);
-  // const location = useLocation();
-  // useEffect(() => {
-  //   setAppBarVisible(!["/login", "/register"].includes(location.pathname));
-  // }, [location]);
+  const filterChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterValue(e.target.value);
+    if (!e.target.value) setFilter("");
+  };
 
   const searchQueryHandler = (e: any) => {
     if (e.type === "click") {
@@ -35,11 +33,6 @@ function AppBar() {
   const uploadModalHandler = () => {
     setModalComponentType("upload");
     setModalOpen(true);
-  };
-
-  const filterChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilterValue(e.target.value);
-    if (!e.target.value) setFilter("");
   };
 
   const loginLogoutButtonProps = {

@@ -19,7 +19,6 @@ function GalleryView({ label }: Props) {
     setGalleryMode,
     imageStoreInit,
     getUserImages,
-    getFilteredImages,
     groupSelectMode,
     groupSelectModeToggle,
     clearSelectedList,
@@ -30,10 +29,6 @@ function GalleryView({ label }: Props) {
   useEffect(() => {
     imageStoreInit(label).then(() => setImgArray(getUserImages));
   }, [imageStoreInit, setGalleryMode, getUserImages, label]);
-
-  useEffect(() => {
-    setImgArray(getFilteredImages);
-  }, [getFilteredImages]);
 
   const groupModeHandler = useCallback(() => {
     clearSelectedList();

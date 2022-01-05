@@ -9,26 +9,34 @@ const Pagination = () => {
     currentPage,
     imagesPerPage,
     galleryMode,
+    filteredImagesNumber,
   } = store.imagesStoreSettings;
   const { userOwnedImages, userOpenedToImages } = store.userSettings;
   const { publicImagesList } = store.publicSettings;
 
-  const getGalleryImagesNumber = () => {
+  const getTotalGalleryImagesNumber = () => {
+    let imagesNumber;
     switch (galleryMode) {
       case "userGallery": {
-        return userOwnedImages.length;
+        imagesNumber = userOwnedImages.length;
+        break;
       }
       case "sharedGallery": {
-        return userOpenedToImages.length;
+        imagesNumber = userOpenedToImages.length;
+        break;
       }
       case "publicGallery": {
-        return publicImagesList.length;
+        imagesNumber = publicImagesList.length;
+        break;
       }
     }
+    return imagesNumber;
   };
 
   const getPagesNumber = () => {
-    return Math.ceil(getGalleryImagesNumber() / imagesPerPage);
+    if (filteredImagesNumber)
+      return Math.ceil(filteredImagesNumber / imagesPerPage);
+    return Math.ceil(getTotalGalleryImagesNumber() / imagesPerPage);
   };
 
   const getPagesList = () => {
@@ -58,7 +66,13 @@ const Pagination = () => {
 
   return (
     <div className={styles.paginationContainer}>
-      <p>Total images in gallery section : {getGalleryImagesNumber()}</p>
+      <p className={styles.totalImagesCount}>
+        Total images in gallery section :{" "}
+        <span>{getTotalGalleryImagesNumber()}</span>
+      </p>
+      <p className={styles.totalImagesCount}>
+        Total filtered images : <span>{filteredImagesNumber}</span>
+      </p>
       <p>Number of images per page</p>
       <div className={styles.selectWrapper}>
         <select

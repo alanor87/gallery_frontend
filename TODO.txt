@@ -9,4 +9,3 @@ Global aim is to create an image hosting that would be targeting the sharing if 
 BUGS work
 
  - handle duplication resilience in tags and openedToUsers lists - in share components especially.
- - pagination debugging

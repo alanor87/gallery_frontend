@@ -89,6 +89,7 @@ const ImagesStore = types
     filter: types.optional(types.string, ""),
     imagesPerPage: types.optional(types.number, 20),
     currentPage: types.optional(types.number, 0),
+    filteredImagesNumber: types.optional(types.number, 0),
     isLoading: types.optional(types.boolean, true),
   })
   .views((self) => ({
@@ -97,17 +98,6 @@ const ImagesStore = types
     },
     get getUserImages(): ImageType[] {
       return self.images;
-    },
-    get getFilteredImages(): ImageType[] {
-      if (!self.filter) return self.images;
-      const filteredImages = self.images.filter((image) =>
-        image.imageInfo.tags.includes(self.filter)
-      );
-      if (!filteredImages.length) {
-        popupNotice(`No images found by request ${self.filter}`);
-        return self.images;
-      }
-      return filteredImages;
     },
   }))
   .actions((self) => {
@@ -129,23 +119,23 @@ const ImagesStore = types
         let requestRoute;
         switch (self.galleryMode) {
           case "userGallery": {
-            requestRoute = `/images/userOwnedImages?currentPage=${self.currentPage}&imagesPerPage=${self.imagesPerPage}`;
+            requestRoute = `/images/userOwnedImages?currentPage=${self.currentPage}&imagesPerPage=${self.imagesPerPage}&filter=${self.filter}`;
             break;
           }
           case "sharedGallery": {
-            requestRoute = `/images/userOpenedToImages?currentPage=${self.currentPage}&imagesPerPage=${self.imagesPerPage}`;
+            requestRoute = `/images/userOpenedToImages?currentPage=${self.currentPage}&imagesPerPage=${self.imagesPerPage}&filter=${self.filter}`;
             break;
           }
           case "publicGallery": {
             const { publicSettingsInit } = getParent(self, 1);
             publicSettingsInit();
-
-            requestRoute = `/public/publicImages?currentPage=${self.currentPage}&imagesPerPage=${self.imagesPerPage}`;
+            requestRoute = `/public/publicImages?currentPage=${self.currentPage}&imagesPerPage=${self.imagesPerPage}&filter=${self.filter}`;
             break;
           }
         }
         const response = yield axios.get(requestRoute);
-        const { images } = response.data.body;
+        const { images, filteredImagesNumber } = response.data.body;
+        self.filteredImagesNumber = filteredImagesNumber;
         applySnapshot(self.images, images);
       } catch (error) {
         popupNotice(`Error while fetching images.
@@ -247,6 +237,7 @@ const ImagesStore = types
 
     const setFilter = (value: string) => {
       self.filter = value;
+      setCurrentPage(0);
     };
 
     const setImagesPerPage = (value: number) => {

@@ -144,7 +144,12 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
         </div>
       )}
 
-      <NavLink to={`/image/${_id}`}>
+      <NavLink
+        to={`/image/${_id}`}
+        tabIndex={0}
+        onFocus={() => console.log("Focus!")}
+        className={styles.imageLink}
+      >
         <div
           className={styles.imgWrap}
           style={{ backgroundImage: `url(${imageURL})` }}
