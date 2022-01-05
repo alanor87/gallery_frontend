@@ -65,6 +65,7 @@ function GalleryView({ label }: Props) {
             }
           >
             <ImageMenu
+              isOpened={groupSelectMode}
               groupMenuMode={true}
               onSelect={groupModeHandler}
               onDelete={groupDeleteHandler}

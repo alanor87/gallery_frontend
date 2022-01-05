@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, memo } from "react";
+import React, { useState, useEffect, useCallback, useRef, memo } from "react";
 import { NavLink } from "react-router-dom";
 import TagList from "../TagList";
 import { Button, Spinner } from "../elements";
@@ -38,13 +38,29 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
   const [tagEditorOverlayIsOpen, setTagEditorOpen] = useState(false);
 
+  const imageMenuRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!groupSelectMode) toggleSelectImage(false);
   }, [groupSelectMode, toggleSelectImage]);
 
+  useEffect(() => {
+    if (imageMenuRef.current && imageMenuIsOpen) {
+      imageMenuRef.current.tabIndex = 0;
+      imageMenuRef.current.focus();
+    }
+  }, [imageMenuIsOpen]);
+
   const isUserMode = getCurrentGalleryMode === "userGallery";
 
-  const imageMenuToggleHandler = () => setImageMenuIsOpen(!imageMenuIsOpen);
+  const imageMenuToggleHandler = (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    setImageMenuIsOpen(!imageMenuIsOpen);
+  };
+  const imageMenuCloseHandler = (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    setImageMenuIsOpen(false);
+  };
 
   const toggleImageSelect = () => {
     toggleSelectImage(!isSelected);
@@ -103,7 +119,11 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
     !tagEditorOverlayIsOpen && !deleteOverlayIsOpen && !shareOverlayIsOpen;
 
   return (
-    <div className={styles.cardWrap}>
+    <div
+      className={styles.cardWrap}
+      tabIndex={groupSelectMode ? -1 : 0}
+      onMouseLeave={imageMenuCloseHandler}
+    >
       {overlaysAreClosedCheck() && !groupSelectMode && (
         <div className={styles.menu}>
           <Button
@@ -113,17 +133,23 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
             className={styles.menuButton}
             text={likes.length}
             disabled={!userIsAuthenticated}
+            title="Like / Dislike"
           />
           {isUserMode && (
             <>
               <div
+                ref={imageMenuRef}
                 className={
                   imageMenuIsOpen
                     ? styles.imageMenuWrapper + " " + styles.isOpened
                     : styles.imageMenuWrapper
                 }
+                onFocus={() => {
+                  console.log("ref focus");
+                }}
               >
                 <ImageMenu
+                  isOpened={imageMenuIsOpen}
                   onDelete={deleteOverlayOpenHandler}
                   onEdit={tagEditOpenHandler}
                   onSelect={groupSelectOnHandler}
@@ -134,6 +160,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
               <div style={{ position: "relative" }}>
                 <Button
                   type="button"
+                  title="Image menu"
                   icon={IconSettings}
                   onClick={imageMenuToggleHandler}
                   className={styles.menuButton}
@@ -144,12 +171,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
         </div>
       )}
 
-      <NavLink
-        to={`/image/${_id}`}
-        tabIndex={0}
-        onFocus={() => console.log("Focus!")}
-        className={styles.imageLink}
-      >
+      <NavLink to={`/image/${_id}`} tabIndex={-1} className={styles.imageLink}>
         <div
           className={styles.imgWrap}
           style={{ backgroundImage: `url(${imageURL})` }}

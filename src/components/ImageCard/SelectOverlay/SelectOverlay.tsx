@@ -11,7 +11,7 @@ const SelectOverlay: React.FC<Props> = ({
   isSelected = false,
   onSelectToggle,
 }) => {
-  const toggleCheckImage = (e: React.MouseEvent) => {
+  const toggleCheckImage = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.stopPropagation();
     e.preventDefault();
     onSelectToggle();
@@ -24,6 +24,8 @@ const SelectOverlay: React.FC<Props> = ({
           : styles.selectOverlay
       }
       onClick={toggleCheckImage}
+      onKeyPress={toggleCheckImage}
+      tabIndex={0}
     >
       <Checkbox
         title="check / uncheck"
