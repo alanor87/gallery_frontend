@@ -11,7 +11,6 @@ interface Props {
   closeHandle: () => void;
   onTagDelete: (tagToDelete: string) => void;
   onAddTags: (newTag: string) => void;
-  isLoading?: boolean;
 }
 
 const TagEditor: React.FC<Props> = ({
@@ -19,7 +18,6 @@ const TagEditor: React.FC<Props> = ({
   closeHandle,
   onTagDelete,
   onAddTags,
-  isLoading = false,
 }) => {
   const [tagName, setTagName] = useState("");
 

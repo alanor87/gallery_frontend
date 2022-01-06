@@ -15,7 +15,7 @@ const PublicRoute: React.FC<RouterPropsType> = ({
   return (
     <Route
       {...routeProps}
-      render={(props) => {
+      render={() => {
         return !userIsAuthenticated || !routeProps.restricted ? (
           <Component label={label} path={routeProps.path} />
         ) : (

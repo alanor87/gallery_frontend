@@ -15,7 +15,7 @@ const PrivateRoute: React.FC<RouterPropsType> = ({
   return (
     <Route
       {...routeProps}
-      render={(props) => {
+      render={() => {
         return userIsAuthenticated ? (
           <Component label={label} />
         ) : (

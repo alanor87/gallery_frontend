@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useLocation } from "react-router";
-import { Suspense } from "react";
 import { Switch, Redirect } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import axios from "axios";
@@ -14,30 +13,22 @@ import routes from "./routes";
 import store from "./MST/store";
 
 function App() {
+  const { userSettings, backendToggle, publicSettingsInit, localTokenInit } =
+    store;
+  const { userIsAuthenticated } = userSettings;
+  const { lightThemeIsOn, sidePanelIsOpen } = userSettings.userInterface;
+
   useEffect(() => {
-    console.log("App useEffect");
-    store.publicSettingsInit();
-    if (
-      localStorage.getItem("token") &&
-      !store.userSettings.userIsAuthenticated
-    )
-      store.localTokenInit();
-  }, []);
+    publicSettingsInit();
+    if (localStorage.getItem("token") && !userIsAuthenticated) localTokenInit();
+  }, [localTokenInit, publicSettingsInit, userIsAuthenticated]);
 
   const location = useLocation();
 
   const [isAuthRoute, setIsAuthRoute] = useState(true);
-
   useEffect(() => {
     setIsAuthRoute(["/login", "/register"].includes(location.pathname));
-    console.log("location : ", location.pathname);
-    console.log("isAuthRoute : ", isAuthRoute);
   }, [location]);
-
-  const { userSettings, backendToggle } = store;
-
-  const { lightThemeIsOn, sidePanelIsOpen } = userSettings.userInterface;
-  const { userIsAuthenticated } = userSettings;
 
   useEffect(() => {
     if (lightThemeIsOn) document.body.classList.add("AppLightTheme");

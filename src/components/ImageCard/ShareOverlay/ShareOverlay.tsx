@@ -80,7 +80,7 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
   const acceptChangesHandler = async () => {
     setIsLoading(true);
     /*
-     *  Mapping the array of just user names for the iamge object openedTo property
+     *  Mapping the array of just user names for the image object openedTo property
      *  and writing the updated image info from the backend to the corresponding images in store.
      */
     const openedToNamesList = getOpenegToNamesList();
@@ -145,7 +145,6 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
       closeHandle={openToOverlayCloseHandler}
       onTagDelete={userDelHandler}
       onAddTags={userAddHandler}
-      isLoading={false}
     />
   );
 };

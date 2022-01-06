@@ -231,6 +231,7 @@ const ImagesStore = types
         ${error}`);
       }
     });
+
     const setGalleryMode = (value: GalleryType) => {
       self.galleryMode = value;
     };

@@ -6,6 +6,7 @@ import styles from "./LoginRegisterView.module.scss";
 interface Props {
   path: string;
 }
+
 const LoginRegisterView: React.FC<Props> = ({ path }) => {
   const backgroundImage = store.userSettings.userInterface.backgroundImage;
   return (

@@ -34,7 +34,7 @@ function LoginForm() {
         validateOnBlur={false}
         onSubmit={formSubmitHandler}
       >
-        <Form action="#" method="GET">
+        <Form>
           <label className={styles.labelAuthorisation}>
             E-mail
             <Input fieldType="text" fieldName="userEmail" />

@@ -201,7 +201,6 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
           closeHandle={onTagEditCloseHandler}
           onTagDelete={tagDelHandler}
           onAddTags={tagAddHandler}
-          isLoading={imgInfoIsLoading}
         />
       )}
 
