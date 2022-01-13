@@ -30,7 +30,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   } = store.imagesStoreSettings;
   const { userName, userIsAuthenticated } = store.userSettings;
   const { setModalOpen, setModalComponentType } = store.modalWindowsSettings;
-  const { _id, imageURL, imageInfo, toggleSelectImage } = image;
+  const { _id, smallImageURL, imageInfo, toggleSelectImage } = image;
   const { tags, likes, openedTo, isPublic } = imageInfo;
 
   const [deleteOverlayIsOpen, setDeleteOverlayIsOpen] = useState(false);
@@ -177,13 +177,12 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
       <NavLink
         to={`/${getCurrentGalleryMode}/${_id}`}
         tabIndex={-1}
-        className={styles.imageLink}
         title={imageInfo.tags.join(" ")}
         onClick={imageModalOpenHandler}
       >
         <div
           className={styles.imgWrap}
-          style={{ backgroundImage: `url(${imageURL})` }}
+          style={{ backgroundImage: `url(${smallImageURL})` }}
         ></div>
       </NavLink>
 
