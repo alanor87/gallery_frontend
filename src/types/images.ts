@@ -11,11 +11,12 @@ export interface ImageInfoType {
   isPublic: boolean;
   belongsTo: string;
   openedTo: string[];
+  title?: string;
+  description?: string;
 }
 
 export interface SelectedImageType {
   selectedId: string;
-  imageHostingId: string;
   isPublic: boolean;
 }
 

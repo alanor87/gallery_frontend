@@ -1,10 +1,4 @@
-import {
-  types,
-  flow,
-  getSnapshot,
-  applySnapshot,
-  destroy,
-} from "mobx-state-tree";
+import { types, flow, applySnapshot } from "mobx-state-tree";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { popupNotice } from "../utils/popupNotice";
 import userSettings from "./userSettings";
@@ -59,11 +53,16 @@ const modalSettings = types
     };
   });
 
+const publicSettings = types.model({
+  publicImagesList: types.optional(types.array(types.string), []),
+});
+
 const store = types
   .model({
     userSettings: types.optional(userSettings, initialUserSettings),
     imagesStoreSettings: types.optional(imagesStoreSettings, {}),
     modalWindowsSettings: types.optional(modalSettings, {}),
+    publicSettings: types.optional(publicSettings, {}),
   })
   .actions((self) => {
     const registerInit = flow(function* (registerData: RegisterFormInterface) {
@@ -75,21 +74,20 @@ const store = types
       }
     });
 
-    // The userSettings.userOwnedImages get all the images objects of user. Then we transfer all those
-    // to the imageStore - and delete the .userOwnedImages in userSettings store. This is done to have only one
-    // request instead of two -  and to avoid storing of duplicated objects in two stores.
-    const imagesStoreInitFromUser = () => {
-      applySnapshot(
-        self.imagesStoreSettings.images,
-        getSnapshot(self.userSettings.userOwnedImages)
-      );
-      destroy(self.userSettings.userOwnedImages);
-    };
+    const publicSettingsInit = flow(function* () {
+      try {
+        const response = yield axios("/public/publicSettings");
+        applySnapshot(self.publicSettings, response.data.body.publicSettings);
+      } catch (error) {
+        popupNotice(`Error getting public settings.
+        ${error}.
+        `);
+      }
+    });
 
     const localTokenInit = flow(function* () {
       try {
         yield self.userSettings.getTokenFromLocalStorage();
-        imagesStoreInitFromUser();
       } catch (error) {
         popupNotice(`Error user login.
         ${error}.
@@ -104,7 +102,6 @@ const store = types
     const loginInit = flow(function* (loginData: LoginFormInterface) {
       try {
         yield self.userSettings.userLogin(loginData);
-        imagesStoreInitFromUser();
       } catch (error) {
         popupNotice(`Error user login.
         ${error}`);
@@ -131,6 +128,7 @@ const store = types
     };
 
     return {
+      publicSettingsInit,
       localTokenInit,
       registerInit,
       loginInit,

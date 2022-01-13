@@ -10,25 +10,53 @@
   padding: 10px;
   box-shadow: 0px 0px 10px 2px black;
   background-color: var(--main-background-color);
-  z-index: 20;
+  z-index: 10;
   transition: background-color 250ms linear;
 }
 
-.searchInput {
+.searchInputWrap {
   @media screen and(max-width: 600px) {
     width: 100%;
   }
+  display: flex;
+  justify-content: space-between;
   width: 50%;
   margin-right: 30px;
-  padding: 5px;
-  background-color: var(--input-color);
-  font-size: 24px;
+  background-color: var(--main-background-color);
+  border-radius: 5px;
   color: var(--main-text-color);
-  border: 1px solid var(--color-border-main);
-  box-shadow: 3px 3px 5px 0px black;
-  transition: border-color 250ms linear;
+  transition: background-color 250ms linear;
   &:focus {
     border-color: var(--color-accent);
     outline: none;
+  }
+
+  .searchInput {
+    @media screen and(max-width: 600px) {
+      width: 100%;
+    }
+    display: block;
+    flex-grow: 1;
+    align-self: stretch;
+    margin-right: 5px;
+    padding: 5px;
+    font-size: 20px;
+    background-color: var(--input-color);
+    border: none;
+    box-shadow: 0px 0px 2px 1px var(--main-text-color);
+    border-radius: 5px;
+    transition: box-shadow 250ms linear;
+
+    &:focus {
+      outline: none;
+      box-shadow: 0px 0px 2px 1px var(--color-accent);
+    }
+  }
+
+  .searchButton {
+    @media screen and(max-width: 600px) {
+      display: none;
+    }
+    margin: 0;
   }
 }

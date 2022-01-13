@@ -8,6 +8,7 @@ import { ReactComponent as IconSelectAll } from "../../img/icon_select_all.svg";
 import styles from "./ImageMenu.module.scss";
 
 interface Props {
+  isOpened?: boolean;
   groupMenuMode?: boolean;
   onDelete?: () => void;
   onSelect?: () => void;
@@ -15,14 +16,15 @@ interface Props {
   onShare?: () => void;
 }
 const ImageMenu: React.FC<Props> = ({
+  isOpened = true,
   groupMenuMode = false,
   onDelete,
   onEdit,
   onShare,
   onSelect,
 }) => {
-  console.log("Image menu render");
   const { toggleSelectAllImages, selectedImages } = store.imagesStoreSettings;
+  const buttonsTabIndex = isOpened ? 0 : -1;
   return (
     <div className={styles.imageMenuWrapper}>
       <Button
@@ -31,6 +33,7 @@ const ImageMenu: React.FC<Props> = ({
         title="Select mode on/off"
         icon={IconSelect}
         onClick={onSelect}
+        tabIndex={buttonsTabIndex}
       />
       {groupMenuMode && (
         <Button
@@ -39,6 +42,7 @@ const ImageMenu: React.FC<Props> = ({
           title="Select / deselect all"
           icon={IconSelectAll}
           onClick={toggleSelectAllImages}
+          tabIndex={buttonsTabIndex}
         />
       )}
       {!groupMenuMode && (
@@ -48,6 +52,7 @@ const ImageMenu: React.FC<Props> = ({
           title="Edit tags"
           icon={IconEdit}
           onClick={onEdit}
+          tabIndex={buttonsTabIndex}
         />
       )}
       <Button
@@ -57,6 +62,7 @@ const ImageMenu: React.FC<Props> = ({
         icon={IconShare}
         disabled={groupMenuMode && !selectedImages.length}
         onClick={onShare}
+        tabIndex={buttonsTabIndex}
       />
       <Button
         className={styles.imageMenuButton}
@@ -65,6 +71,7 @@ const ImageMenu: React.FC<Props> = ({
         icon={IconDelete}
         disabled={groupMenuMode && !selectedImages.length}
         onClick={onDelete}
+        tabIndex={buttonsTabIndex}
       />
     </div>
   );

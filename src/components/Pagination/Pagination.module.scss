@@ -1,0 +1,82 @@
+.paginationContainer {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  color: var(--main-text-color);
+  background-color: var(--main-background-color);
+  box-shadow: 0px 0px 12px 5px var(--main-background-color);
+  opacity: 0.8;
+  transform: translateY(40px);
+  transition: transform 250ms linear, opacity 250ms linear;
+  z-index: 3;
+
+  & > * {
+    margin-right: 20px;
+  }
+
+  &:hover {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.totalImagesCount {
+  & span {
+    color: var(--color-accent);
+  }
+}
+
+.footerOpenArrow {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  width: 60px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--main-background-color);
+  box-shadow: 0px 0px 12px 5px var(--main-background-color);
+  border-radius: 20px 20px 0 0;
+  transform: translateX(-50%);
+  transition: background-color 250ms linear, box-shadow 250ms linear;
+  cursor: pointer;
+
+  & svg {
+    width: 30px;
+  }
+}
+
+.selectWrapper {
+  display: flex;
+}
+
+.imagesPerPageSelect {
+  border-radius: 5px;
+}
+
+.pagesList {
+  display: flex;
+  list-style: none;
+
+  & li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 2px;
+    border: 1px solid var(--main-text-color);
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .currentPageNumber {
+    border: 1px solid var(--color-accent);
+  }
+}

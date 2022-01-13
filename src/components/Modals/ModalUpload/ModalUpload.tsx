@@ -25,7 +25,7 @@ const ModalUpload = () => {
             ...previousImages,
             {
               previewImageName: singleImage.name,
-              previewImaageSource: event!.target!.result,
+              previewImageSource: event!.target!.result,
             },
           ]);
         };
@@ -59,7 +59,6 @@ const ModalUpload = () => {
     });
     await uploadImages(formData);
     setModalComponentType("none");
-    setIsLoading(false);
     setModalOpen(false);
   };
 
@@ -94,7 +93,7 @@ const ModalUpload = () => {
       />
       {previewImages.length > 0 && (
         <ul className={styles.modalUploadImagesPreviewWrapper}>
-          {previewImages.map(({ previewImageName, previewImaageSource }) => (
+          {previewImages.map(({ previewImageName, previewImageSource }) => (
             <li key={previewImageName}>
               <Button
                 type="button"
@@ -104,7 +103,7 @@ const ModalUpload = () => {
                 onClick={handleImageRemove(previewImageName)}
               />
               <img
-                src={previewImaageSource}
+                src={previewImageSource}
                 alt="uploading item"
                 className={styles.modalUploadImagesPreview}
                 onDragOver={(e) => {

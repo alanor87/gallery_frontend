@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, memo } from "react";
+import React, { useState, useEffect, useCallback, useRef, memo } from "react";
 import { NavLink } from "react-router-dom";
 import TagList from "../TagList";
 import { Button, Spinner } from "../elements";
@@ -22,10 +22,15 @@ interface Props {
 const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   console.log("Image render"); // just for debugging -  to be sure memoization works)
 
-  const { editImagesInfo, groupSelectModeToggle, selectedListChange } =
-    store.imagesStoreSettings;
-  const { userName } = store.userSettings;
-  const { _id, imageHostingId, imageURL, imageInfo, toggleSelectImage } = image;
+  const {
+    getCurrentGalleryMode,
+    editImagesInfo,
+    groupSelectModeToggle,
+    selectedListChange,
+  } = store.imagesStoreSettings;
+  const { userName, userIsAuthenticated } = store.userSettings;
+  const { setModalOpen, setModalComponentType } = store.modalWindowsSettings;
+  const { _id, imageURL, imageInfo, toggleSelectImage } = image;
   const { tags, likes, openedTo, isPublic } = imageInfo;
 
   const [deleteOverlayIsOpen, setDeleteOverlayIsOpen] = useState(false);
@@ -34,15 +39,38 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
   const [tagEditorOverlayIsOpen, setTagEditorOpen] = useState(false);
 
+  const imageMenuRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!groupSelectMode) toggleSelectImage(false);
   }, [groupSelectMode, toggleSelectImage]);
 
-  const imageMenuToggleHandler = () => setImageMenuIsOpen(!imageMenuIsOpen);
+  useEffect(() => {
+    if (imageMenuRef.current && imageMenuIsOpen) {
+      imageMenuRef.current.tabIndex = 0;
+      imageMenuRef.current.focus();
+    }
+  }, [imageMenuIsOpen]);
+
+  const isUserMode = getCurrentGalleryMode === "userGallery";
+
+  const imageMenuToggleHandler = (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    setImageMenuIsOpen(!imageMenuIsOpen);
+  };
+  const imageMenuCloseHandler = (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    setImageMenuIsOpen(false);
+  };
 
   const toggleImageSelect = () => {
     toggleSelectImage(!isSelected);
-    selectedListChange(_id, imageHostingId);
+    selectedListChange(_id);
+  };
+
+  const imageModalOpenHandler = () => {
+    setModalComponentType("image");
+    setModalOpen(true);
   };
 
   const groupSelectOnHandler = useCallback(() => {
@@ -97,7 +125,11 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
     !tagEditorOverlayIsOpen && !deleteOverlayIsOpen && !shareOverlayIsOpen;
 
   return (
-    <div className={styles.cardWrap}>
+    <div
+      className={styles.cardWrap}
+      tabIndex={groupSelectMode ? -1 : 0}
+      onMouseLeave={imageMenuCloseHandler}
+    >
       {overlaysAreClosedCheck() && !groupSelectMode && (
         <div className={styles.menu}>
           <Button
@@ -106,34 +138,49 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
             onClick={toggleLikeHandler}
             className={styles.menuButton}
             text={likes.length}
+            disabled={!userIsAuthenticated}
+            title="Like / Dislike"
           />
-          <div
-            className={
-              imageMenuIsOpen
-                ? styles.imageMenuWrapper + " " + styles.isOpened
-                : styles.imageMenuWrapper
-            }
-          >
-            <ImageMenu
-              onDelete={deleteOverlayOpenHandler}
-              onEdit={tagEditOpenHandler}
-              onSelect={groupSelectOnHandler}
-              onShare={shareOverlayOpenHandler}
-            />
-          </div>
+          {isUserMode && (
+            <>
+              <div
+                ref={imageMenuRef}
+                className={
+                  imageMenuIsOpen
+                    ? styles.imageMenuWrapper + " " + styles.isOpened
+                    : styles.imageMenuWrapper
+                }
+              >
+                <ImageMenu
+                  isOpened={imageMenuIsOpen}
+                  onDelete={deleteOverlayOpenHandler}
+                  onEdit={tagEditOpenHandler}
+                  onSelect={groupSelectOnHandler}
+                  onShare={shareOverlayOpenHandler}
+                />
+              </div>
 
-          <div style={{ position: "relative" }}>
-            <Button
-              type="button"
-              icon={IconSettings}
-              onClick={imageMenuToggleHandler}
-              className={styles.menuButton}
-            />
-          </div>
+              <div style={{ position: "relative" }}>
+                <Button
+                  type="button"
+                  title="Image menu"
+                  icon={IconSettings}
+                  onClick={imageMenuToggleHandler}
+                  className={styles.menuButton}
+                />
+              </div>
+            </>
+          )}
         </div>
       )}
 
-      <NavLink to={`/image/${_id}`}>
+      <NavLink
+        to={`/${getCurrentGalleryMode}/${_id}`}
+        tabIndex={-1}
+        className={styles.imageLink}
+        title={imageInfo.tags.join(" ")}
+        onClick={imageModalOpenHandler}
+      >
         <div
           className={styles.imgWrap}
           style={{ backgroundImage: `url(${imageURL})` }}
@@ -145,10 +192,10 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
           <div className={styles.imgCardText}>
             <TagList
               tags={tags}
-              title={"Double click to edit"}
-              placeholder={"Double click to add tags"}
+              title={isUserMode ? "Double click to edit" : "No tags"}
+              placeholder={isUserMode ? "Double click to add tags" : "No tags"}
               isTagDeletable={false}
-              onDoubleClick={tagEditOpenHandler}
+              onDoubleClick={isUserMode ? tagEditOpenHandler : () => null}
               tagDelHandler={tagDelHandler}
             />
           </div>
@@ -161,14 +208,12 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
           closeHandle={onTagEditCloseHandler}
           onTagDelete={tagDelHandler}
           onAddTags={tagAddHandler}
-          isLoading={imgInfoIsLoading}
         />
       )}
 
       {deleteOverlayIsOpen && (
         <DeleteOverlay
           _id={_id}
-          imageHostingId={imageHostingId}
           onCloseDeleteOverlay={deleteOverlayCloseHandler}
         />
       )}

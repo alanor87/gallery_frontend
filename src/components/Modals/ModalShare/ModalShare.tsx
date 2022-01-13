@@ -9,7 +9,7 @@ import styles from "./ModalShare.module.scss";
 
 const ModalShare = () => {
   const [isPublicState, setisPublicState] = useState(false);
-  const [usersOpenedToList, setUsersOpenedToList] = useState<string[]>([]);
+  const [newOpenedToList, setNewOpenedToList] = useState<string[]>([]);
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
@@ -36,13 +36,11 @@ const ModalShare = () => {
   const userAddHandler = async (name: string) => {
     if (name === userName) return;
     const userDoesExist = await checkIfUserExistsByName(name);
-    if (userDoesExist && !usersOpenedToList.includes(name))
-      setUsersOpenedToList([...usersOpenedToList, name]);
+    if (userDoesExist && !newOpenedToList.includes(name))
+      setNewOpenedToList([...newOpenedToList, name]);
   };
   const userRemoveHandler = (name: string) => {
-    setUsersOpenedToList(
-      usersOpenedToList.filter((userName) => userName !== name)
-    );
+    setNewOpenedToList(newOpenedToList.filter((userName) => userName !== name));
   };
 
   const cancelHandler = () => {
@@ -53,8 +51,8 @@ const ModalShare = () => {
   };
 
   /*
-   * Iterating through selectedImages, taking openedTolist - and merging with the usersOpenedToList
-   * without duplications - using an intermediate Set object, since we have an empty initial usersOpenedToList,
+   * Iterating through selectedImages, taking openedTolist - and merging with the newOpenedToList
+   * without duplications - using an intermediate Set object, since we have an empty initial newOpenedToList,
    * single for all the selected images. Was told that this way has Big O(n) complexity ))
    */
   const acceptChangesHandler = async () => {
@@ -66,7 +64,7 @@ const ModalShare = () => {
         const currentImage = getImageById(selectedId)!;
         const oldOpenedToList = currentImage.imageInfo.openedTo;
         const newOpenedList = [
-          ...new Set([...oldOpenedToList, ...usersOpenedToList]),
+          ...new Set([...oldOpenedToList, ...newOpenedToList]),
         ];
         const newImageInfo: NewImageInfoType = {
           _id: selectedId,
@@ -87,17 +85,18 @@ const ModalShare = () => {
      * we have to do that manually in each image shareOverlay. For now its that way.
      */
 
-    const usersList: ImageOpenedToUserEntry[] = usersOpenedToList.map(
-      (name) => ({ name, action: "add" })
-    );
+    const usersList: ImageOpenedToUserEntry[] = newOpenedToList.map((name) => ({
+      name,
+      action: "add",
+    }));
 
     /*
      * Updating each users selectedUsersList list with the list of selectedImagesId.
      * Performing this operation on the backend.
      */
     await imagesMultiuserShare(selectedImagesId, usersList);
-    setModalComponentType("none");
     setIsLoading(false);
+    setModalComponentType("none");
     setModalOpen(false);
     deselectAllImages();
     groupSelectModeToggle();
@@ -119,7 +118,7 @@ const ModalShare = () => {
             </div>
             <div className={styles.option}>
               <p className={styles.openedTo}>Is opened to users : </p>
-              {usersOpenedToList.map((entry, index) => (
+              {newOpenedToList.map((entry, index) => (
                 <Tag key={index} tagValue={entry} />
               ))}
               <Button
@@ -144,7 +143,7 @@ const ModalShare = () => {
 
       {openedToOverlayIsOpen && !isLoading && (
         <TagEditor
-          tags={usersOpenedToList}
+          tags={newOpenedToList}
           closeHandle={openToOverlayCloseHandler}
           onAddTags={userAddHandler}
           onTagDelete={userRemoveHandler}

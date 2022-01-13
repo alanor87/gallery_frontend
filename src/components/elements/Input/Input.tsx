@@ -1,4 +1,4 @@
-import { Field, useFormikContext } from "formik";
+import { Field, FormikContextType, useFormikContext } from "formik";
 import styles from "./Input.module.scss";
 
 interface Props {
@@ -8,7 +8,8 @@ interface Props {
 }
 
 function Input({ fieldName, fieldType }: Props) {
-  const { values, errors, touched } = useFormikContext<any>();
+  const { values, errors, touched } =
+    useFormikContext<FormikContextType<any>>();
 
   const getFieldClassName = () => {
     return fieldName in values && fieldName in errors && fieldName in touched

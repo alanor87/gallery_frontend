@@ -34,6 +34,7 @@ function Checkbox({
         checked={isChecked}
         className="isHidden"
         onChange={onChange}
+        tabIndex={-1}
       />
       {isChecked && <IconSelect className={styles.checkboxIcon} />}
     </label>

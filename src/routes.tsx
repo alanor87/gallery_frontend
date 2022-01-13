@@ -7,7 +7,7 @@ const routes = [
   {
     isPublic: true,
     path: "/login",
-    redirectTo: "/gallery",
+    redirectTo: "/userGallery",
     exact: true,
     restricted: true,
     component: LoginRegisterView,
@@ -16,7 +16,7 @@ const routes = [
   {
     isPublic: true,
     path: "/register",
-    redirectTo: "/gallery",
+    redirectTo: "/userGallery",
     exact: true,
     restricted: true,
     component: LoginRegisterView,
@@ -24,12 +24,12 @@ const routes = [
   },
   {
     isPublic: false,
-    path: "/gallery",
+    path: "/userGallery",
     redirectTo: "/login",
     exact: false,
     restricted: false,
     component: GalleryView,
-    label: "GalleryView",
+    label: "userGallery",
   },
   {
     isPublic: false,
@@ -38,7 +38,7 @@ const routes = [
     exact: false,
     restricted: false,
     component: GalleryView,
-    label: "SharedGalleryView",
+    label: "sharedGallery",
   },
   {
     isPublic: true,
@@ -47,7 +47,7 @@ const routes = [
     exact: false,
     restricted: false,
     component: GalleryView,
-    label: "PublicGalleryView",
+    label: "publicGallery",
   },
   // {
   //   isPublic: false,
@@ -59,14 +59,5 @@ const routes = [
   //   label: "ModalImageView",
   // },
 ];
-
-export interface RouterPropsType {
-  component: any;
-  redirectTo: string;
-  children?: JSX.Element | React.FC;
-  path: string;
-  restricted: boolean;
-  exact: boolean;
-}
 
 export default routes;

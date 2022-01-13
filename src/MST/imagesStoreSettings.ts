@@ -1,19 +1,31 @@
 import axios from "axios";
-import { types, flow, Instance, applySnapshot } from "mobx-state-tree";
+import {
+  types,
+  flow,
+  Instance,
+  applySnapshot,
+  getParent,
+} from "mobx-state-tree";
 import { ImageOpenedToUserEntry } from "types/common";
 import { NewImageInfoType, GalleryType } from "types/images";
 import { popupNotice } from "../utils/popupNotice";
 
 interface InitialImageStoreSettings {
-  galleryType: GalleryType;
+  galleryMode: GalleryType;
   images: ImageType[];
+  groupSelectMode: boolean;
+  filter: string;
+  page: number;
   imagesPerPage: number;
 }
 
 const initialImageStoreSettings: InitialImageStoreSettings = {
-  galleryType: "userGallery",
+  galleryMode: "userGallery",
   images: [],
-  imagesPerPage: 10,
+  groupSelectMode: false,
+  filter: "",
+  page: 0,
+  imagesPerPage: 20,
 };
 
 const ImageInfo = types
@@ -38,11 +50,12 @@ const ImageInfo = types
 export const Image = types
   .model({
     _id: types.string,
-    imageHostingId: types.string,
     imageURL: types.optional(types.string, ""),
     smallImageURL: types.optional(types.string, ""),
     imageInfo: types.optional(ImageInfo, {}),
     isSelected: types.optional(types.boolean, false),
+    title: types.optional(types.string, ""),
+    description: types.optional(types.string, ""),
   })
   .actions((self) => {
     const updateImageInfo = (newImageInfo: ImageInfoType) => {
@@ -58,7 +71,7 @@ export const Image = types
 
 const ImagesStore = types
   .model({
-    galleryType: types.optional(
+    galleryMode: types.optional(
       types.enumeration(["userGallery", "sharedGallery", "publicGallery"]),
       "userGallery"
     ),
@@ -68,24 +81,69 @@ const ImagesStore = types
       types.array(
         types.model({
           selectedId: types.string,
-          imageHostingId: types.string,
           isPublic: types.optional(types.boolean, false),
         })
       ),
       []
     ),
+    filter: types.optional(types.string, ""),
+    imagesPerPage: types.optional(types.number, 20),
+    currentPage: types.optional(types.number, 0),
+    filteredImagesNumber: types.optional(types.number, 0),
+    isLoading: types.optional(types.boolean, true),
   })
   .views((self) => ({
+    get getCurrentGalleryMode(): GalleryType {
+      return self.galleryMode;
+    },
     get getUserImages(): ImageType[] {
       return self.images;
     },
-    get getFilteredImages(): ImageType[] {
-      return self.images.filter((image) => image.imageInfo.tags.includes(""));
-    },
   }))
   .actions((self) => {
-    const getImageById = (id: string) =>
-      self.images.find((image) => image._id === id);
+    const imageStoreInit = flow(function* (galleryMode: GalleryType) {
+      console.log("imageStoreInit");
+      purgeStorage();
+      setGalleryMode(galleryMode);
+      try {
+        yield fetchImages();
+      } catch (error) {
+        popupNotice(`Error while initializing gallery.
+             ${error}`);
+      }
+    });
+
+    const fetchImages = flow(function* () {
+      try {
+        self.isLoading = true;
+        let requestRoute;
+        switch (self.galleryMode) {
+          case "userGallery": {
+            requestRoute = `/images/userOwnedImages?currentPage=${self.currentPage}&imagesPerPage=${self.imagesPerPage}&filter=${self.filter}`;
+            break;
+          }
+          case "sharedGallery": {
+            requestRoute = `/images/userOpenedToImages?currentPage=${self.currentPage}&imagesPerPage=${self.imagesPerPage}&filter=${self.filter}`;
+            break;
+          }
+          case "publicGallery": {
+            const { publicSettingsInit } = getParent(self, 1);
+            publicSettingsInit();
+            requestRoute = `/public/publicImages?currentPage=${self.currentPage}&imagesPerPage=${self.imagesPerPage}&filter=${self.filter}`;
+            break;
+          }
+        }
+        const response = yield axios.get(requestRoute);
+        const { images, filteredImagesNumber } = response.data.body;
+        self.filteredImagesNumber = filteredImagesNumber;
+        applySnapshot(self.images, images);
+      } catch (error) {
+        popupNotice(`Error while fetching images.
+             ${error}`);
+      } finally {
+        self.isLoading = false;
+      }
+    });
 
     const uploadImages = flow(function* (imagesToUpload) {
       try {
@@ -98,9 +156,15 @@ const ImagesStore = types
             },
           }
         );
-        uploadedImages.data.newImages.forEach((image: ImageType) => {
-          self.images.push(image);
-        });
+        const newImages: ImageType[] = uploadedImages.data.newImages;
+        const newImagesIdList = newImages.map((image) => image._id);
+        const { userSettings } = getParent(self, 1);
+        updateUserOwnedImagesLocal([
+          ...userSettings.userOwnedImages,
+          ...newImagesIdList,
+        ]);
+        setCurrentPage(0);
+        popupNotice(`Images uploaded!`);
       } catch (error) {
         popupNotice(`Error while uploading images.
              ${error}`);
@@ -143,11 +207,9 @@ const ImagesStore = types
         const response = yield axios.post("/images/deleteImages", {
           imagesToDelete: self.selectedImages,
         });
-        const filteredImages = self.images.filter((image) => {
-          return response.data.newImagesList.includes(image._id);
-        });
-        applySnapshot(self.images, filteredImages);
-        applySnapshot(self.selectedImages, []);
+        clearSelectedList();
+        updateUserOwnedImagesLocal(response.data.newImagesList);
+        setCurrentPage(0);
         popupNotice(`Images deleted!`);
       } catch (error) {
         popupNotice(`Error while deleting images.
@@ -170,20 +232,39 @@ const ImagesStore = types
       }
     });
 
+    const setGalleryMode = (value: GalleryType) => {
+      self.galleryMode = value;
+    };
+
+    const setFilter = (value: string) => {
+      self.filter = value;
+      setCurrentPage(0);
+    };
+
+    const setImagesPerPage = (value: number) => {
+      self.imagesPerPage = value;
+      self.currentPage = 0;
+      fetchImages();
+    };
+
+    const setCurrentPage = (value: number) => {
+      self.currentPage = value;
+      fetchImages();
+    };
+
+    const getImageById = (id: string) =>
+      self.images.find((image) => image._id === id);
+
     const groupSelectModeToggle = () => {
       self.groupSelectMode = !self.groupSelectMode;
     };
 
-    const selectedListChange = (
-      selectedId: string,
-      imageHostingId = "",
-      isPublic = false
-    ) => {
+    const selectedListChange = (selectedId: string, isPublic = false) => {
       const indexInList = self.selectedImages.findIndex(
         (image) => image.selectedId === selectedId
       );
       if (indexInList === -1) {
-        self.selectedImages.push({ selectedId, imageHostingId, isPublic });
+        self.selectedImages.push({ selectedId, isPublic });
       } else {
         self.selectedImages.forEach((image, index) => {
           if (image.selectedId === selectedId)
@@ -204,7 +285,6 @@ const ImagesStore = types
         self.selectedImages,
         self.images.map((image) => ({
           selectedId: image._id,
-          imageHostingId: image.imageHostingId,
           isPublic: image.imageInfo.isPublic,
         }))
       );
@@ -221,15 +301,25 @@ const ImagesStore = types
       applySnapshot(self.selectedImages, []);
     };
 
+    const updateUserOwnedImagesLocal = (newImagesIdList: string[]) => {
+      const { userSettings } = getParent(self, 1);
+      userSettings.updateUserOwnedImages(newImagesIdList);
+    };
+
     const purgeStorage = () => {
       applySnapshot(self, initialImageStoreSettings);
     };
 
     return {
+      setGalleryMode,
+      imageStoreInit,
       getImageById,
       editImagesInfo,
       uploadImages,
       deleteImages,
+      setFilter,
+      setImagesPerPage,
+      setCurrentPage,
       groupSelectModeToggle,
       imagesMultiuserShare,
       selectedListChange,

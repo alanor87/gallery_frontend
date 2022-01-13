@@ -4,13 +4,11 @@ import { Button, Spinner } from "../../elements";
 
 interface Props {
   _id: string;
-  imageHostingId: string;
   onCloseDeleteOverlay: () => void;
 }
 
 const DeleteOverlay: React.FunctionComponent<Props> = ({
   _id,
-  imageHostingId,
   onCloseDeleteOverlay,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +17,7 @@ const DeleteOverlay: React.FunctionComponent<Props> = ({
 
   const deleteImageHandler = async () => {
     setIsLoading(true);
-    selectedListChange(_id, imageHostingId);
+    selectedListChange(_id);
     await deleteImages();
     clearSelectedList();
   };

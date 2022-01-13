@@ -1,31 +1,34 @@
-import { useEffect } from "react";
-import { Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useLocation } from "react-router";
 import { Switch, Redirect } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import axios from "axios";
 import PrivateRoute from "./components/_routes/PrivateRoute";
 import PublicRoute from "./components/_routes/PublicRoute";
 import AppBar from "./components/AppBar";
+import Pagination from "./components/Pagination";
 import SideMenu from "./components/SideMenu";
-import { Spinner } from "./components/elements";
+import { ToggleButton, Spinner } from "./components/elements";
 import routes from "./routes";
 import store from "./MST/store";
-import { ToggleButton } from "./components/elements";
 
 function App() {
-  useEffect(() => {
-    console.log("App useEffect");
-    if (
-      localStorage.getItem("token") &&
-      !store.userSettings.userIsAuthenticated
-    )
-      store.localTokenInit();
-  }, []);
-
-  const { userSettings, backendToggle } = store;
-
-  const { lightThemeIsOn, sidePanelIsOpen } = userSettings.userInterface;
+  const { userSettings, backendToggle, publicSettingsInit, localTokenInit } =
+    store;
   const { userIsAuthenticated } = userSettings;
+  const { lightThemeIsOn, sidePanelIsOpen } = userSettings.userInterface;
+
+  useEffect(() => {
+    publicSettingsInit();
+    if (localStorage.getItem("token") && !userIsAuthenticated) localTokenInit();
+  }, [localTokenInit, publicSettingsInit, userIsAuthenticated]);
+
+  const location = useLocation();
+
+  const [isAuthRoute, setIsAuthRoute] = useState(true);
+  useEffect(() => {
+    setIsAuthRoute(["/login", "/register"].includes(location.pathname));
+  }, [location]);
 
   useEffect(() => {
     if (lightThemeIsOn) document.body.classList.add("AppLightTheme");
@@ -40,15 +43,10 @@ function App() {
     return <Spinner text="Checking token" side={100} />;
 
   console.log("App render");
-
   return (
     <div className={"appMain"}>
-      {userIsAuthenticated && (
-        <>
-          <AppBar />
-          <SideMenu isOpen={sidePanelIsOpen} />{" "}
-        </>
-      )}
+      {!isAuthRoute && <AppBar />}
+      {userIsAuthenticated && <SideMenu isOpen={sidePanelIsOpen} />}
       <main className="mainSection">
         <Suspense fallback={<Spinner side={100} />}>
           {" "}
@@ -71,6 +69,7 @@ function App() {
                     exact={exact}
                     restricted={restricted}
                     component={component}
+                    label={label}
                   />
                 ) : (
                   <PrivateRoute
@@ -80,10 +79,11 @@ function App() {
                     exact={exact}
                     restricted={restricted}
                     component={component}
+                    label={label}
                   />
                 )
             )}
-            <Redirect to={userIsAuthenticated ? "/gallery" : "/login"} />
+            <Redirect to={userIsAuthenticated ? "/userGallery" : "/login"} />
           </Switch>
         </Suspense>
         <ToggleButton
@@ -91,6 +91,7 @@ function App() {
           style={{ position: "absolute", bottom: "10px", right: "10px" }}
           toggleHandler={backendToggle}
         />
+        {!isAuthRoute && <Pagination />}
       </main>
     </div>
   );

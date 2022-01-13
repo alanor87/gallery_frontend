@@ -6,15 +6,16 @@
     display: block;
     position: fixed;
     top: 55px;
-    width: 180px;
+    width: 210px;
     height: 94vh;
     overflow-y: auto;
     margin-right: 10px;
     padding: 25px 15px;
+
     background-image: linear-gradient(
       to right,
-      var(--main-background-color) 23%,
-      transparent 94%
+      var(--main-background-color) 85%,
+      transparent 100%
     );
     opacity: 0;
     transition: opacity 250ms linear, left 250ms linear 250ms;
@@ -29,4 +30,18 @@
     pointer-events: all;
     opacity: 1;
   }
+}
+
+.navLinksList {
+  list-style: none;
+
+  & li {
+    margin-bottom: 20px;
+  }
+}
+
+.navLink {
+  font-size: 26px;
+  text-decoration: none;
+  color: var(--color-accent);
 }

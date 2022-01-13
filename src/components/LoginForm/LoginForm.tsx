@@ -26,7 +26,7 @@ function LoginForm() {
   };
 
   return (
-    <div className={styles.loginForm}>
+    <div className={styles.authForm}>
       <h2>Login</h2>
       <Formik
         initialValues={formInitialValues}
@@ -34,7 +34,7 @@ function LoginForm() {
         validateOnBlur={false}
         onSubmit={formSubmitHandler}
       >
-        <Form action="#" method="GET">
+        <Form>
           <label className={styles.labelAuthorisation}>
             E-mail
             <Input fieldType="text" fieldName="userEmail" />
@@ -46,11 +46,16 @@ function LoginForm() {
           <div className={styles.btnWrapper}>
             <Button type="submit" text="Login" />
           </div>
-          <NavLink to="/register" className="navLink">
-            Register
-          </NavLink>
         </Form>
       </Formik>
+      <div className={styles.bottomLinksWrapper}>
+        <NavLink to="/register" className="navLink">
+          Register
+        </NavLink>
+        <NavLink to="/publicGallery" className="navLink">
+          To public gallery
+        </NavLink>
+      </div>
     </div>
   );
 }
