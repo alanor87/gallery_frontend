@@ -9,7 +9,7 @@ Global aim is to create an image hosting that would be targeting the sharing if 
 - add sharing of the image as the link on the site  page of the image - and as wht link to the image on hosting.
 - generating QR code for the image link.
 - add shar8ng through social networks - FB, Twitter, Instagram etc.
-- pack all  the svg icons into one sprite.
+- pack all the svg icons into one sprite.
 
 BUGS work
 
