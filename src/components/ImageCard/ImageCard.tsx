@@ -141,11 +141,21 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
       <NavLink
         to={`/${getCurrentGalleryMode}/${_id}`}
         tabIndex={-1}
+<<<<<<< HEAD
         className={styles.imgLink}
         title={imageInfo.tags.join(" ")}
         onClick={imageModalOpenHandler}
       >
         <img className={styles.imgWrap} src={smallImageURL} alt={_id} />
+=======
+        title={imageInfo.tags.join(" ")}
+        onClick={imageModalOpenHandler}
+      >
+        <div
+          className={styles.imgWrap}
+          style={{ backgroundImage: `url(${smallImageURL})` }}
+        ></div>
+>>>>>>> 4edabce84b55801f2ab8e81f2c565391e942d4ae
       </NavLink>
 
       {overlaysAreClosedCheck() && !groupSelectMode && (

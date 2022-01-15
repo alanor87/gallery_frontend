@@ -2,6 +2,7 @@ import React, { useEffect, useCallback } from "react";
 import ModalUpload from "../ModalUpload";
 import ModalDelete from "../ModalDelete";
 import ModalShare from "../ModalShare";
+import ModalImage from "../ModalImage";
 import { observer } from "mobx-react-lite";
 import { createPortal } from "react-dom";
 import store from "../../../MST/store";
@@ -34,7 +35,7 @@ const Modal: React.FunctionComponent<Props> = ({ style }) => {
   const getCurrentModalComponent = () => {
     switch (modalComponentType) {
       case "image":
-        return null;
+        return <ModalImage />;
       case "delete":
         return <ModalDelete />;
       case "share":
