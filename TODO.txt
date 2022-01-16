@@ -12,5 +12,5 @@ Global aim is to create an image hosting that would be targeting the sharing if 
 - pack all the svg icons into one sprite.
 
 BUGS work
-
+ - fix token validation issue when requesting a simgle image from backend from publicGallery - in this case there should not be token validation.
  - handle duplication resilience in tags and openedToUsers lists - in share components especially.

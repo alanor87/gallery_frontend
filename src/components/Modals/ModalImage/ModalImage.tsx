@@ -10,18 +10,29 @@ const ModalImage = () => {
   const { modalImageId } = store.modalWindowsSettings;
 
   const [currentModalImage, setCurrentModalImage] = useState<ImageType>();
+  const [imageIsLoaded, setImageIsLoaded] = useState(false);
 
   useEffect(() => {
     fetchImageById(modalImageId).then((image) => {
       setCurrentModalImage(image);
-      console.log("currentModalImage : ", currentModalImage);
     });
   }, [modalImageId, fetchImageById]);
+
+  const onImageLoad = (e: any) => {
+    console.log("event : ", e);
+    setImageIsLoaded(true);
+  };
 
   return currentModalImage ? (
     <div className={styles.modalImage}>
       <div className={styles.imagePart}>
-        <img src={currentModalImage?.imageURL} alt="dddf" />
+        {!imageIsLoaded && <Spinner side={50} />}
+        <img
+          src={currentModalImage?.imageURL}
+          alt={"God save the queen!"}
+          onLoad={onImageLoad}
+          style={{ visibility: imageIsLoaded ? "visible" : "hidden" }}
+        />
       </div>
       <div className={styles.nonImagePart}>
         <TagList
@@ -30,9 +41,7 @@ const ModalImage = () => {
         />
       </div>
     </div>
-  ) : (
-    <Spinner side={50} />
-  );
+  ) : null;
 };
 
 export default ModalImage;
