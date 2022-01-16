@@ -8,7 +8,7 @@ interface Props {
   addOptionOn?: boolean;
   isTagDeletable?: boolean;
   onDoubleClick?: () => void;
-  tagDelHandler: (tagValue: string) => void;
+  tagDelHandler?: (tagValue: string) => void;
 }
 
 const TagList: React.FunctionComponent<Props> = ({

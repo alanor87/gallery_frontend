@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { popupNotice } from "utils/popupNotice";
 import { Button, Spinner } from "../../elements";
 import { ReactComponent as CloseIcon } from "../../../img/icon_close.svg";
 import store from "../../../MST/store";
@@ -15,23 +16,23 @@ const ModalUpload = () => {
     e.preventDefault();
     e.stopPropagation();
     // defining if we added file through dialogue window - or drag'ndrop
-    const files = e.type === "drop" ? e.dataTransfer.files : e.target.files;
-    if (files.length && files.length + previewImages.length < 6) {
-      for (let i = 0; i < files.length; i += 1) {
-        const singleImage = files[i];
-        const reader = new FileReader();
-        reader.onload = (event: ProgressEvent<FileReader>) => {
+    try {
+      const files = e.type === "drop" ? e.dataTransfer.files : e.target.files;
+      if (files.length && files.length + previewImages.length < 6) {
+        for (let i = 0; i < files.length; i += 1) {
+          const singleImage = files[i];
           setPreviewImages((previousImages) => [
             ...previousImages,
             {
               previewImageName: singleImage.name,
-              previewImageSource: event!.target!.result,
+              previewImageSource: URL.createObjectURL(singleImage),
             },
           ]);
-        };
-        reader.readAsDataURL(singleImage);
-        filesToUpload.push(singleImage);
+          filesToUpload.push(singleImage);
+        }
       }
+    } catch (error) {
+      popupNotice("Error while loading files from local drive.");
     }
   };
 

@@ -17,6 +17,10 @@
     background-repeat: no-repeat;
     filter: blur(2px);
     z-index: 1;
+
+    @media screen and(max-width: 800px) {
+      display: none;
+    }
   }
 
   &:hover .text,
@@ -55,18 +59,20 @@
   }
 }
 
-.imgLink {
+.imgWrap {
   position: absolute;
   display: block;
   width: 100%;
   height: 100%;
   z-index: 2;
+  cursor: pointer;
+
+  img {
+    height: 100%;
+    margin: auto;
+  }
 }
 
-.imgWrap {
-  height: 100%;
-  margin: auto;
-}
 .menu {
   position: absolute;
   top: 0;

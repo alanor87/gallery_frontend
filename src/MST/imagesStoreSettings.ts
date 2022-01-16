@@ -145,6 +145,11 @@ const ImagesStore = types
       }
     });
 
+    const fetchImageById = flow(function* (imageId) {
+      const response = yield axios.get(`images/${imageId}`);
+      return response.data.body as ImageType;
+    });
+
     const uploadImages = flow(function* (imagesToUpload) {
       try {
         const uploadedImages = yield axios.post(
@@ -311,6 +316,7 @@ const ImagesStore = types
     };
 
     return {
+      fetchImageById,
       setGalleryMode,
       imageStoreInit,
       getImageById,

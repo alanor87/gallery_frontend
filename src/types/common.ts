@@ -7,7 +7,7 @@ export interface RouterPropsType {
   component: any;
   redirectTo: string;
   children?: JSX.Element | React.FC;
-  path: string;
+  path: string | string[];
   restricted: boolean;
   exact: boolean;
   label: string;

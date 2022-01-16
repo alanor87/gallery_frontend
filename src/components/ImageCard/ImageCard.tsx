@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useRef, memo } from "react";
-import { NavLink } from "react-router-dom";
 import TagList from "../TagList";
 import { Button, Spinner } from "../elements";
 import store from "../../MST/store";
@@ -29,7 +28,8 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
     selectedListChange,
   } = store.imagesStoreSettings;
   const { userName, userIsAuthenticated } = store.userSettings;
-  const { setModalOpen, setModalComponentType } = store.modalWindowsSettings;
+  const { setModalOpen, setModalComponentType, setModalImageId } =
+    store.modalWindowsSettings;
   const { _id, smallImageURL, imageInfo, toggleSelectImage } = image;
   const { tags, likes, openedTo, isPublic } = imageInfo;
 
@@ -69,6 +69,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   };
 
   const imageModalOpenHandler = () => {
+    setModalImageId(_id);
     setModalComponentType("image");
     setModalOpen(true);
   };
@@ -138,25 +139,13 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
         style={{ backgroundImage: `url(${smallImageURL})` }}
       ></div>
 
-      <NavLink
-        to={`/${getCurrentGalleryMode}/${_id}`}
+      <div
         tabIndex={-1}
-<<<<<<< HEAD
-        className={styles.imgLink}
-        title={imageInfo.tags.join(" ")}
+        className={styles.imgWrap}
         onClick={imageModalOpenHandler}
       >
-        <img className={styles.imgWrap} src={smallImageURL} alt={_id} />
-=======
-        title={imageInfo.tags.join(" ")}
-        onClick={imageModalOpenHandler}
-      >
-        <div
-          className={styles.imgWrap}
-          style={{ backgroundImage: `url(${smallImageURL})` }}
-        ></div>
->>>>>>> 4edabce84b55801f2ab8e81f2c565391e942d4ae
-      </NavLink>
+        <img className={styles.image} src={smallImageURL} alt={_id} />
+      </div>
 
       {overlaysAreClosedCheck() && !groupSelectMode && (
         <>

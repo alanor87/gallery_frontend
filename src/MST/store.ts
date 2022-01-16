@@ -39,6 +39,7 @@ const modalSettings = types
       "none"
     ),
     modalIsOpened: types.optional(types.boolean, false),
+    modalImageId: types.optional(types.string, ""),
   })
   .actions((self) => {
     const setModalOpen = (value: boolean) => {
@@ -47,9 +48,13 @@ const modalSettings = types
     const setModalComponentType = (value: modalWindowTypes) => {
       self.modalComponentType = value;
     };
+    const setModalImageId = (value: string) => {
+      self.modalImageId = value;
+    };
     return {
       setModalOpen,
       setModalComponentType,
+      setModalImageId,
     };
   });
 

@@ -49,15 +49,6 @@ const routes = [
     component: GalleryView,
     label: "publicGallery",
   },
-  // {
-  //   isPublic: false,
-  //   path: "/image/:id",
-  //   redirectTo: "/login",
-  //   exact: false,
-  //   restricted: false,
-  //   component: ModalImageView,
-  //   label: "ModalImageView",
-  // },
 ];
 
 export default routes;
