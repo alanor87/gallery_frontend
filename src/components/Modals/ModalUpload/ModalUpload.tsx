@@ -3,12 +3,15 @@ import { popupNotice } from "utils/popupNotice";
 import { Button, Spinner } from "../../elements";
 import { ReactComponent as CloseIcon } from "../../../img/icon_close.svg";
 import store from "../../../MST/store";
+import { ModalWindowProps } from "types/modal";
 import styles from "./styles.module.scss";
 
-const ModalUpload = () => {
+const ModalUpload: React.FC<ModalWindowProps> = ({
+  isLoading,
+  setIsLoading,
+}) => {
   const [previewImages, setPreviewImages] = useState<any[]>([]);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const { uploadImages } = store.imagesStoreSettings;
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 

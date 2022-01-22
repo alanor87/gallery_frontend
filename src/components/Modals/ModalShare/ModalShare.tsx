@@ -1,17 +1,20 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Checkbox, Button, Tag, Spinner } from "components/elements";
 import TagEditor from "components/TagEditor";
 import { ReactComponent as EditIcon } from "img/icon_edit.svg";
 import store from "MST/store";
 import { NewImageInfoType } from "types/images";
 import { ImageOpenedToUserEntry } from "types/common";
+import { ModalWindowProps } from "types/modal";
 import styles from "./ModalShare.module.scss";
 
-const ModalShare = () => {
+const ModalShare: React.FC<ModalWindowProps> = ({
+  isLoading,
+  setIsLoading,
+}) => {
   const [isPublicState, setisPublicState] = useState(false);
   const [newOpenedToList, setNewOpenedToList] = useState<string[]>([]);
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
   const {
     selectedImages,

@@ -146,8 +146,17 @@ const ImagesStore = types
     });
 
     const fetchImageById = flow(function* (imageId) {
-      const response = yield axios.get(`images/${imageId}`);
-      return response.data.body as ImageType;
+      try {
+        const imagesRoute =
+          self.galleryMode === "publicGallery"
+            ? "public/publicImages"
+            : "images";
+        const response = yield axios.get(`${imagesRoute}/${imageId}`);
+        return response.data.body as ImageType;
+      } catch (error) {
+        popupNotice(`Error while fetching image.
+             ${error}`);
+      }
     });
 
     const uploadImages = flow(function* (imagesToUpload) {

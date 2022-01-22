@@ -1,21 +1,24 @@
 .modalImage {
-  position: absolute;
   top: 0;
   display: flex;
   width: 100%;
 
   @media screen and(max-width: 800px) {
+    position: absolute;
     display: block;
+    height: 100vh;
+    overflow: auto;
   }
 
   .imagePart {
     position: relative;
-    width: 70%;
+    width: 65%;
     height: 100vh;
     display: flex;
     align-items: flex-start;
     justify-content: center;
     overflow-y: auto;
+
     img {
       width: 100%;
       height: auto;
@@ -27,6 +30,51 @@
   }
 
   .nonImagePart {
-    flex-grow: 1;
+    position: relative;
+    width: 35%;
+    padding: 0 5px 5px;
+    height: 100vh;
+    backdrop-filter: blur(8px);
+    overflow-y: auto;
+
+    .modalImageHeader {
+      position: sticky;
+      top: 0;
+      display: flex;
+      padding: 10px 0;
+      background-color: var(--main-background-color-alpha);
+
+      h2 {
+        flex-grow: 1;
+        text-align: center;
+      }
+
+      .modalImageCloseBtn {
+        border: none;
+        border-radius: 50%;
+        background-color: var(--color-accent);
+        padding: 1px;
+        margin-left: auto;
+        cursor: pointer;
+      }
+    }
+
+    .tagListWrapper {
+      margin-bottom: 15px;
+    }
+
+    .description p {
+      &::first-letter {
+        font-size: 19px;
+      }
+      text-indent: 10px;
+    }
+
+    @media screen and(max-width: 800px) {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow-y: unset;
+    }
   }
 }

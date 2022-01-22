@@ -1,10 +1,12 @@
-import { useState } from "react";
 import { Button, Spinner } from "../../elements";
 import store from "../../../MST/store";
+import { ModalWindowProps } from "types/modal";
 import styles from "./styles.module.scss";
 
-const ModalDelete = () => {
-  const [isLoading, setIsLoading] = useState(false);
+const ModalDelete: React.FC<ModalWindowProps> = ({
+  isLoading,
+  setIsLoading,
+}) => {
   const { selectedImages, deleteImages, groupSelectModeToggle } =
     store.imagesStoreSettings;
 

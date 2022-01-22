@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ModalUpload from "../ModalUpload";
 import ModalDelete from "../ModalDelete";
 import ModalShare from "../ModalShare";
@@ -22,6 +22,7 @@ const Modal: React.FunctionComponent<Props> = ({ style }) => {
     setModalComponentType,
   } = store.modalWindowsSettings;
 
+  const [isLoading, setIsLoading] = useState(false);
   const modalBackdropClose = useCallback(
     (event: any) => {
       if (event.target === event.currentTarget || event.key === "Escape") {
@@ -37,11 +38,15 @@ const Modal: React.FunctionComponent<Props> = ({ style }) => {
       case "image":
         return <ModalImage />;
       case "delete":
-        return <ModalDelete />;
+        return (
+          <ModalDelete isLoading={isLoading} setIsLoading={setIsLoading} />
+        );
       case "share":
-        return <ModalShare />;
+        return <ModalShare isLoading={isLoading} setIsLoading={setIsLoading} />;
       case "upload":
-        return <ModalUpload />;
+        return (
+          <ModalUpload isLoading={isLoading} setIsLoading={setIsLoading} />
+        );
       case "none":
         return null;
       default:
@@ -50,11 +55,12 @@ const Modal: React.FunctionComponent<Props> = ({ style }) => {
   };
 
   useEffect(() => {
-    if (modalIsOpened) window.addEventListener("keydown", modalBackdropClose);
+    if (modalIsOpened && !isLoading)
+      window.addEventListener("keydown", modalBackdropClose);
     return function cleanup() {
       window.removeEventListener("keydown", modalBackdropClose);
     };
-  }, [modalIsOpened, modalBackdropClose]);
+  }, [modalIsOpened, modalBackdropClose, isLoading]);
 
   return createPortal(
     <div

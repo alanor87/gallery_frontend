@@ -2,15 +2,11 @@ Global aim is to create an image hosting that would be targeting the sharing if 
  with not only sharing between the members of the service itself - bu also all the populat social networks, 
  also - options to generate the QR code for the image link.
 
-- CURRENT - make small images for the gallery - and load big ones only on the modal images view.
-- remove openedTo from data being sent to publicGallery.
-- make modal window unclosable while the spinner inside of it is spinning.
 - make big separate images view, with all the bells and whistles.
-- add sharing of the image as the link on the site  page of the image - and as wht link to the image on hosting.
+- add sharing of the image as the link on the site page of the image - and as wht link to the image on hosting.
 - generating QR code for the image link.
-- add shar8ng through social networks - FB, Twitter, Instagram etc.
+- add sharing through social networks - FB, Twitter, Instagram etc.
 - pack all the svg icons into one sprite.
 
 BUGS work
- - fix token validation issue when requesting a simgle image from backend from publicGallery - in this case there should not be token validation.
  - handle duplication resilience in tags and openedToUsers lists - in share components especially.
