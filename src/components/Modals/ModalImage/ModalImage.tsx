@@ -2,16 +2,18 @@ import { useState, useEffect } from "react";
 import TagList from "components/TagList";
 import { Spinner } from "components/elements";
 import { Button } from "components/elements";
+import ImageMenu from "components/ImageMenu";
 import { ReactComponent as CloseIcon } from "../../../img/icon_close.svg";
+import { ReactComponent as IconLike } from "../../../img/icon_like.svg";
 import store from "../../../MST/store";
 import { ImageType } from "MST/imagesStoreSettings";
 import styles from "./styles.module.scss";
 
 const ModalImage = () => {
-  const { fetchImageById } = store.imagesStoreSettings;
+  const { fetchImageById, editImagesInfo } = store.imagesStoreSettings;
   const { modalImageId, setModalOpen, setModalComponentType } =
     store.modalWindowsSettings;
-  const { userIsAuthenticated } = store.userSettings;
+  const { userIsAuthenticated, userName } = store.userSettings;
 
   const [currentModalImage, setCurrentModalImage] = useState<ImageType>();
   const [imageIsLoaded, setImageIsLoaded] = useState(false);
@@ -24,6 +26,21 @@ const ModalImage = () => {
 
   const onImageLoad = (e: any) => {
     setImageIsLoaded(true);
+  };
+
+  const toggleLikeHandler = async () => {
+    // setimgInfoIsLoading(true);
+
+    const { _id } = currentModalImage!;
+    const { likes } = currentModalImage!.imageInfo;
+    if (!likes.includes(userName)) {
+      const newLikesList = [...likes, userName];
+      await editImagesInfo([{ _id, imageInfo: { likes: newLikesList } }]);
+    } else {
+      const newLikesList = likes.filter((name) => name !== userName);
+      await editImagesInfo([{ _id, imageInfo: { likes: newLikesList } }]);
+    }
+    // setimgInfoIsLoading(false);
   };
 
   const modalImageCloseHandle = () => {
@@ -53,17 +70,29 @@ const ModalImage = () => {
             icon={CloseIcon}
             onClick={modalImageCloseHandle}
           />
-        </div>
-        <div className={styles.tagListWrapper}>
-          {currentModalImage.imageInfo.tags.length > 0 && (
-            <TagList
-              tags={currentModalImage.imageInfo.tags}
-              isTagDeletable={false}
+          <div className={styles.imageControlsWrapper}>
+            <Button
+              type="button"
+              icon={IconLike}
+              onClick={toggleLikeHandler}
+              className={styles.menuButton}
+              text={currentModalImage.imageInfo.likes.length}
+              disabled={!userIsAuthenticated}
+              title="Like / Dislike"
             />
-          )}
+          </div>
         </div>
 
         <div className={styles.description}>
+          {" "}
+          <div className={styles.tagListWrapper}>
+            {currentModalImage.imageInfo.tags.length > 0 && (
+              <TagList
+                tags={currentModalImage.imageInfo.tags}
+                isTagDeletable={false}
+              />
+            )}
+          </div>
           <p>
             Description of the image. Lorem ipsum dolor sit amet consectetur
             adipisicing elit. Rerum accusamus hic distinctio nesciunt temporibus

@@ -2,9 +2,9 @@ import { types, flow, applySnapshot } from "mobx-state-tree";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { popupNotice } from "../utils/popupNotice";
 import userSettings from "./userSettings";
+import modalSettings from "./modalSettings";
 import imagesStoreSettings from "./imagesStoreSettings";
 import { RegisterFormInterface, LoginFormInterface } from "types/user";
-import { modalWindowTypes } from "types/interface";
 
 axios.defaults.baseURL = "http://localhost:3030/api/v1";
 // axios.defaults.baseURL = "https://gallery-app-mj.herokuapp.com/api/v1";
@@ -31,32 +31,6 @@ const initialUserSettings = {
     sidePanelIsOpen: false,
   },
 };
-
-const modalSettings = types
-  .model({
-    modalComponentType: types.optional(
-      types.enumeration(["image", "delete", "share", "upload", "none"]),
-      "none"
-    ),
-    modalIsOpened: types.optional(types.boolean, false),
-    modalImageId: types.optional(types.string, ""),
-  })
-  .actions((self) => {
-    const setModalOpen = (value: boolean) => {
-      self.modalIsOpened = value;
-    };
-    const setModalComponentType = (value: modalWindowTypes) => {
-      self.modalComponentType = value;
-    };
-    const setModalImageId = (value: string) => {
-      self.modalImageId = value;
-    };
-    return {
-      setModalOpen,
-      setModalComponentType,
-      setModalImageId,
-    };
-  });
 
 const publicSettings = types.model({
   publicImagesList: types.optional(types.array(types.string), []),

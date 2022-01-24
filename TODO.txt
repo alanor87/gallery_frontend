@@ -1,8 +1,9 @@
-Global aim is to create an image hosting that would be targeting the sharing if images as accessible and wide as possible - 
- with not only sharing between the members of the service itself - bu also all the populat social networks, 
+Global aim is to create an image hosting that would make the sharing of images as accessible and wide as possible - 
+ with not only sharing between the members of the service itself - bu also all the popular social networks, 
  also - options to generate the QR code for the image link.
 
-- make big separate images view, with all the bells and whistles.
+- CURRENT - make big separate images view, with all the bells and whistles.
+- add spinners for image cards images loading.
 - add sharing of the image as the link on the site page of the image - and as wht link to the image on hosting.
 - generating QR code for the image link.
 - add sharing through social networks - FB, Twitter, Instagram etc.
