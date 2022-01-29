@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Button.module.scss";
 
-interface Props {
+export interface ButtonProps {
   text?: string | number;
   type?: "button" | "submit" | "reset" | undefined;
   title?: string;
@@ -28,7 +28,7 @@ function Button({
   onClick,
   onFocus,
   onBlur,
-}: Props) {
+}: ButtonProps) {
   const buttonClassName = disabled
     ? styles.commonButton + " " + className + " " + styles.disabled
     : styles.commonButton + " " + className;

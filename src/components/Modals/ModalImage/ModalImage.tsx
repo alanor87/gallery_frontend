@@ -1,8 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { observer } from "mobx-react-lite";
+import { Spinner, Button } from "components/elements";
 import TagList from "components/TagList";
-import { Spinner } from "components/elements";
-import { Button } from "components/elements";
 import ImageMenu from "components/ImageMenu";
+import ShareOverlay from "components/Overlays/ShareOverlay";
+import DeleteOverlay from "components/Overlays/DeleteOverlay";
+import TagEditor from "../../TagEditor";
 import { ReactComponent as CloseIcon } from "../../../img/icon_close.svg";
 import { ReactComponent as IconLike } from "../../../img/icon_like.svg";
 import store from "../../../MST/store";
@@ -10,37 +13,89 @@ import { ImageType } from "MST/imagesStoreSettings";
 import styles from "./styles.module.scss";
 
 const ModalImage = () => {
-  const { fetchImageById, editImagesInfo } = store.imagesStoreSettings;
-  const { modalImageId, setModalOpen, setModalComponentType } =
+  const { fetchImageById, editImagesInfo, galleryMode } =
+    store.imagesStoreSettings;
+  const { modalImageId, setModalImageId, setModalOpen, setModalComponentType } =
     store.modalWindowsSettings;
   const { userIsAuthenticated, userName } = store.userSettings;
 
   const [currentModalImage, setCurrentModalImage] = useState<ImageType>();
-  const [imageIsLoaded, setImageIsLoaded] = useState(false);
+  const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
+  const [imageIsLoading, setImageIsLoading] = useState(true);
+  const [tagEditorIsOpen, setTagEditorIsOpen] = useState(false);
+  const [shareOverlayIsOpen, setShareOverlayIsOpen] = useState(false);
+  const [deleteOverlayIsOpen, setDeleteOverlayIsOpen] = useState(false);
+
+  const loadModalImage = useCallback(
+    () =>
+      fetchImageById(modalImageId).then((image) => {
+        setCurrentModalImage(image);
+      }),
+    []
+  );
 
   useEffect(() => {
-    fetchImageById(modalImageId).then((image) => {
-      setCurrentModalImage(image);
-    });
-  }, [modalImageId, fetchImageById]);
+    loadModalImage();
+  }, [modalImageId, fetchImageById, loadModalImage]);
 
-  const onImageLoad = (e: any) => {
-    setImageIsLoaded(true);
+  const onImageLoad = () => {
+    setImageIsLoading(false);
   };
 
   const toggleLikeHandler = async () => {
-    // setimgInfoIsLoading(true);
-
     const { _id } = currentModalImage!;
     const { likes } = currentModalImage!.imageInfo;
+
+    setimgInfoIsLoading(true);
+    let newLikesList = [];
     if (!likes.includes(userName)) {
-      const newLikesList = [...likes, userName];
-      await editImagesInfo([{ _id, imageInfo: { likes: newLikesList } }]);
+      newLikesList = [...likes, userName];
     } else {
-      const newLikesList = likes.filter((name) => name !== userName);
-      await editImagesInfo([{ _id, imageInfo: { likes: newLikesList } }]);
+      newLikesList = likes.filter((name) => name !== userName);
     }
-    // setimgInfoIsLoading(false);
+    await editImagesInfo([{ _id, imageInfo: { likes: newLikesList } }]);
+    loadModalImage();
+    setimgInfoIsLoading(false);
+  };
+
+  const tagEditOpenHandler = () => {
+    setTagEditorIsOpen(true);
+  };
+  const shareOverlayOpenHandler = () => {
+    setShareOverlayIsOpen(true);
+  };
+  const deleteOverlayOpenHandler = () => {
+    setDeleteOverlayIsOpen(true);
+  };
+
+  const shareOverlayCloseHandler = () => {
+    loadModalImage();
+    setShareOverlayIsOpen(false);
+  };
+  const onTagEditCloseHandler = () => setTagEditorIsOpen(false);
+  const deleteOverlayCloseHandler = () => setDeleteOverlayIsOpen(false);
+  const deleteOverlayConfirmHandler = () => {
+    setModalImageId("");
+    setModalComponentType("none");
+    setModalOpen(false);
+  };
+
+  const tagDelHandler = (tagToDelete: string) => {
+    const newTags = currentModalImage!.imageInfo.tags.filter(
+      (tag) => tag !== tagToDelete
+    );
+    tagsUpdateHandler(newTags);
+  };
+  const tagAddHandler = (tagsToAdd: string) => {
+    const parsedTags = tagsToAdd.split(/,/).map((tag) => tag.trim());
+    tagsUpdateHandler([...currentModalImage!.imageInfo.tags, ...parsedTags]);
+  };
+  const tagsUpdateHandler = async (newTags: string[]) => {
+    const { _id } = currentModalImage!;
+    setimgInfoIsLoading(true);
+    await editImagesInfo([{ _id, imageInfo: { tags: newTags } }]);
+    loadModalImage();
+    setimgInfoIsLoading(false);
   };
 
   const modalImageCloseHandle = () => {
@@ -51,114 +106,148 @@ const ModalImage = () => {
   return currentModalImage ? (
     <div className={styles.modalImage}>
       <div className={styles.imagePart}>
-        {!imageIsLoaded && <Spinner side={50} />}
+        {imageIsLoading && <Spinner side={50} />}
         <img
           src={currentModalImage?.imageURL}
           alt={"God save the queen!"}
           onLoad={onImageLoad}
-          style={{ visibility: imageIsLoaded ? "visible" : "hidden" }}
+          style={{ visibility: !imageIsLoading ? "visible" : "hidden" }}
         />
       </div>
       <div className={styles.nonImagePart}>
-        <div className={styles.modalImageHeader}>
-          {" "}
-          <h2>Image title</h2>
-          <Button
-            type="button"
-            title="Close tag editor"
-            className={styles.modalImageCloseBtn}
-            icon={CloseIcon}
-            onClick={modalImageCloseHandle}
-          />
-          <div className={styles.imageControlsWrapper}>
-            <Button
-              type="button"
-              icon={IconLike}
-              onClick={toggleLikeHandler}
-              className={styles.menuButton}
-              text={currentModalImage.imageInfo.likes.length}
-              disabled={!userIsAuthenticated}
-              title="Like / Dislike"
-            />
-          </div>
-        </div>
+        <>
+          <div className={styles.modalImageHeader}>
+            <div className={styles.imageTitleWrapper}>
+              <Button
+                type="button"
+                icon={IconLike}
+                onClick={toggleLikeHandler}
+                className={styles.modalImageLikeBtn}
+                text={currentModalImage.imageInfo.likes.length}
+                disabled={!userIsAuthenticated}
+                title="Like / Dislike"
+              />
+              <h2>Image title</h2>
+              <Button
+                type="button"
+                title="Close tag editor"
+                className={styles.modalImageCloseBtn}
+                icon={CloseIcon}
+                onClick={modalImageCloseHandle}
+              />
+            </div>
 
-        <div className={styles.description}>
-          {" "}
-          <div className={styles.tagListWrapper}>
-            {currentModalImage.imageInfo.tags.length > 0 && (
-              <TagList
-                tags={currentModalImage.imageInfo.tags}
-                isTagDeletable={false}
+            {userIsAuthenticated && galleryMode === "userGallery" && (
+              <ImageMenu
+                className={styles.modalImageMenu}
+                modalImageMode={true}
+                onShare={shareOverlayOpenHandler}
+                onDelete={deleteOverlayOpenHandler}
               />
             )}
           </div>
-          <p>
-            Description of the image. Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Rerum accusamus hic distinctio nesciunt temporibus
-            accusantium aliquam quisquam eligendi eveniet enim facilis nisi ad
-            officiis qui, iusto blanditiis labore exercitationem. Voluptatem
-            consectetur molestiae nemo debitis maiores ab tenetur, natus
-            excepturi. Maiores ex hic assumenda molestias rem minima laborum
-            labore natus animi eum. Explicabo ipsam temporibus molestias
-            assumenda numquam officiis sint amet placeat. Eos minus aliquam
-            ratione illo dicta, distinctio a adipisci, rerum hic ex pariatur
-            corrupti odit sit nesciunt accusamus! Minus sunt error sint? Est
-            veritatis possimus nobis placeat. Vel nostrum facilis soluta
-            adipisci explicabo ratione aliquam mollitia reprehenderit delectus
-            neque.
-          </p>
-          <p>
-            Description of the image. Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Rerum accusamus hic distinctio nesciunt temporibus
-            accusantium aliquam quisquam eligendi eveniet enim facilis nisi ad
-            officiis qui, iusto blanditiis labore exercitationem. Voluptatem
-            consectetur molestiae nemo debitis maiores ab tenetur, natus
-            excepturi. Maiores ex hic assumenda molestias rem minima laborum
-            labore natus animi eum. Explicabo ipsam temporibus molestias
-            assumenda numquam officiis sint amet placeat. Eos minus aliquam
-            ratione illo dicta, distinctio a adipisci, rerum hic ex pariatur
-            corrupti odit sit nesciunt accusamus! Minus sunt error sint? Est
-            veritatis possimus nobis placeat. Vel nostrum facilis soluta
-            adipisci explicabo ratione aliquam mollitia reprehenderit delectus
-            neque.
-          </p>
-          <p>
-            Description of the image. Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Rerum accusamus hic distinctio nesciunt temporibus
-            accusantium aliquam quisquam eligendi eveniet enim facilis nisi ad
-            officiis qui, iusto blanditiis labore exercitationem. Voluptatem
-            consectetur molestiae nemo debitis maiores ab tenetur, natus
-            excepturi. Maiores ex hic assumenda molestias rem minima laborum
-            labore natus animi eum. Explicabo ipsam temporibus molestias
-            assumenda numquam officiis sint amet placeat. Eos minus aliquam
-            ratione illo dicta, distinctio a adipisci, rerum hic ex pariatur
-            corrupti odit sit nesciunt accusamus! Minus sunt error sint? Est
-            veritatis possimus nobis placeat. Vel nostrum facilis soluta
-            adipisci explicabo ratione aliquam mollitia reprehenderit delectus
-            neque.
-          </p>
-          <p>
-            Description of the image. Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Rerum accusamus hic distinctio nesciunt temporibus
-            accusantium aliquam quisquam eligendi eveniet enim facilis nisi ad
-            officiis qui, iusto blanditiis labore exercitationem. Voluptatem
-            consectetur molestiae nemo debitis maiores ab tenetur, natus
-            excepturi. Maiores ex hic assumenda molestias rem minima laborum
-            labore natus animi eum. Explicabo ipsam temporibus molestias
-            assumenda numquam officiis sint amet placeat. Eos minus aliquam
-            ratione illo dicta, distinctio a adipisci, rerum hic ex pariatur
-            corrupti odit sit nesciunt accusamus! Minus sunt error sint? Est
-            veritatis possimus nobis placeat. Vel nostrum facilis soluta
-            adipisci explicabo ratione aliquam mollitia reprehenderit delectus
-            neque.
-          </p>
-        </div>
+
+          <div className={styles.description}>
+            <div className={styles.tagListWrapper}>
+              {currentModalImage.imageInfo.tags.length > 0 && (
+                <TagList
+                  tags={currentModalImage.imageInfo.tags}
+                  onDoubleClick={tagEditOpenHandler}
+                  isTagDeletable={false}
+                />
+              )}
+            </div>
+            <p>
+              Description of the image. Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Rerum accusamus hic distinctio nesciunt
+              temporibus accusantium aliquam quisquam eligendi eveniet enim
+              facilis nisi ad officiis qui, iusto blanditiis labore
+              exercitationem. Voluptatem consectetur molestiae nemo debitis
+              maiores ab tenetur, natus excepturi. Maiores ex hic assumenda
+              molestias rem minima laborum labore natus animi eum. Explicabo
+              ipsam temporibus molestias assumenda numquam officiis sint amet
+              placeat. Eos minus aliquam ratione illo dicta, distinctio a
+              adipisci, rerum hic ex pariatur corrupti odit sit nesciunt
+              accusamus! Minus sunt error sint? Est veritatis possimus nobis
+              placeat. Vel nostrum facilis soluta adipisci explicabo ratione
+              aliquam mollitia reprehenderit delectus neque.
+            </p>
+            <p>
+              Description of the image. Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Rerum accusamus hic distinctio nesciunt
+              temporibus accusantium aliquam quisquam eligendi eveniet enim
+              facilis nisi ad officiis qui, iusto blanditiis labore
+              exercitationem. Voluptatem consectetur molestiae nemo debitis
+              maiores ab tenetur, natus excepturi. Maiores ex hic assumenda
+              molestias rem minima laborum labore natus animi eum. Explicabo
+              ipsam temporibus molestias assumenda numquam officiis sint amet
+              placeat. Eos minus aliquam ratione illo dicta, distinctio a
+              adipisci, rerum hic ex pariatur corrupti odit sit nesciunt
+              accusamus! Minus sunt error sint? Est veritatis possimus nobis
+              placeat. Vel nostrum facilis soluta adipisci explicabo ratione
+              aliquam mollitia reprehenderit delectus neque.
+            </p>
+            <p>
+              Description of the image. Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Rerum accusamus hic distinctio nesciunt
+              temporibus accusantium aliquam quisquam eligendi eveniet enim
+              facilis nisi ad officiis qui, iusto blanditiis labore
+              exercitationem. Voluptatem consectetur molestiae nemo debitis
+              maiores ab tenetur, natus excepturi. Maiores ex hic assumenda
+              molestias rem minima laborum labore natus animi eum. Explicabo
+              ipsam temporibus molestias assumenda numquam officiis sint amet
+              placeat. Eos minus aliquam ratione illo dicta, distinctio a
+              adipisci, rerum hic ex pariatur corrupti odit sit nesciunt
+              accusamus! Minus sunt error sint? Est veritatis possimus nobis
+              placeat. Vel nostrum facilis soluta adipisci explicabo ratione
+              aliquam mollitia reprehenderit delectus neque.
+            </p>
+            <p>
+              Description of the image. Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Rerum accusamus hic distinctio nesciunt
+              temporibus accusantium aliquam quisquam eligendi eveniet enim
+              facilis nisi ad officiis qui, iusto blanditiis labore
+              exercitationem. Voluptatem consectetur molestiae nemo debitis
+              maiores ab tenetur, natus excepturi. Maiores ex hic assumenda
+              molestias rem minima laborum labore natus animi eum. Explicabo
+              ipsam temporibus molestias assumenda numquam officiis sint amet
+              placeat. Eos minus aliquam ratione illo dicta, distinctio a
+              adipisci, rerum hic ex pariatur corrupti odit sit nesciunt
+              accusamus! Minus sunt error sint? Est veritatis possimus nobis
+              placeat. Vel nostrum facilis soluta adipisci explicabo ratione
+              aliquam mollitia reprehenderit delectus neque.
+            </p>
+          </div>
+        </>
+        {imgInfoIsLoading && <Spinner side={50} />}
       </div>
+
+      {shareOverlayIsOpen && (
+        <ShareOverlay
+          _id={currentModalImage._id}
+          isPublic={currentModalImage.imageInfo.isPublic}
+          openedTo={currentModalImage.imageInfo.openedTo}
+          setIsLoading={setimgInfoIsLoading}
+          onCloseShareOverlay={shareOverlayCloseHandler}
+        />
+      )}
+      {deleteOverlayIsOpen && (
+        <DeleteOverlay
+          _id={currentModalImage._id}
+          onCloseDeleteOverlay={deleteOverlayCloseHandler}
+          onConfirmDeleteOverlay={deleteOverlayConfirmHandler}
+        />
+      )}
+      {tagEditorIsOpen && (
+        <TagEditor
+          tags={currentModalImage.imageInfo.tags}
+          onAddTags={tagAddHandler}
+          onTagDelete={tagDelHandler}
+          closeHandle={onTagEditCloseHandler}
+        />
+      )}
     </div>
-  ) : (
-    <Spinner side={50} />
-  );
+  ) : null;
 };
 
 export default ModalImage;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { popupNotice } from "utils/popupNotice";
 import { Button, Spinner } from "../../elements";
 import { ReactComponent as CloseIcon } from "../../../img/icon_close.svg";
@@ -20,7 +20,8 @@ const ModalUpload: React.FC<ModalWindowProps> = ({
     e.stopPropagation();
     // defining if we added file through dialogue window - or drag'ndrop
     try {
-      const files = e.type === "drop" ? e.dataTransfer.files : e.target.files;
+      const files: FileList =
+        e.type === "drop" ? e.dataTransfer.files : e.target.files;
       if (files.length && files.length + previewImages.length < 6) {
         for (let i = 0; i < files.length; i += 1) {
           const singleImage = files[i];

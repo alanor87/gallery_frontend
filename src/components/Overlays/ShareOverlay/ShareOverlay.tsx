@@ -106,37 +106,39 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
       .map((entry) => entry.name);
 
   return !openedToOverlayIsOpen ? (
-    <div className={`imageCardOverlay ${styles.shareOverlay}`}>
-      <p className={`imageCardOverlay-title ${styles.shareOverlayTitle}`}>
-        Image share options
-      </p>
-      <div className={styles.option}>
-        <label>
-          Make the image public.
-          <Checkbox
-            isChecked={isPublicState}
-            onChange={publicStateChangeHandler}
-            className={styles.shareOverlayCheckbox}
+    <div className={`imageCardOverlay`}>
+      <div className={`${styles.shareOverlay}`}>
+        <p className={`imageCardOverlay-title ${styles.shareOverlayTitle}`}>
+          Image share options
+        </p>
+        <div className={styles.option}>
+          <label>
+            Make the image public.
+            <Checkbox
+              isChecked={isPublicState}
+              onChange={publicStateChangeHandler}
+              className={styles.shareOverlayCheckbox}
+            />
+          </label>
+        </div>
+        <div className={styles.option}>
+          <p className={styles.openedTo}>Is opened to users : </p>
+          {openedToEntriesList.map((entry) => {
+            if (entry.action === "remove") return null;
+            return <Tag key={entry.name} tagValue={entry.name} />;
+          })}
+          <Button
+            className={styles.addUserBtn}
+            text="Edit"
+            title="Edit list of users with acces to this image"
+            icon={EditIcon}
+            onClick={openToOverlayOpenHandler}
           />
-        </label>
-      </div>
-      <div className={styles.option}>
-        <p className={styles.openedTo}>Is opened to users : </p>
-        {openedToEntriesList.map((entry) => {
-          if (entry.action === "remove") return null;
-          return <Tag key={entry.name} tagValue={entry.name} />;
-        })}
-        <Button
-          className={styles.addUserBtn}
-          text="Edit"
-          title="Edit list of users with acces to this image"
-          icon={EditIcon}
-          onClick={openToOverlayOpenHandler}
-        />
-      </div>
-      <div className={styles.buttonWrapper}>
-        <Button type="button" text="Accept" onClick={acceptChangesHandler} />
-        <Button type="button" text="Cancel" onClick={onCloseShareOverlay} />
+        </div>
+        <div className={styles.buttonWrapper}>
+          <Button type="button" text="Accept" onClick={acceptChangesHandler} />
+          <Button type="button" text="Cancel" onClick={onCloseShareOverlay} />
+        </div>
       </div>
     </div>
   ) : (

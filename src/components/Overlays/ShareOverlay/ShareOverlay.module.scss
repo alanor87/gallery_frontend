@@ -17,7 +17,7 @@
 
 .shareOverlayTitle {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .shareOverlayCheckbox {
@@ -44,5 +44,6 @@
 
 .buttonWrapper {
   display: flex;
+  justify-content: space-around;
   margin-top: auto;
 }

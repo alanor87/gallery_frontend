@@ -75,6 +75,7 @@ function GalleryView({ label }: Props) {
 
           <div className={styles.galleryPage}>
             {imgArray.map((image) => {
+              console.log("render cards");
               return (
                 <ImageCard
                   image={image}

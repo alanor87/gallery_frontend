@@ -8,6 +8,10 @@
     display: block;
     height: 100vh;
     overflow: auto;
+
+    :global(.imageCardOverlay) {
+      position: fixed;
+    }
   }
 
   .imagePart {
@@ -17,7 +21,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    overflow-y: auto;
+    overflow-y: scroll;
 
     img {
       width: 100%;
@@ -26,13 +30,13 @@
     @media screen and(max-width: 800px) {
       width: auto;
       height: auto;
+      overflow-y: auto;
     }
   }
 
   .nonImagePart {
     position: relative;
     width: 35%;
-    padding: 0 5px 5px;
     height: 100vh;
     backdrop-filter: blur(8px);
     overflow-y: auto;
@@ -41,26 +45,50 @@
       position: sticky;
       top: 0;
       display: flex;
+      justify-content: center;
       flex-wrap: wrap;
-      padding: 10px 0;
+      margin-bottom: 10px;
+      padding-top: 10px;
       background-color: var(--main-background-color-alpha);
 
-      h2 {
-        flex-grow: 1;
-        text-align: center;
-      }
-
-      .modalImageCloseBtn {
-        border: none;
-        border-radius: 50%;
-        background-color: var(--color-accent);
-        padding: 1px;
-        margin-left: auto;
-        cursor: pointer;
-      }
-
-      .imageControlsWrapper {
+      .imageTitleWrapper {
+        position: relative;
         width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+
+        &::before {
+          content: "";
+          display: block;
+          width: 42px;
+        }
+
+        .modalImageLikeBtn {
+          position: absolute;
+          background-color: var(--color-accent);
+        }
+
+        h2 {
+          text-align: center;
+        }
+
+        .modalImageCloseBtn {
+          border: none;
+          border-radius: 50%;
+          background-color: var(--color-accent);
+          padding: 1px;
+          cursor: pointer;
+        }
+      }
+
+      .modalImageMenu {
+        width: 100%;
+        justify-content: space-around;
+        padding: 0 40px;
+        border-radius: 6px;
+        background-color: var(--main-background-color-alpha);
       }
     }
 
@@ -68,11 +96,14 @@
       margin-bottom: 15px;
     }
 
-    .description p {
-      &::first-letter {
-        font-size: 19px;
+    .description {
+      padding: 0 5px;
+      p {
+        &::first-letter {
+          font-size: 19px;
+        }
+        text-indent: 10px;
       }
-      text-indent: 10px;
     }
 
     @media screen and(max-width: 800px) {

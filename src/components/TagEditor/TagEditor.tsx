@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { observer } from "mobx-react-lite";
 import TagList from "../TagList";
 import { Button } from "../elements";
 import { ReactComponent as CloseIcon } from "../../img/icon_close.svg";
@@ -25,14 +24,8 @@ const TagEditor: React.FC<Props> = ({
     setTagName(event.target.value);
   };
 
-  const parseInput = (inputValue: string) => {
-    const tags = inputValue.split(/, | |,/);
-    console.log(tags);
-  };
-
   const handleEnterPress = (event: React.KeyboardEvent) => {
     if (event.code === "Enter") {
-      parseInput(tagName);
       onAddTags(tagName);
       setTagName("");
     }
@@ -76,4 +69,4 @@ const TagEditor: React.FC<Props> = ({
   );
 };
 
-export default observer(TagEditor);
+export default TagEditor;

@@ -5,11 +5,13 @@ import { Button, Spinner } from "../../elements";
 interface Props {
   _id: string;
   onCloseDeleteOverlay: () => void;
+  onConfirmDeleteOverlay?: () => void;
 }
 
 const DeleteOverlay: React.FunctionComponent<Props> = ({
   _id,
   onCloseDeleteOverlay,
+  onConfirmDeleteOverlay,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { deleteImages, selectedListChange, clearSelectedList } =
@@ -20,6 +22,7 @@ const DeleteOverlay: React.FunctionComponent<Props> = ({
     selectedListChange(_id);
     await deleteImages();
     clearSelectedList();
+    onConfirmDeleteOverlay && onConfirmDeleteOverlay();
   };
 
   const closeDeleteOverlayHandler = () => {

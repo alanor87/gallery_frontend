@@ -8,16 +8,20 @@ import { ReactComponent as IconSelectAll } from "../../img/icon_select_all.svg";
 import styles from "./ImageMenu.module.scss";
 
 interface Props {
+  className?: string;
   isOpened?: boolean;
   groupMenuMode?: boolean;
+  modalImageMode?: boolean;
   onDelete?: () => void;
   onSelect?: () => void;
   onEdit?: () => void;
   onShare?: () => void;
 }
 const ImageMenu: React.FC<Props> = ({
+  className,
   isOpened = true,
   groupMenuMode = false,
+  modalImageMode = false,
   onDelete,
   onEdit,
   onShare,
@@ -26,15 +30,17 @@ const ImageMenu: React.FC<Props> = ({
   const { toggleSelectAllImages, selectedImages } = store.imagesStoreSettings;
   const buttonsTabIndex = isOpened ? 0 : -1;
   return (
-    <div className={styles.imageMenuWrapper}>
-      <Button
-        className={styles.imageMenuButton}
-        type="button"
-        title="Select mode on/off"
-        icon={IconSelect}
-        onClick={onSelect}
-        tabIndex={buttonsTabIndex}
-      />
+    <div className={`${styles.imageMenuWrapper} ${className}`}>
+      {!modalImageMode && (
+        <Button
+          className={styles.imageMenuButton}
+          type="button"
+          title="Select mode on/off"
+          icon={IconSelect}
+          onClick={onSelect}
+          tabIndex={buttonsTabIndex}
+        />
+      )}
       {groupMenuMode && (
         <Button
           className={styles.imageMenuButton}

@@ -1,11 +1,11 @@
 import { Tag } from "../elements";
+import { observer } from "mobx-react-lite";
 import styles from "./TagList.module.scss";
 
 interface Props {
   tags: string[];
   title?: string;
   placeholder?: string;
-  addOptionOn?: boolean;
   isTagDeletable?: boolean;
   onDoubleClick?: () => void;
   tagDelHandler?: (tagValue: string) => void;
@@ -41,4 +41,4 @@ const TagList: React.FunctionComponent<Props> = ({
   );
 };
 
-export default TagList;
+export default observer(TagList);
