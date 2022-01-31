@@ -19,13 +19,6 @@ function App() {
   const { userIsAuthenticated } = userSettings;
   const { lightThemeIsOn, sidePanelIsOpen } = userSettings.userInterface;
 
-  // axios.defaults.baseURL = backendURL;
-
-  useEffect(() => {
-    publicSettingsInit();
-    if (localStorage.getItem("token") && !userIsAuthenticated) localTokenInit();
-  }, [localTokenInit, publicSettingsInit, userIsAuthenticated]);
-
   const location = useLocation();
 
   const [isAuthRoute, setIsAuthRoute] = useState(true);
@@ -40,12 +33,18 @@ function App() {
   }, [backendURL]);
 
   useEffect(() => {
+    publicSettingsInit();
+    if (localStorage.getItem("token") && !userIsAuthenticated) localTokenInit();
+  }, [localTokenInit, publicSettingsInit, userIsAuthenticated]);
+
+  useEffect(() => {
     setIsAuthRoute(["/login", "/register"].includes(location.pathname));
   }, [location]);
 
   useEffect(() => {
-    if (lightThemeIsOn) document.body.classList.add("AppLightTheme");
-    if (!lightThemeIsOn) document.body.classList.remove("AppLightTheme");
+    lightThemeIsOn
+      ? document.body.classList.add("AppLightTheme")
+      : document.body.classList.remove("AppLightTheme");
   }, [lightThemeIsOn]);
 
   const backendToggle = () => {

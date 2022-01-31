@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { observer } from "mobx-react-lite";
 import { Spinner, Button } from "components/elements";
 import TagList from "components/TagList";
 import ImageMenu from "components/ImageMenu";
