@@ -12,27 +12,14 @@ import { ToggleButton, Spinner } from "./components/elements";
 import routes from "./routes";
 import store from "./MST/store";
 
-// console.log("Build mode : " + process.env.NODE_ENV);
-
-// axios.defaults.baseURL =
-//   process.env.NODE_ENV === "development"
-//     ? "http://localhost:3030/api/v1"
-//     : "https://gallery-app-mj.herokuapp.com/api/v1";
-
 console.log("axios.defaults.baseURL : " + axios.defaults.baseURL);
 
 function App() {
-  const {
-    userSettings,
-    backendURL,
-    backendToggle,
-    publicSettingsInit,
-    localTokenInit,
-  } = store;
+  const { userSettings, publicSettingsInit, localTokenInit } = store;
   const { userIsAuthenticated } = userSettings;
   const { lightThemeIsOn, sidePanelIsOpen } = userSettings.userInterface;
 
-  axios.defaults.baseURL = backendURL;
+  // axios.defaults.baseURL = backendURL;
 
   useEffect(() => {
     publicSettingsInit();
@@ -42,6 +29,16 @@ function App() {
   const location = useLocation();
 
   const [isAuthRoute, setIsAuthRoute] = useState(true);
+  const [backendURL, setBackendURL] = useState(
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3030/api/v1"
+      : "https://gallery-app-mj.herokuapp.com/api/v1"
+  );
+
+  useEffect(() => {
+    axios.defaults.baseURL = backendURL;
+  }, [backendURL]);
+
   useEffect(() => {
     setIsAuthRoute(["/login", "/register"].includes(location.pathname));
   }, [location]);
@@ -50,6 +47,14 @@ function App() {
     if (lightThemeIsOn) document.body.classList.add("AppLightTheme");
     if (!lightThemeIsOn) document.body.classList.remove("AppLightTheme");
   }, [lightThemeIsOn]);
+
+  const backendToggle = () => {
+    const newBackendURL =
+      backendURL === "http://localhost:3030/api/v1"
+        ? "https://gallery-app-mj.herokuapp.com/api/v1"
+        : "http://localhost:3030/api/v1";
+    setBackendURL(newBackendURL);
+  };
 
   /*
    * If there's a token in localStorage on the initial page load / page reload  -
@@ -103,7 +108,7 @@ function App() {
           </Switch>
         </Suspense>
         <ToggleButton
-          hint={axios.defaults.baseURL}
+          hint={backendURL}
           style={{ position: "absolute", bottom: "10px", right: "10px" }}
           toggleHandler={backendToggle}
         />
