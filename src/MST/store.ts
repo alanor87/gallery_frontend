@@ -6,11 +6,6 @@ import modalSettings from "./modalSettings";
 import imagesStoreSettings from "./imagesStoreSettings";
 import { RegisterFormInterface, LoginFormInterface } from "types/user";
 
-axios.defaults.baseURL =
-  process.env.BUILD_MODE === "development"
-    ? "http://localhost:3030/api/v1"
-    : "https://gallery-app-mj.herokuapp.com/api/v1";
-
 axios.interceptors.response.use(
   (res: AxiosResponse) => res,
   (err: AxiosError) => {
