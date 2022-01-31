@@ -12,20 +12,27 @@ import { ToggleButton, Spinner } from "./components/elements";
 import routes from "./routes";
 import store from "./MST/store";
 
-console.log("Build mode : " + process.env.NODE_ENV);
+// console.log("Build mode : " + process.env.NODE_ENV);
 
-axios.defaults.baseURL =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3030/api/v1"
-    : "https://gallery-app-mj.herokuapp.com/api/v1";
+// axios.defaults.baseURL =
+//   process.env.NODE_ENV === "development"
+//     ? "http://localhost:3030/api/v1"
+//     : "https://gallery-app-mj.herokuapp.com/api/v1";
 
 console.log("axios.defaults.baseURL : " + axios.defaults.baseURL);
 
 function App() {
-  const { userSettings, backendToggle, publicSettingsInit, localTokenInit } =
-    store;
+  const {
+    userSettings,
+    backendURL,
+    backendToggle,
+    publicSettingsInit,
+    localTokenInit,
+  } = store;
   const { userIsAuthenticated } = userSettings;
   const { lightThemeIsOn, sidePanelIsOpen } = userSettings.userInterface;
+
+  axios.defaults.baseURL = backendURL;
 
   useEffect(() => {
     publicSettingsInit();

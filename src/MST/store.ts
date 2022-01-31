@@ -39,6 +39,12 @@ const store = types
     imagesStoreSettings: types.optional(imagesStoreSettings, {}),
     modalWindowsSettings: types.optional(modalSettings, {}),
     publicSettings: types.optional(publicSettings, {}),
+    backendURL: types.optional(
+      types.string,
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3030/api/v1"
+        : "https://gallery-app-mj.herokuapp.com/api/v1"
+    ),
   })
   .actions((self) => {
     const registerInit = flow(function* (registerData: RegisterFormInterface) {
@@ -97,7 +103,7 @@ const store = types
       }
     });
 
-    const backendToggle = (value: boolean) => {
+    const backendToggle = () => {
       axios.defaults.baseURL =
         axios.defaults.baseURL === "http://localhost:3030/api/v1"
           ? "https://gallery-app-mj.herokuapp.com/api/v1"
