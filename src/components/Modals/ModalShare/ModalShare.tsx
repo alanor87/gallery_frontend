@@ -128,7 +128,7 @@ const ModalShare: React.FC<ModalWindowProps> = ({
                 className={styles.addUserBtn}
                 text="Edit"
                 title="Edit list of users with acces to this image"
-                icon={EditIcon}
+                icon="icon_edit"
                 onClick={openToOverlayOpenHandler}
               />
             </div>

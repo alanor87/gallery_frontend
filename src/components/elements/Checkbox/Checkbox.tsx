@@ -1,4 +1,5 @@
 import React from "react";
+import Icon from "../Icon";
 import { ReactComponent as IconSelect } from "../../../img/icon_select.svg";
 import styles from "./Checkbox.module.scss";
 
@@ -36,7 +37,9 @@ function Checkbox({
         onChange={onChange}
         tabIndex={-1}
       />
-      {isChecked && <IconSelect className={styles.checkboxIcon} />}
+      {isChecked && (
+        <Icon iconName="icon_select" className={styles.checkboxIcon} />
+      )}
     </label>
   );
 }

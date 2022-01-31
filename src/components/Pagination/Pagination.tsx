@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { ReactComponent as IconArrowUp } from "../../img/icon_arrow_up.svg";
+import { Icon } from "components/elements";
 import store from "MST/store";
 import styles from "./Pagination.module.scss";
 
@@ -68,7 +68,7 @@ const Pagination = () => {
   return (
     <div className={styles.paginationContainer}>
       <div className={styles.footerOpenArrow}>
-        <IconArrowUp />
+        <Icon iconName="icon_arrow_up" side={30} />
       </div>
       <p className={styles.totalImagesCount}>
         Total images in gallery section :{" "}

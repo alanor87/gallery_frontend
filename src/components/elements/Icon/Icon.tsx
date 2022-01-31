@@ -1,14 +1,14 @@
-import React from "react";
 import sprite from "../../../img/sprite.svg";
-import styles from "./Checkbox.module.scss";
 
 interface Props {
   iconName: string;
+  className?: string;
+  side?: number;
 }
 
-function Icon({ iconName }: Props) {
+function Icon({ iconName, className, side = 20 }: Props) {
   return (
-    <svg>
+    <svg className={className} style={{ width: side, height: side }}>
       <use href={sprite + "#" + iconName} />
     </svg>
   );

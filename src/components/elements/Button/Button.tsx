@@ -1,4 +1,5 @@
 import React from "react";
+import Icon from "../Icon";
 import styles from "./Button.module.scss";
 
 export interface ButtonProps {
@@ -8,7 +9,7 @@ export interface ButtonProps {
   tabIndex?: number;
   disabled?: boolean;
   style?: any;
-  icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+  icon?: string;
   className?: string;
   onClick?: (event: React.MouseEvent) => void;
   onHover?: (event: React.MouseEvent) => void;
@@ -23,7 +24,7 @@ function Button({
   tabIndex = 0,
   disabled = false,
   style,
-  icon: Icon,
+  icon,
   className,
   onClick,
   onFocus,
@@ -44,9 +45,9 @@ function Button({
       aria-label={title}
       tabIndex={tabIndex}
     >
-      {Icon && (
+      {icon && (
         <span className={styles.buttonIcon} style={{ ...style }}>
-          <Icon />
+          <Icon iconName={icon} />
         </span>
       )}
 

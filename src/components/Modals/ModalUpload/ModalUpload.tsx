@@ -104,7 +104,7 @@ const ModalUpload: React.FC<ModalWindowProps> = ({
                 type="button"
                 title="Delete from upload"
                 className={styles.modalUploadImageDeleteButton}
-                icon={CloseIcon}
+                icon="icon_close"
                 onClick={handleImageRemove(previewImageName)}
               />
               <img

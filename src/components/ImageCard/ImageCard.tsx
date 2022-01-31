@@ -171,7 +171,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
               <div className={styles.menu}>
                 <Button
                   type="button"
-                  icon={IconLike}
+                  icon="icon_like"
                   onClick={toggleLikeHandler}
                   className={styles.menuButton}
                   text={likes.length}
@@ -202,7 +202,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
                       <Button
                         type="button"
                         title="Image menu"
-                        icon={IconSettings}
+                        icon="icon_settings"
                         onClick={imageMenuToggleHandler}
                         className={styles.menuButton}
                       />

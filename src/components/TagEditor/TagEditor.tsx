@@ -45,7 +45,7 @@ const TagEditor: React.FC<Props> = ({
           type="button"
           title="Close tag editor"
           className={styles.tagEditorInputFormBtn}
-          icon={CloseIcon}
+          icon="icon_close"
           onClick={closeHandle}
         />
         <input
@@ -60,16 +60,11 @@ const TagEditor: React.FC<Props> = ({
           type="button"
           className={styles.tagEditorInputFormBtn}
           title="Add tag"
-          icon={PlusIcon}
+          icon="icon_plus"
           onClick={addTag}
         />
       </div>
-      <TagList
-        tags={tags}
-        isEditable={true}
-        tagDelHandler={onTagDelete}
-        isTagDeletable={true}
-      />
+      <TagList tags={tags} isEditable={true} tagDelHandler={onTagDelete} />
     </div>
   );
 };

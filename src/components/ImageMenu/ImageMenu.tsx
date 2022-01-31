@@ -1,10 +1,5 @@
 import { Button } from "../elements";
 import store from "../../MST/store";
-import { ReactComponent as IconSelect } from "../../img/icon_select.svg";
-import { ReactComponent as IconEdit } from "../../img/icon_edit.svg";
-import { ReactComponent as IconShare } from "../../img/icon_share.svg";
-import { ReactComponent as IconDelete } from "../../img/icon_delete.svg";
-import { ReactComponent as IconSelectAll } from "../../img/icon_select_all.svg";
 import styles from "./ImageMenu.module.scss";
 
 interface Props {
@@ -36,7 +31,7 @@ const ImageMenu: React.FC<Props> = ({
           className={styles.imageMenuButton}
           type="button"
           title="Select mode on/off"
-          icon={IconSelect}
+          icon="icon_select"
           onClick={onSelect}
           tabIndex={buttonsTabIndex}
         />
@@ -46,7 +41,7 @@ const ImageMenu: React.FC<Props> = ({
           className={styles.imageMenuButton}
           type="button"
           title="Select / deselect all"
-          icon={IconSelectAll}
+          icon="icon_select_all"
           onClick={toggleSelectAllImages}
           tabIndex={buttonsTabIndex}
         />
@@ -56,7 +51,7 @@ const ImageMenu: React.FC<Props> = ({
           className={styles.imageMenuButton}
           type="button"
           title="Edit tags"
-          icon={IconEdit}
+          icon="icon_edit"
           onClick={onEdit}
           tabIndex={buttonsTabIndex}
         />
@@ -65,7 +60,7 @@ const ImageMenu: React.FC<Props> = ({
         className={styles.imageMenuButton}
         type="button"
         title="Share"
-        icon={IconShare}
+        icon="icon_share"
         disabled={groupMenuMode && !selectedImages.length}
         onClick={onShare}
         tabIndex={buttonsTabIndex}
@@ -74,7 +69,7 @@ const ImageMenu: React.FC<Props> = ({
         className={styles.imageMenuButton}
         type="button"
         title="Delete"
-        icon={IconDelete}
+        icon="icon_delete"
         disabled={groupMenuMode && !selectedImages.length}
         onClick={onDelete}
         tabIndex={buttonsTabIndex}

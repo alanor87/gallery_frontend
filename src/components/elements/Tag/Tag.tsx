@@ -1,4 +1,5 @@
 import styles from "./Tag.module.scss";
+import Icon from "../Icon";
 
 interface Props {
   tagValue: string;
@@ -18,7 +19,9 @@ const Tag: React.FC<Props> = ({ tagValue, isDeletable, deleteTag }) => {
           className={styles.tagDeleteBtn}
           onClick={tagDeleteHandler}
           title="Delete tag"
-        />
+        >
+          <Icon iconName="icon_close" side={13} />
+        </button>
       )}
     </li>
   );

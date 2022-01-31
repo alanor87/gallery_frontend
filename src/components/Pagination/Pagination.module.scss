@@ -45,10 +45,6 @@
   transform: translateX(-50%);
   transition: background-color 250ms linear, box-shadow 250ms linear;
   cursor: pointer;
-
-  & svg {
-    width: 30px;
-  }
 }
 
 .selectWrapper {

@@ -121,7 +121,7 @@ const ModalImage = () => {
             <div className={styles.imageTitleWrapper}>
               <Button
                 type="button"
-                icon={IconLike}
+                icon="icon_like"
                 onClick={toggleLikeHandler}
                 className={styles.modalImageLikeBtn}
                 text={currentModalImage.imageInfo.likes.length}
@@ -133,7 +133,7 @@ const ModalImage = () => {
                 type="button"
                 title="Close tag editor"
                 className={styles.modalImageCloseBtn}
-                icon={CloseIcon}
+                icon="icon_close"
                 onClick={modalImageCloseHandle}
               />
             </div>

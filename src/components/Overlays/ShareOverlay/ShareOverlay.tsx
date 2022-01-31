@@ -131,7 +131,7 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
             className={styles.addUserBtn}
             text="Edit"
             title="Edit list of users with acces to this image"
-            icon={EditIcon}
+            icon="icon_edit"
             onClick={openToOverlayOpenHandler}
           />
         </div>
