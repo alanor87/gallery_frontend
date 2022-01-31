@@ -2,7 +2,6 @@ import { useState } from "react";
 import store from "../../../MST/store";
 import TagEditor from "../../TagEditor";
 import { Checkbox, Button, Tag } from "../../elements";
-import { ReactComponent as EditIcon } from "../../../img/icon_edit.svg";
 import { ImageOpenedToUserEntry } from "types/common";
 import styles from "./ShareOverlay.module.scss";
 

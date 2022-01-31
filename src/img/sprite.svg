@@ -34,7 +34,7 @@
                 fill="var(--color-accent)"></path>
         </symbol>
         <symbol id="icon_plus" viewBox="0 0 32 32">
-            <path
+            <path transform="rotate(45 16 16)"
                 d="M24.956 8.929l-1.885-1.885-7.071 7.071-7.071-7.071-1.885 1.885 7.071 7.071-7.071 7.071 1.885 1.885 7.071-7.071 7.071 7.071 1.885-1.885-7.071-7.071z">
             </path>
         </symbol>

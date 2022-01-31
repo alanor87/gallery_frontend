@@ -5,8 +5,6 @@ import ImageMenu from "components/ImageMenu";
 import ShareOverlay from "components/Overlays/ShareOverlay";
 import DeleteOverlay from "components/Overlays/DeleteOverlay";
 import TagEditor from "../../TagEditor";
-import { ReactComponent as CloseIcon } from "../../../img/icon_close.svg";
-import { ReactComponent as IconLike } from "../../../img/icon_like.svg";
 import store from "../../../MST/store";
 import { ImageType } from "MST/imagesStoreSettings";
 import styles from "./styles.module.scss";

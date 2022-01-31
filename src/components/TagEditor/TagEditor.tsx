@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import TagList from "../TagList";
 import { Button } from "../elements";
-import { ReactComponent as CloseIcon } from "../../img/icon_close.svg";
-import { ReactComponent as PlusIcon } from "../../img/icon_plus.svg";
 import styles from "./TagEditor.module.scss";
 
 interface Props {

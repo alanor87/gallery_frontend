@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { popupNotice } from "utils/popupNotice";
 import { Button, Spinner } from "../../elements";
-import { ReactComponent as CloseIcon } from "../../../img/icon_close.svg";
 import store from "../../../MST/store";
 import { ModalWindowProps } from "types/modal";
 import styles from "./styles.module.scss";

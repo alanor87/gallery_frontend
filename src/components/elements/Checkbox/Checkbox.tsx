@@ -1,6 +1,4 @@
-import React from "react";
 import Icon from "../Icon";
-import { ReactComponent as IconSelect } from "../../../img/icon_select.svg";
 import styles from "./Checkbox.module.scss";
 
 interface Props {
@@ -9,7 +7,6 @@ interface Props {
   isChecked: boolean;
   title?: string;
   disabled?: boolean;
-  icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   className?: string;
   onChange?: (event: any) => void;
 }

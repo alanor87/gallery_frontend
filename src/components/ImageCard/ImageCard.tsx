@@ -8,8 +8,6 @@ import DeleteOverlay from "../Overlays/DeleteOverlay";
 import ShareOverlay from "../Overlays/ShareOverlay";
 import SelectOverlay from "../Overlays/SelectOverlay";
 import { ImageType } from "../../MST/imagesStoreSettings";
-import { ReactComponent as IconLike } from "../../img/icon_like.svg";
-import { ReactComponent as IconSettings } from "../../img/icon_settings.svg";
 import store from "../../MST/store";
 import styles from "./ImageCard.module.scss";
 

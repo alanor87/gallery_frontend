@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Checkbox, Button, Tag, Spinner } from "components/elements";
 import TagEditor from "components/TagEditor";
-import { ReactComponent as EditIcon } from "img/icon_edit.svg";
 import store from "MST/store";
 import { NewImageInfoType } from "types/images";
 import { ImageOpenedToUserEntry } from "types/common";
