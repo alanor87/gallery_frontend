@@ -12,7 +12,7 @@ import { ImageType } from "MST/imagesStoreSettings";
 import styles from "./styles.module.scss";
 
 const ModalImage = () => {
-  const { fetchImageById, editImagesInfo, galleryMode } =
+  const { fetchImageById, editImagesInfo, getCurrentGalleryMode } =
     store.imagesStoreSettings;
   const { modalImageId, setModalImageId, setModalOpen, setModalComponentType } =
     store.modalWindowsSettings;
@@ -102,6 +102,8 @@ const ModalImage = () => {
     setModalComponentType("none");
   };
 
+  const isUserMode = getCurrentGalleryMode === "userGallery";
+
   return currentModalImage ? (
     <div className={styles.modalImage}>
       <div className={styles.imagePart}>
@@ -136,7 +138,7 @@ const ModalImage = () => {
               />
             </div>
 
-            {userIsAuthenticated && galleryMode === "userGallery" && (
+            {userIsAuthenticated && isUserMode && (
               <ImageMenu
                 className={styles.modalImageMenu}
                 modalImageMode={true}
@@ -151,8 +153,8 @@ const ModalImage = () => {
               {currentModalImage.imageInfo.tags.length > 0 && (
                 <TagList
                   tags={currentModalImage.imageInfo.tags}
+                  isEditable={isUserMode}
                   onDoubleClick={tagEditOpenHandler}
-                  isTagDeletable={false}
                 />
               )}
             </div>

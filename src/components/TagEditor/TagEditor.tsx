@@ -64,7 +64,12 @@ const TagEditor: React.FC<Props> = ({
           onClick={addTag}
         />
       </div>
-      <TagList tags={tags} tagDelHandler={onTagDelete} isTagDeletable={true} />
+      <TagList
+        tags={tags}
+        isEditable={true}
+        tagDelHandler={onTagDelete}
+        isTagDeletable={true}
+      />
     </div>
   );
 };

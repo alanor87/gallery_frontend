@@ -2,12 +2,12 @@ Global aim is to create an image hosting that would make the sharing of images a
  with not only sharing between the members of the service itself - bu also all the popular social networks, 
  also - options to generate the QR code for the image link.
 
-- CURRENT - make big separate images view, with all the bells and whistles.
-- add spinners for image cards images loading.
 - add sharing of the image as the link on the site page of the image - and as wht link to the image on hosting.
 - generating QR code for the image link.
 - add sharing through social networks - FB, Twitter, Instagram etc.
-- CURRENT - pack all the svg icons into one sprite.
+- pack all the svg icons into one sprite.
+- add description and title to images.
+- random background images for auth views -  from public galleries
 
 BUGS work
  - handle duplication resilience in tags and openedToUsers lists - in share components especially.

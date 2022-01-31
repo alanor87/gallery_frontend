@@ -218,9 +218,8 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
                     placeholder={
                       isUserMode ? "Double click to add tags" : "No tags"
                     }
-                    isTagDeletable={false}
+                    isEditable={true}
                     onDoubleClick={isUserMode ? tagEditOpenHandler : () => null}
-                    tagDelHandler={tagDelHandler}
                   />
                 </div>
               </div>

@@ -6,7 +6,7 @@ interface Props {
   tags: string[];
   title?: string;
   placeholder?: string;
-  isTagDeletable?: boolean;
+  isEditable?: boolean;
   onDoubleClick?: () => void;
   tagDelHandler?: (tagValue: string) => void;
 }
@@ -15,7 +15,7 @@ const TagList: React.FunctionComponent<Props> = ({
   tags,
   title,
   placeholder,
-  isTagDeletable = false,
+  isEditable,
   onDoubleClick,
   tagDelHandler,
 }) => {
@@ -23,15 +23,15 @@ const TagList: React.FunctionComponent<Props> = ({
     <ul
       title={tags.length ? title : ""}
       className={styles.tagList}
-      onDoubleClick={onDoubleClick}
+      onDoubleClick={isEditable && onDoubleClick ? onDoubleClick : () => null}
     >
       {tags.length ? (
         tags.map((tag, index) => (
           <Tag
             tagValue={tag}
             key={index}
-            isDeletable={isTagDeletable}
-            deleteTag={tagDelHandler}
+            isDeletable={tagDelHandler && isEditable}
+            deleteTag={isEditable && tagDelHandler ? tagDelHandler : () => null}
           />
         ))
       ) : (
