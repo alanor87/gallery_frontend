@@ -12,6 +12,8 @@ import { ToggleButton, Spinner } from "./components/elements";
 import routes from "./routes";
 import store from "./MST/store";
 
+console.log("Build mode : " + process.env.NODE_ENV);
+
 function App() {
   const { userSettings, backendToggle, publicSettingsInit, localTokenInit } =
     store;
