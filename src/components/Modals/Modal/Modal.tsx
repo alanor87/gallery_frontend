@@ -3,6 +3,7 @@ import ModalUpload from "../ModalUpload";
 import ModalDelete from "../ModalDelete";
 import ModalShare from "../ModalShare";
 import ModalImage from "../ModalImage";
+import ModalMenu from "../ModalMenu";
 import { observer } from "mobx-react-lite";
 import { createPortal } from "react-dom";
 import store from "../../../MST/store";
@@ -47,6 +48,8 @@ const Modal: React.FunctionComponent<Props> = ({ style }) => {
         return (
           <ModalUpload isLoading={isLoading} setIsLoading={setIsLoading} />
         );
+      case "menu":
+        return <ModalMenu />;
       case "none":
         return null;
       default:

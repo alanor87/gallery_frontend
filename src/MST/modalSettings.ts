@@ -4,7 +4,7 @@ import { modalWindowTypes } from "types/interface";
 const modalSettings = types
   .model({
     modalComponentType: types.optional(
-      types.enumeration(["image", "delete", "share", "upload", "none"]),
+      types.enumeration(["image", "delete", "share", "upload", "menu", "none"]),
       "none"
     ),
     modalIsOpened: types.optional(types.boolean, false),

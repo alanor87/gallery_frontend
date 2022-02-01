@@ -1,1 +1,7 @@
-export type modalWindowTypes = "image" | "delete" | "share" | "upload" | "none";
+export type modalWindowTypes =
+  | "image"
+  | "delete"
+  | "share"
+  | "upload"
+  | "menu"
+  | "none";

@@ -246,7 +246,9 @@ const ModalImage = () => {
         />
       )}
     </div>
-  ) : null;
+  ) : (
+    <Spinner side={50} />
+  );
 };
 
 export default ModalImage;

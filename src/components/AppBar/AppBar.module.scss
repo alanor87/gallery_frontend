@@ -15,9 +15,6 @@
 }
 
 .searchInputWrap {
-  @media screen and(max-width: 600px) {
-    width: 100%;
-  }
   display: flex;
   justify-content: space-between;
   width: 50%;
@@ -32,9 +29,6 @@
   }
 
   .searchInput {
-    @media screen and(max-width: 600px) {
-      width: 100%;
-    }
     display: block;
     flex-grow: 1;
     align-self: stretch;
@@ -54,9 +48,6 @@
   }
 
   .searchButton {
-    @media screen and(max-width: 600px) {
-      display: none;
-    }
     margin: 0;
   }
 }
