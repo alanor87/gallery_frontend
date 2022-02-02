@@ -12,10 +12,6 @@
   pointer-events: none;
   transition: opacity 250ms linear;
   z-index: 10;
-
-  @media screen and (max-width: 800px) {
-    transition: none;
-  }
 }
 
 .isOpened {
