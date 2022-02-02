@@ -31,4 +31,8 @@
     color: var(--color-accent);
     border: 3px solid var(--color-accent);
   }
+
+  & svg {
+    fill: var(--main-text-color);
+  }
 }

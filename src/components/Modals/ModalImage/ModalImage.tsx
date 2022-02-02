@@ -7,7 +7,7 @@ import DeleteOverlay from "components/Overlays/DeleteOverlay";
 import TagEditor from "../../TagEditor";
 import store from "../../../MST/store";
 import { ImageType } from "MST/imagesStoreSettings";
-import styles from "./styles.module.scss";
+import styles from "./ModalImage.module.scss";
 
 const ModalImage = () => {
   const { fetchImageById, editImagesInfo, getCurrentGalleryMode } =
@@ -130,7 +130,7 @@ const ModalImage = () => {
               <Button
                 type="button"
                 title="Close tag editor"
-                className={styles.modalImageCloseBtn}
+                className="closeBtn"
                 icon="icon_close"
                 onClick={modalImageCloseHandle}
               />

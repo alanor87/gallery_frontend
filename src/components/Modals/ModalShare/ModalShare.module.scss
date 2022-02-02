@@ -22,6 +22,10 @@
   width: 20px;
   height: 20px;
   padding: 0 3px 0 0;
+
+  svg {
+    fill: var(--main-text-color);
+  }
 }
 
 .option {
@@ -43,6 +47,10 @@
   & span {
     height: auto;
     width: auto;
+  }
+
+  svg {
+    fill: var(--main-text-color);
   }
 }
 

@@ -15,7 +15,7 @@ interface Props {
   style?: any;
 }
 
-const Modal: React.FunctionComponent<Props> = ({ style }) => {
+const Modal: React.FunctionComponent<Props> = () => {
   const {
     modalComponentType,
     modalIsOpened,
@@ -92,7 +92,6 @@ const Modal: React.FunctionComponent<Props> = ({ style }) => {
           : styles.modalBackdrop
       }
       onClick={modalBackdropClose}
-      style={style}
     >
       {getCurrentModalComponent()}
     </div>,

@@ -1,6 +1,6 @@
 import React from "react";
 import { Checkbox } from "../../elements";
-import styles from "./styles.module.scss";
+import styles from "./SelectOverlay.module.scss";
 
 interface Props {
   isSelected: boolean;

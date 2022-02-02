@@ -42,7 +42,7 @@ const TagEditor: React.FC<Props> = ({
         <Button
           type="button"
           title="Close tag editor"
-          className={styles.tagEditorInputFormBtn}
+          className="closeBtn"
           icon="icon_close"
           onClick={closeHandle}
         />

@@ -25,6 +25,10 @@
   height: 22px;
   margin-left: 20px;
   padding: 0 3px 0 0;
+
+  svg {
+    fill: var(--main-text-color);
+  }
 }
 
 .openedTo {
@@ -39,6 +43,10 @@
   & span {
     height: auto;
     width: auto;
+  }
+
+  svg {
+    fill: var(--main-text-color);
   }
 }
 

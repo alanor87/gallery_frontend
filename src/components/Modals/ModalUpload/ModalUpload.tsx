@@ -3,7 +3,7 @@ import { popupNotice } from "utils/popupNotice";
 import { Button, Spinner } from "../../elements";
 import store from "../../../MST/store";
 import { ModalWindowProps } from "types/modal";
-import styles from "./styles.module.scss";
+import styles from "./ModalUpload.module.scss";
 
 const ModalUpload: React.FC<ModalWindowProps> = ({
   isLoading,
@@ -101,7 +101,7 @@ const ModalUpload: React.FC<ModalWindowProps> = ({
               <Button
                 type="button"
                 title="Delete from upload"
-                className={styles.modalUploadImageDeleteButton}
+                className={"closeBtn " + styles.modalUploadImageDeleteButton}
                 icon="icon_close"
                 onClick={handleImageRemove(previewImageName)}
               />

@@ -18,7 +18,7 @@
     filter: blur(2px);
     z-index: 1;
 
-    @media screen and(max-width: 800px) {
+    @media screen and(max-width: 830px) {
       display: none;
     }
   }
@@ -39,7 +39,7 @@
     border: 1px solid var(--color-accent);
   }
 
-  @media screen and(max-width: 800px) {
+  @media screen and(max-width: 830px) {
     width: 100%;
   }
 }

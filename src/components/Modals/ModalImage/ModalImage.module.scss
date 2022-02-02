@@ -38,7 +38,6 @@
     position: relative;
     width: 35%;
     height: 100vh;
-    backdrop-filter: blur(8px);
     overflow-y: auto;
 
     .modalImageHeader {
@@ -72,14 +71,6 @@
 
         h2 {
           text-align: center;
-        }
-
-        .modalImageCloseBtn {
-          border: none;
-          border-radius: 50%;
-          background-color: var(--color-accent);
-          padding: 1px;
-          cursor: pointer;
         }
       }
 

@@ -12,7 +12,7 @@ export type AppBarProps = {
 };
 
 function AppBar() {
-  const isMobileScreen = useWindowWidth() <= 800;
+  const isMobileScreen = useWindowWidth() <= 830;
 
   const { setFilter } = store.imagesStoreSettings;
 

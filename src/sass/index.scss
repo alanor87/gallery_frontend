@@ -39,6 +39,14 @@
   }
 }
 
+.closeBtn {
+  border: none;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  padding: 1px;
+  cursor: pointer;
+}
+
 .isHidden {
   position: absolute;
   width: 1px;

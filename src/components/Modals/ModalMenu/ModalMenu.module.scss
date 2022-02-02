@@ -1,0 +1,43 @@
+.modalMenu {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  font-size: 25px;
+
+  & > * {
+    margin-bottom: 30px;
+  }
+
+  .navLinksList {
+    list-style: none;
+    font-size: 46px;
+
+    li:not(:last-child) {
+      margin-bottom: 30px;
+    }
+  }
+
+  .modalImageCloseBtn {
+    position: absolute;
+    top: 12px;
+    right: 17px;
+  }
+
+  .buttonsWrapper {
+    display: flex;
+  }
+
+  .toggleWrapper {
+    display: flex;
+    align-items: center;
+
+    & > :not(:last-child) {
+      margin-right: 20px;
+    }
+  }
+}

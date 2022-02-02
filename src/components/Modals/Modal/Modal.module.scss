@@ -1,12 +1,3 @@
-@keyframes animate {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
 .modalBackdrop {
   position: absolute;
   display: flex;
@@ -19,10 +10,12 @@
   background-color: var(--main-background-color-alpha);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 400ms linear;
-  animation-name: animate;
-  animation-delay: 2000ms;
+  transition: opacity 250ms linear;
   z-index: 10;
+
+  @media screen and (max-width: 800px) {
+    transition: none;
+  }
 }
 
 .isOpened {
