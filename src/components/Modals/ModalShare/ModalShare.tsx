@@ -10,11 +10,11 @@ import styles from "./ModalShare.module.scss";
 const ModalShare: React.FC<ModalWindowProps> = ({
   isLoading,
   setIsLoading,
+  modalCloseHandle,
 }) => {
   const [isPublicState, setisPublicState] = useState(false);
   const [newOpenedToList, setNewOpenedToList] = useState<string[]>([]);
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
-  const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
   const {
     selectedImages,
     editImagesInfo,
@@ -48,8 +48,7 @@ const ModalShare: React.FC<ModalWindowProps> = ({
   const cancelHandler = () => {
     deselectAllImages();
     groupSelectModeToggle();
-    setModalComponentType("none");
-    setModalOpen(false);
+    modalCloseHandle();
   };
 
   /*
@@ -58,7 +57,7 @@ const ModalShare: React.FC<ModalWindowProps> = ({
    * single for all the selected images. Was told that this way has Big O(n) complexity ))
    */
   const acceptChangesHandler = async () => {
-    setIsLoading(true);
+    setIsLoading && setIsLoading(true);
 
     const selectedImagesId = selectedImages.map((image) => image.selectedId);
     const updatedImagesInfo: NewImageInfoType[] = selectedImagesId.map(
@@ -97,9 +96,8 @@ const ModalShare: React.FC<ModalWindowProps> = ({
      * Performing this operation on the backend.
      */
     await imagesMultiuserShare(selectedImagesId, usersList);
-    setIsLoading(false);
-    setModalComponentType("none");
-    setModalOpen(false);
+    setIsLoading && setIsLoading(false);
+    modalCloseHandle();
     deselectAllImages();
     groupSelectModeToggle();
   };

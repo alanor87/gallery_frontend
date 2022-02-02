@@ -10,6 +10,7 @@ export interface ButtonProps {
   disabled?: boolean;
   style?: any;
   icon?: string;
+  iconSize?: number;
   className?: string;
   onClick?: (event: React.MouseEvent) => void;
   onHover?: (event: React.MouseEvent) => void;
@@ -25,6 +26,7 @@ function Button({
   disabled = false,
   style,
   icon,
+  iconSize,
   className,
   onClick,
   onFocus,
@@ -46,8 +48,11 @@ function Button({
       tabIndex={tabIndex}
     >
       {icon && (
-        <span className={styles.buttonIcon} style={{ ...style }}>
-          <Icon iconName={icon} />
+        <span
+          className={styles.buttonIcon}
+          style={{ ...style, width: iconSize, height: iconSize }}
+        >
+          <Icon iconName={icon} side={iconSize} />
         </span>
       )}
 

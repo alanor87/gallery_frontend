@@ -6,6 +6,7 @@ import styles from "./styles.module.scss";
 const ModalDelete: React.FC<ModalWindowProps> = ({
   isLoading,
   setIsLoading,
+  modalCloseHandle,
 }) => {
   const { selectedImages, deleteImages, groupSelectModeToggle } =
     store.imagesStoreSettings;
@@ -13,11 +14,10 @@ const ModalDelete: React.FC<ModalWindowProps> = ({
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 
   const deleteClickHandler = async () => {
-    setIsLoading(true);
+    setIsLoading && setIsLoading(true);
     await deleteImages();
     groupSelectModeToggle();
-    setModalComponentType("none");
-    setModalOpen(false);
+    modalCloseHandle();
   };
 
   return (

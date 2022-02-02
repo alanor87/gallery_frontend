@@ -3,12 +3,18 @@ import { useWindowWidth } from "hooks";
 import AppBarDesktop from "./AppBarDesktop";
 import AppBarMobile from "./AppBarMobile";
 import store from "../../MST/store";
+import styles from "./AppBar.module.scss";
+
+export type AppBarProps = {
+  filterValue: string;
+  filterChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  searchQueryHandler: (e: any) => void;
+};
 
 function AppBar() {
-  const isMobileScreen = useWindowWidth() < 800;
+  const isMobileScreen = useWindowWidth() <= 800;
 
-  const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
-  const { getCurrentGalleryMode, setFilter } = store.imagesStoreSettings;
+  const { setFilter } = store.imagesStoreSettings;
 
   const [filterValue, setFilterValue] = useState("");
 
@@ -28,13 +34,22 @@ function AppBar() {
     }
   };
 
-  return isMobileScreen ? (
-    <AppBarMobile
-      filterChangeHandler={onFilterChange}
-      searchQueryHandler={onSearchQuery}
-    />
-  ) : (
-    <AppBarDesktop />
+  return (
+    <header className={styles.sectionHeader}>
+      {isMobileScreen ? (
+        <AppBarMobile
+          filterValue={filterValue}
+          filterChangeHandler={onFilterChange}
+          searchQueryHandler={onSearchQuery}
+        />
+      ) : (
+        <AppBarDesktop
+          filterValue={filterValue}
+          filterChangeHandler={onFilterChange}
+          searchQueryHandler={onSearchQuery}
+        />
+      )}
+    </header>
   );
 }
 

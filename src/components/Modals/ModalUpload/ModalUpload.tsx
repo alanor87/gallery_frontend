@@ -8,11 +8,11 @@ import styles from "./styles.module.scss";
 const ModalUpload: React.FC<ModalWindowProps> = ({
   isLoading,
   setIsLoading,
+  modalCloseHandle,
 }) => {
   const [previewImages, setPreviewImages] = useState<any[]>([]);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
   const { uploadImages } = store.imagesStoreSettings;
-  const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
 
   const handleImagesAdd = (e: any) => {
     e.preventDefault();
@@ -56,14 +56,13 @@ const ModalUpload: React.FC<ModalWindowProps> = ({
   };
 
   const handleImagesUpload = async () => {
-    setIsLoading(true);
+    setIsLoading && setIsLoading(true);
     const formData = new FormData();
     filesToUpload.forEach((file) => {
       formData.append("images", file);
     });
     await uploadImages(formData);
-    setModalComponentType("none");
-    setModalOpen(false);
+    modalCloseHandle();
   };
 
   return (

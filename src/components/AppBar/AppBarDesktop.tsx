@@ -1,34 +1,20 @@
-import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { ToggleButton, Button } from "../elements";
 import store from "../../MST/store";
+import { AppBarProps } from "./AppBar";
 import styles from "./AppBar.module.scss";
 
-function AppBarDesktop() {
+function AppBarDesktop({
+  filterValue,
+  filterChangeHandler,
+  searchQueryHandler,
+}: AppBarProps) {
   const { logoutInit } = store;
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
-  const { getCurrentGalleryMode, setFilter } = store.imagesStoreSettings;
+  const { getCurrentGalleryMode } = store.imagesStoreSettings;
   const { userIsAuthenticated, userName, userEmail } = store.userSettings;
   const { lightThemeIsOn, toggleTheme, toggleSidePanel, sidePanelIsOpen } =
     store.userSettings.userInterface;
-
-  const [filterValue, setFilterValue] = useState("");
-
-  const filterChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilterValue(e.target.value);
-    if (!e.target.value) setFilter("");
-  };
-
-  const searchQueryHandler = (e: any) => {
-    if (e.type === "click") {
-      setFilter(filterValue);
-      return;
-    }
-    if (e.type === "keypress" && e.key === "Enter") {
-      setFilter(filterValue);
-      return;
-    }
-  };
 
   const uploadModalHandler = () => {
     setModalComponentType("upload");
@@ -46,7 +32,7 @@ function AppBarDesktop() {
   };
 
   return (
-    <header className={styles.sectionHeader}>
+    <>
       {userIsAuthenticated && (
         <ToggleButton
           toggleHandler={toggleSidePanel}
@@ -57,6 +43,7 @@ function AppBarDesktop() {
       <div className={styles.searchInputWrap}>
         <input
           type="text"
+          value={filterValue}
           className={styles.searchInput}
           placeholder="Search"
           autoComplete="off"
@@ -89,7 +76,7 @@ function AppBarDesktop() {
           />
         </>
       )}
-    </header>
+    </>
   );
 }
 

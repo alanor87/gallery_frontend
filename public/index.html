@@ -25,6 +25,62 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Gallery front</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        scrollbar-width: thin;
+        scrollbar-color: var(--main-text-color) var(--main-background-color);
+      }
+
+      :root {
+        --main-background-color: rgb(22, 22, 22);
+        --main-background-color-alpha: rgba(22, 22, 22, 0.7);
+        --main-text-color: rgba(218, 207, 207, 0.952);
+        --color-accent: rgb(240, 117, 35);
+        --color-border-main: rgba(77, 81, 85, 0.46);
+        --input-color: rgba(219, 217, 217, 0.384);
+        --color-error: rgb(238, 23, 41);
+        --breakpoint-desktop: 1200px;
+        --breakpoint-tablet: 800px;
+        --breakpoint-mobile: 600px;
+      }
+
+      *::-webkit-scrollbar {
+        width: 10px;
+      }
+      /* Track */
+      ::-webkit-scrollbar-track {
+        background: var(--main-background-color);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: var(--color-border-main);
+        border-radius: 2px;
+      }
+
+      body {
+        height: 100vh;
+        background-color: var(--main-background-color);
+        font-family: "Piazzolla";
+        color: var(--main-text-color);
+        padding-top: 65px;
+        overflow-y: hidden;
+        transition: background-color 250ms linear, color 250ms linear;
+      }
+
+      img {
+        display: block;
+      }
+
+      .AppLightTheme {
+        --main-background-color: rgba(219, 219, 219);
+        --main-background-color-alpha: rgba(219, 219, 219, 0.9);
+        --main-text-color: rgb(65, 65, 65);
+        transition: background-color 250ms linear, color 250ms linear;
+      }
+    </style>
   </head>
   <script>
     // before React is loaded

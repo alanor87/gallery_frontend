@@ -1,4 +1,5 @@
 export type ModalWindowProps = {
-  isLoading: boolean;
-  setIsLoading: (value: boolean) => void;
+  isLoading?: boolean;
+  setIsLoading?: (value: boolean) => void;
+  modalCloseHandle: () => void;
 };

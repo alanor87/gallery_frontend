@@ -24,15 +24,20 @@ const Modal: React.FunctionComponent<Props> = ({ style }) => {
   } = store.modalWindowsSettings;
 
   const [isLoading, setIsLoading] = useState(false);
+
   const modalBackdropClose = useCallback(
     (event: any) => {
       if (event.target === event.currentTarget || event.key === "Escape") {
-        setModalOpen(false);
-        setModalComponentType("none");
+        modalCloseHandle();
       }
     },
     [setModalOpen, setModalComponentType]
   );
+
+  const modalCloseHandle = () => {
+    setModalOpen(false);
+    setModalComponentType("none");
+  };
 
   const getCurrentModalComponent = () => {
     switch (modalComponentType) {
@@ -40,16 +45,30 @@ const Modal: React.FunctionComponent<Props> = ({ style }) => {
         return <ModalImage />;
       case "delete":
         return (
-          <ModalDelete isLoading={isLoading} setIsLoading={setIsLoading} />
+          <ModalDelete
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+            modalCloseHandle={modalCloseHandle}
+          />
         );
       case "share":
-        return <ModalShare isLoading={isLoading} setIsLoading={setIsLoading} />;
+        return (
+          <ModalShare
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+            modalCloseHandle={modalCloseHandle}
+          />
+        );
       case "upload":
         return (
-          <ModalUpload isLoading={isLoading} setIsLoading={setIsLoading} />
+          <ModalUpload
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+            modalCloseHandle={modalCloseHandle}
+          />
         );
       case "menu":
-        return <ModalMenu />;
+        return <ModalMenu modalCloseHandle={modalCloseHandle} />;
       case "none":
         return null;
       default:
