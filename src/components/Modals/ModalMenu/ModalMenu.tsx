@@ -76,7 +76,7 @@ const ModalMenu: React.FC<ModalWindowProps> = ({ modalCloseHandle }) => {
           </div>
         </>
       )}{" "}
-      <div className={styles.toggleWrapper}>
+      <div className="themeToggleWrapper">
         <span>dark theme</span>
         <ToggleButton
           toggleHandler={toggleTheme}

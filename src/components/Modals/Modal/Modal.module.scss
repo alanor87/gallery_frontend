@@ -10,7 +10,7 @@
   background-color: var(--main-background-color-alpha);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 250ms linear;
+  transition: opacity 250ms linear, background-color 250ms linear;
   z-index: 10;
 }
 

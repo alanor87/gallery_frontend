@@ -57,6 +57,15 @@ function AppBarDesktop({
           onClick={searchQueryHandler}
         />
       </div>
+      <div className="themeToggleWrapper">
+        <span>dark theme</span>
+        <ToggleButton
+          toggleHandler={toggleTheme}
+          isChecked={lightThemeIsOn}
+          hint="Dark/light theme"
+        />
+        <span>light theme</span>
+      </div>
       <Button type="button" {...loginLogoutButtonProps} />
       {userIsAuthenticated && (
         <>
@@ -66,14 +75,9 @@ function AppBarDesktop({
             onClick={uploadModalHandler}
             disabled={getCurrentGalleryMode !== "userGallery"}
           />
-          <p>
+          <span className={styles.nameAndEmail}>
             {userName}, {userEmail}
-          </p>
-          <ToggleButton
-            toggleHandler={toggleTheme}
-            isChecked={lightThemeIsOn}
-            hint="Dark/light theme"
-          />
+          </span>
         </>
       )}
     </>

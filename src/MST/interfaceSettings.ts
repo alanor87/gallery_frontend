@@ -1,6 +1,6 @@
 import axios from "axios";
 import { popupNotice } from "../utils/popupNotice";
-import { types, flow } from "mobx-state-tree";
+import { types, flow, getParent } from "mobx-state-tree";
 
 export const interfaceSettings = types
   .model({
@@ -23,8 +23,9 @@ export const interfaceSettings = types
     });
 
     const toggleTheme = (value: boolean) => {
+      const { userIsAuthenticated } = getParent(self);
       self.lightThemeIsOn = value;
-      fetchSetInterfaceSettings();
+      if (userIsAuthenticated) fetchSetInterfaceSettings();
     };
 
     const toggleSidePanel = (value: boolean) => {

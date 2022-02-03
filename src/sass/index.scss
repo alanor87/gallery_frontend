@@ -39,6 +39,18 @@
   }
 }
 
+.themeToggleWrapper {
+  display: flex;
+  align-items: center;
+
+  span:first-child {
+    text-align: end;
+  }
+  & > :not(:last-child) {
+    margin-right: 10px;
+  }
+}
+
 .closeBtn {
   border: none;
   border-radius: 50%;

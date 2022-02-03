@@ -17,8 +17,7 @@
 .searchInputWrap {
   display: flex;
   justify-content: space-between;
-  width: 50%;
-  margin-right: 30px;
+  width: 40%;
   background-color: var(--main-background-color);
   border-radius: 5px;
   color: var(--main-text-color);
@@ -33,7 +32,7 @@
   display: block;
   flex-grow: 1;
   align-self: stretch;
-  margin-right: 5px;
+  margin-right: 10px;
   padding: 5px;
   font-size: 20px;
   background-color: var(--input-color);
@@ -51,6 +50,10 @@
 
 .searchButton {
   margin: 0;
+}
+
+.nameAndEmail {
+  text-align: end;
 }
 
 .mobileMenuBtn {

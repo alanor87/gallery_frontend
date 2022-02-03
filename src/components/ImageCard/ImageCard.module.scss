@@ -17,10 +17,6 @@
     background-repeat: no-repeat;
     filter: blur(2px);
     z-index: 1;
-
-    @media screen and(max-width: 830px) {
-      display: none;
-    }
   }
 
   &:hover .text,
@@ -39,7 +35,7 @@
     border: 1px solid var(--color-accent);
   }
 
-  @media screen and(max-width: 830px) {
+  @media screen and(max-width: 630px) {
     width: 100%;
   }
 }
