@@ -88,6 +88,7 @@ const store = types
       try {
         localStorage.removeItem("token");
         yield self.userSettings.userLogout();
+        window.location.href = "/login";
       } catch (error) {
         popupNotice(`Error user logout.
         ${error}`);

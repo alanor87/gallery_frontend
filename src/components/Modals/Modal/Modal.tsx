@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useCallback } from "react";
-import ModalUpload from "../ModalUpload";
-import ModalDelete from "../ModalDelete";
-import ModalShare from "../ModalShare";
-import ModalImage from "../ModalImage";
-import ModalMenu from "../ModalMenu";
+import React, { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { observer } from "mobx-react-lite";
 import { createPortal } from "react-dom";
+import { Spinner } from "components/elements";
 import store from "../../../MST/store";
 import styles from "./Modal.module.scss";
+
+const ModalUpload = lazy(() => import("../ModalUpload"));
+const ModalDelete = lazy(() => import("../ModalDelete"));
+const ModalShare = lazy(() => import("../ModalShare"));
+const ModalImage = lazy(() => import("../ModalImage"));
+const ModalMenu = lazy(() => import("../ModalMenu"));
 
 const modalRoot = document.querySelector("#modal-root")!;
 
@@ -93,7 +95,10 @@ const Modal: React.FunctionComponent<Props> = () => {
       }
       onClick={modalBackdropClose}
     >
-      {getCurrentModalComponent()}
+      <Suspense fallback={<Spinner side={50} />}>
+        {" "}
+        {getCurrentModalComponent()}
+      </Suspense>
     </div>,
     modalRoot
   );

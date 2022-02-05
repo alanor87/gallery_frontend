@@ -22,10 +22,11 @@ function App() {
   const location = useLocation();
 
   const [isAuthRoute, setIsAuthRoute] = useState(true);
+
   const [backendURL, setBackendURL] = useState(
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3030/api/v1"
-      : "https://gallery-app-mj.herokuapp.com/api/v1"
+    process.env.NODE_ENV === "production"
+      ? "https://gallery-app-mj.herokuapp.com/api/v1"
+      : "http://192.168.1.184:3030/api/v1"
   );
 
   useEffect(() => {

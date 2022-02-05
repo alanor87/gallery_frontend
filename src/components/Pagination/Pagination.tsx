@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { Icon } from "components/elements";
 import store from "MST/store";
+import useWindowWidth from "hooks/useWindowWidth";
 import styles from "./Pagination.module.scss";
 
 const Pagination = () => {
@@ -14,6 +15,8 @@ const Pagination = () => {
   } = store.imagesStoreSettings;
   const { userOwnedImages, userOpenedToImages } = store.userSettings;
   const { publicImagesList } = store.publicSettings;
+
+  const isMobileScreen = useWindowWidth() <= 900;
 
   const getTotalGalleryImagesNumber = () => {
     let imagesNumber;
@@ -65,19 +68,13 @@ const Pagination = () => {
     setCurrentPage(value);
   };
 
-  return (
+  return isMobileScreen ? (
     <div className={styles.paginationContainer}>
+      {" "}
       <div className={styles.footerOpenArrow}>
         <Icon iconName="icon_arrow_up" side={30} />
       </div>
-      <p className={styles.totalImagesCount}>
-        Total images in gallery section :{" "}
-        <span>{getTotalGalleryImagesNumber()}</span>
-      </p>
-      <p className={styles.totalImagesCount}>
-        Total filtered images : <span>{filteredImagesNumber}</span>
-      </p>
-      <p>Number of images per page</p>
+      <ul className={styles.pagesList}>{getPagesList()}</ul>
       <div className={styles.selectWrapper}>
         <select
           className={styles.imagesPerPageSelect}
@@ -90,8 +87,31 @@ const Pagination = () => {
           <option value="30">30</option>
         </select>
       </div>
-
-      <ul className={styles.pagesList}>{getPagesList()}</ul>
+    </div>
+  ) : (
+    <div className={styles.paginationContainer}>
+      <p>Number of images per page</p>
+      <select
+        className={styles.imagesPerPageSelect}
+        name="imagesPerPage"
+        onChange={onSelectChange}
+        value={imagesPerPage}
+      >
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+      </select>
+      <ul className={styles.pagesList}>{getPagesList()}</ul>{" "}
+      <div className={styles.footerOpenArrow}>
+        <Icon iconName="icon_arrow_up" side={30} />
+      </div>
+      <p className={styles.totalImagesCount}>
+        Total images in gallery section :{" "}
+        <span>{getTotalGalleryImagesNumber()}</span>
+      </p>
+      <p className={styles.totalImagesCount}>
+        Total filtered images : <span>{filteredImagesNumber}</span>
+      </p>
     </div>
   );
 };

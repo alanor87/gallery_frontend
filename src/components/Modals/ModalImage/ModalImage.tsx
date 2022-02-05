@@ -132,6 +132,7 @@ const ModalImage = () => {
                 title="Close tag editor"
                 className="closeBtn"
                 icon="icon_close"
+                iconSize={30}
                 onClick={modalImageCloseHandle}
               />
             </div>

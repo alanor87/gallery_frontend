@@ -16,9 +16,13 @@
   flex-wrap: wrap;
   overflow-y: auto;
   padding-top: 5px;
-  padding-bottom: 10px;
+  padding-bottom: 40px;
   background-color: var(--main-background-color);
   transition: background-color 250ms linear;
+
+  @media screen and (max-width: 630px) {
+    padding-bottom: 40px;
+  }
 }
 
 .groupImageMenuWrapper {

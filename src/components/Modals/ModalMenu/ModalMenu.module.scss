@@ -1,12 +1,12 @@
 .modalMenu {
-  width: 100%;
   height: 100%;
   top: 0;
   left: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-around;
+  padding: 10%;
   font-size: 25px;
 
   & > * {
@@ -18,7 +18,7 @@
     font-size: 46px;
 
     li:not(:last-child) {
-      margin-bottom: 30px;
+      margin-bottom: 50px;
     }
   }
 
@@ -30,6 +30,12 @@
 
   .buttonsWrapper {
     display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .modalMenuButton {
+      font-size: 25px;
+    }
   }
 
   .toggleWrapper {

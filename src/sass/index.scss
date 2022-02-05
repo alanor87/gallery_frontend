@@ -42,12 +42,13 @@
 .themeToggleWrapper {
   display: flex;
   align-items: center;
+  width: min-content;
 
   span:first-child {
     text-align: end;
   }
   & > :not(:last-child) {
-    margin-right: 10px;
+    margin-right: 20px;
   }
 }
 
