@@ -9,8 +9,8 @@ function useWindowWidth() {
   };
 
   useEffect(() => {
-    window.addEventListener("resize", getWindowWidth);
     console.log("listener added");
+    window.addEventListener("resize", getWindowWidth);
     return () => {
       window.removeEventListener("resize", getWindowWidth);
       console.log("listener removed");

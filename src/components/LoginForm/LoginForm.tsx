@@ -4,8 +4,8 @@ import Input from "../elements/Input";
 import store from "../../MST/store";
 import * as Yup from "yup";
 import { Button } from "../elements";
-import styles from "./LoginForm.module.scss";
 import { LoginFormInterface } from "../../types/user";
+import styles from "./LoginForm.module.scss";
 
 const validationSchema = Yup.object({
   userEmail: Yup.string()
@@ -37,11 +37,19 @@ function LoginForm() {
         <Form>
           <label className={styles.labelAuthorisation}>
             E-mail
-            <Input fieldType="text" fieldName="userEmail" />
+            <Input
+              className={styles.labelAuthorisationInput}
+              fieldType="text"
+              fieldName="userEmail"
+            />
           </label>
           <label className={styles.labelAuthorisation}>
             Password
-            <Input fieldType="password" fieldName="userPassword" />
+            <Input
+              className={styles.labelAuthorisationInput}
+              fieldType="password"
+              fieldName="userPassword"
+            />
           </label>
           <div className={styles.btnWrapper}>
             <Button type="submit" text="Login" />

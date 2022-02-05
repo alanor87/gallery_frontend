@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useWindowWidth } from "hooks";
+import { observer } from "mobx-react-lite";
 import AppBarDesktop from "./AppBarDesktop";
 import AppBarMobile from "./AppBarMobile";
 import store from "../../MST/store";
@@ -12,8 +12,7 @@ export type AppBarProps = {
 };
 
 function AppBar() {
-  const isMobileScreen = useWindowWidth() <= 900;
-
+  const { currentWindowWidth } = store;
   const { setFilter } = store.imagesStoreSettings;
 
   const [filterValue, setFilterValue] = useState("");
@@ -36,7 +35,7 @@ function AppBar() {
 
   return (
     <header className={styles.sectionHeader}>
-      {isMobileScreen ? (
+      {currentWindowWidth <= 900 ? (
         <AppBarMobile
           filterValue={filterValue}
           filterChangeHandler={onFilterChange}
@@ -53,4 +52,4 @@ function AppBar() {
   );
 }
 
-export default AppBar;
+export default observer(AppBar);

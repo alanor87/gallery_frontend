@@ -39,6 +39,7 @@ const store = types
     imagesStoreSettings: types.optional(imagesStoreSettings, {}),
     modalWindowsSettings: types.optional(modalSettings, {}),
     publicSettings: types.optional(publicSettings, {}),
+    currentWindowWidth: types.optional(types.number, window.innerWidth),
   })
   .actions((self) => {
     const registerInit = flow(function* (registerData: RegisterFormInterface) {
@@ -98,12 +99,17 @@ const store = types
       }
     });
 
+    const setCurrentWindowWidth = (value: number) => {
+      self.currentWindowWidth = value;
+    };
+
     return {
       publicSettingsInit,
       localTokenInit,
       registerInit,
       loginInit,
       logoutInit,
+      setCurrentWindowWidth,
     };
   });
 

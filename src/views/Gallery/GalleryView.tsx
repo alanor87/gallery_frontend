@@ -9,8 +9,6 @@ import { GalleryType } from "types/images";
 import { ImageType } from "MST/imagesStoreSettings";
 import styles from "./Gallery.module.scss";
 
-console.log(document.fullscreenEnabled);
-
 interface Props {
   label: GalleryType;
 }

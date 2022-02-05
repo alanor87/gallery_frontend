@@ -2,6 +2,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useLocation } from "react-router";
 import { Switch, Redirect } from "react-router-dom";
 import { observer } from "mobx-react-lite";
+import { debounce } from "debounce";
 import axios from "axios";
 import PrivateRoute from "./components/_routes/PrivateRoute";
 import PublicRoute from "./components/_routes/PublicRoute";
@@ -12,10 +13,13 @@ import { ToggleButton, Spinner } from "./components/elements";
 import routes from "./routes";
 import store from "./MST/store";
 
-console.log("axios.defaults.baseURL : " + axios.defaults.baseURL);
-
 function App() {
-  const { userSettings, publicSettingsInit, localTokenInit } = store;
+  const {
+    userSettings,
+    publicSettingsInit,
+    localTokenInit,
+    setCurrentWindowWidth,
+  } = store;
   const { userIsAuthenticated } = userSettings;
   const { lightThemeIsOn, sidePanelIsOpen } = userSettings.userInterface;
 
@@ -28,6 +32,15 @@ function App() {
       ? "https://gallery-app-mj.herokuapp.com/api/v1"
       : "http://192.168.1.184:3030/api/v1"
   );
+
+  useEffect(() => {
+    window.onresize = () => {
+      setCurrentWindowWidth(window.innerWidth);
+    };
+    return () => {
+      window.onresize = null;
+    };
+  }, [setCurrentWindowWidth]);
 
   useEffect(() => {
     axios.defaults.baseURL = backendURL;

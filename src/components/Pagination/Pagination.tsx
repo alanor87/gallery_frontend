@@ -1,10 +1,11 @@
+import { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Icon } from "components/elements";
 import store from "MST/store";
-import useWindowWidth from "hooks/useWindowWidth";
 import styles from "./Pagination.module.scss";
 
 const Pagination = () => {
+  const { currentWindowWidth } = store;
   const {
     setImagesPerPage,
     setCurrentPage,
@@ -16,7 +17,11 @@ const Pagination = () => {
   const { userOwnedImages, userOpenedToImages } = store.userSettings;
   const { publicImagesList } = store.publicSettings;
 
-  const isMobileScreen = useWindowWidth() <= 900;
+  const [isOpened, setIsOpened] = useState(false);
+
+  const togglePaginationOpen = () => {
+    setIsOpened(!isOpened);
+  };
 
   const getTotalGalleryImagesNumber = () => {
     let imagesNumber;
@@ -68,50 +73,58 @@ const Pagination = () => {
     setCurrentPage(value);
   };
 
-  return isMobileScreen ? (
-    <div className={styles.paginationContainer}>
-      {" "}
-      <div className={styles.footerOpenArrow}>
-        <Icon iconName="icon_arrow_up" side={30} />
-      </div>
-      <ul className={styles.pagesList}>{getPagesList()}</ul>
-      <div className={styles.selectWrapper}>
-        <select
-          className={styles.imagesPerPageSelect}
-          name="imagesPerPage"
-          onChange={onSelectChange}
-          value={imagesPerPage}
+  return (
+    <div
+      className={
+        styles.paginationContainer + (isOpened ? " " + styles.isOpened : "")
+      }
+    >
+      <div className={styles.footerOpenArrow} onClick={togglePaginationOpen}>
+        <span
+          className={styles.flipper + (isOpened ? " " + styles.isOpened : "")}
         >
-          <option value="10">10</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-        </select>
+          <Icon iconName="icon_arrow_up" side={30} />
+        </span>
       </div>
-    </div>
-  ) : (
-    <div className={styles.paginationContainer}>
-      <p>Number of images per page</p>
-      <select
-        className={styles.imagesPerPageSelect}
-        name="imagesPerPage"
-        onChange={onSelectChange}
-        value={imagesPerPage}
-      >
-        <option value="10">10</option>
-        <option value="20">20</option>
-        <option value="30">30</option>
-      </select>
-      <ul className={styles.pagesList}>{getPagesList()}</ul>{" "}
-      <div className={styles.footerOpenArrow}>
-        <Icon iconName="icon_arrow_up" side={30} />
-      </div>
-      <p className={styles.totalImagesCount}>
-        Total images in gallery section :{" "}
-        <span>{getTotalGalleryImagesNumber()}</span>
-      </p>
-      <p className={styles.totalImagesCount}>
-        Total filtered images : <span>{filteredImagesNumber}</span>
-      </p>
+      {currentWindowWidth <= 900 ? (
+        <>
+          <ul className={styles.pagesList}>{getPagesList()}</ul>
+          <div className={styles.selectWrapper}>
+            <select
+              className={styles.imagesPerPageSelect}
+              name="imagesPerPage"
+              onChange={onSelectChange}
+              value={imagesPerPage}
+            >
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+            </select>
+          </div>
+        </>
+      ) : (
+        <>
+          <p>Number of images per page</p>
+          <select
+            className={styles.imagesPerPageSelect}
+            name="imagesPerPage"
+            onChange={onSelectChange}
+            value={imagesPerPage}
+          >
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+          </select>
+          <ul className={styles.pagesList}>{getPagesList()}</ul>{" "}
+          <p className={styles.totalImagesCount}>
+            Total images in gallery section :{" "}
+            <span>{getTotalGalleryImagesNumber()}</span>
+          </p>
+          <p className={styles.totalImagesCount}>
+            Total filtered images : <span>{filteredImagesNumber}</span>
+          </p>
+        </>
+      )}
     </div>
   );
 };

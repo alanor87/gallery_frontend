@@ -37,15 +37,27 @@ function RegisterForm() {
         <Form action="#" method="GET">
           <label className={styles.labelAuthorisation}>
             Name
-            <Input fieldType="text" fieldName="userName" />
+            <Input
+              fieldType="text"
+              fieldName="userName"
+              className={styles.labelAuthorisationInput}
+            />
           </label>
           <label className={styles.labelAuthorisation}>
             E-mail
-            <Input fieldType="text" fieldName="userEmail" />
+            <Input
+              fieldType="text"
+              fieldName="userEmail"
+              className={styles.labelAuthorisationInput}
+            />
           </label>
           <label className={styles.labelAuthorisation}>
             Password
-            <Input fieldType="password" fieldName="userPassword" />
+            <Input
+              fieldType="password"
+              fieldName="userPassword"
+              className={styles.labelAuthorisationInput}
+            />
           </label>
           <div className={styles.btnWrapper}>
             <Button type="submit" text="Register" />

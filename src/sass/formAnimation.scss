@@ -18,3 +18,21 @@
   animation-fill-mode: forwards;
   animation-timing-function: ease-out;
 }
+
+@keyframes mobile-form-animation {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) perspective(250px) rotateX(-40deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateX(0deg);
+  }
+}
+
+@mixin mobile-form-animation-settings {
+  animation-name: mobile-form-animation;
+  animation-duration: 600ms;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-out;
+}

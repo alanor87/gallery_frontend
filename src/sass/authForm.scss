@@ -1,4 +1,5 @@
 .authForm {
+  @include form-animation-settings;
   position: relative;
   padding: 15px;
   background-color: var(--main-background-color-alpha);
@@ -6,11 +7,18 @@
   max-width: 450px;
   border-radius: 5px;
   transition: background-color 250ms linear;
-  @include form-animation-settings;
 
-  & h2 {
+  h2 {
     text-align: center;
+  }
+
+  & > *:not(:last-child) {
     margin-bottom: 20px;
+  }
+
+  @media screen and (max-width: 900px) {
+    @include mobile-form-animation-settings;
+    width: 90%;
   }
 }
 
@@ -19,17 +27,18 @@
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
-  @media screen and (max-width: 400px) {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: var(--color-accent);
+
+  @media screen and (max-width: 900px) {
     flex-direction: column;
   }
-  margin-bottom: 20px;
-  font-size: 18px;
-  color: var(--color-accent);
 }
 
 .labelAuthorisationInput {
-  @media screen and (max-width: 400px) {
-    margin-top: 10px;
+  @media screen and (max-width: 900px) {
+    margin-top: 15px;
   }
   height: 30px;
   width: 100%;
@@ -57,6 +66,10 @@
   width: 100%;
   display: flex;
   justify-content: center;
+
+  button {
+    font-size: 20px;
+  }
 }
 
 .bottomLinksWrapper {

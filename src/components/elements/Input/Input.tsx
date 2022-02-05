@@ -2,19 +2,21 @@ import { Field, FormikContextType, useFormikContext } from "formik";
 import styles from "./Input.module.scss";
 
 interface Props {
+  className?: string;
   fieldName: string;
   fieldType: string;
   onClick?: () => void;
 }
 
-function Input({ fieldName, fieldType }: Props) {
+function Input({ className, fieldName, fieldType }: Props) {
   const { values, errors, touched } =
     useFormikContext<FormikContextType<any>>();
+  console.log(className);
 
   const getFieldClassName = () => {
     return fieldName in values && fieldName in errors && fieldName in touched
-      ? styles.input + " " + styles.error
-      : styles.input;
+      ? styles.input + " " + className + " " + styles.error
+      : styles.input + " " + className;
   };
 
   return (
