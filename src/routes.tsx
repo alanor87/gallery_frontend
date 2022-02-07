@@ -2,6 +2,7 @@ import { lazy } from "react";
 
 const LoginRegisterView = lazy(() => import("./views/LoginRegister"));
 const GalleryView = lazy(() => import("./views/Gallery"));
+const SingleImageView = lazy(() => import("./components/Modals/Modal"));
 
 const routes = [
   {
@@ -26,7 +27,7 @@ const routes = [
     isPublic: false,
     path: "/userGallery",
     redirectTo: "/login",
-    exact: false,
+    exact: true,
     restricted: false,
     component: GalleryView,
     label: "userGallery",
@@ -35,7 +36,7 @@ const routes = [
     isPublic: false,
     path: "/sharedGallery",
     redirectTo: "/login",
-    exact: false,
+    exact: true,
     restricted: false,
     component: GalleryView,
     label: "sharedGallery",
@@ -44,9 +45,18 @@ const routes = [
     isPublic: true,
     path: "/publicGallery",
     redirectTo: "/login",
-    exact: false,
+    exact: true,
     restricted: false,
     component: GalleryView,
+    label: "publicGallery",
+  },
+  {
+    isPublic: true,
+    path: "/singleImage",
+    redirectTo: "/login",
+    exact: false,
+    restricted: false,
+    component: SingleImageView,
     label: "publicGallery",
   },
 ];

@@ -2,8 +2,7 @@ Global aim is to create an image hosting that would make the sharing of images a
  with not only sharing between the members of the service itself - bu also all the popular social networks, 
  also - options to generate the QR code for the image link.
 
-- CURRENT - make everything mobule friendly, all  that I've got here right now.
-- add sharing of the image as the link on the site page of the image - and as wht link to the image on hosting.
+- CURRENT - add sharing of the image as the link on the site page of the image - and as wht link to the image on hosting.
 - generating QR code for the image link.
 - add sharing through social networks - FB, Twitter, Instagram etc.
 - pack all the svg icons into one sprite.

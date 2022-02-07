@@ -5,6 +5,7 @@ import styles from "./AppBar.module.scss";
 
 function AppBarMobile({
   filterValue,
+  searchBar,
   filterChangeHandler,
   searchQueryHandler,
 }: AppBarProps) {
@@ -16,15 +17,17 @@ function AppBarMobile({
   };
   return (
     <>
-      <input
-        type="text"
-        value={filterValue}
-        className={styles.searchInput}
-        placeholder="Search"
-        autoComplete="off"
-        onChange={filterChangeHandler}
-        onKeyPress={searchQueryHandler}
-      />
+      {searchBar && (
+        <input
+          type="text"
+          value={filterValue}
+          className={styles.searchInput}
+          placeholder="Search"
+          autoComplete="off"
+          onChange={filterChangeHandler}
+          onKeyPress={searchQueryHandler}
+        />
+      )}
       <Button
         className={styles.mobileMenuBtn}
         icon="icon_menu"

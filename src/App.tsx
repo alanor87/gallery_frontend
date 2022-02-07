@@ -2,7 +2,6 @@ import { useState, useEffect, Suspense } from "react";
 import { useLocation } from "react-router";
 import { Switch, Redirect } from "react-router-dom";
 import { observer } from "mobx-react-lite";
-import { debounce } from "debounce";
 import axios from "axios";
 import PrivateRoute from "./components/_routes/PrivateRoute";
 import PublicRoute from "./components/_routes/PublicRoute";
@@ -12,6 +11,7 @@ import SideMenu from "./components/SideMenu";
 import { ToggleButton, Spinner } from "./components/elements";
 import routes from "./routes";
 import store from "./MST/store";
+import path from "path/posix";
 
 function App() {
   const {
@@ -30,7 +30,7 @@ function App() {
   const [backendURL, setBackendURL] = useState(
     process.env.NODE_ENV === "production"
       ? "https://gallery-app-mj.herokuapp.com/api/v1"
-      : "http://192.168.1.184:3030/api/v1"
+      : "http://localhost:3030/api/v1"
   );
 
   useEffect(() => {
@@ -77,9 +77,12 @@ function App() {
     return <Spinner text="Checking token" side={100} />;
 
   console.log("App render");
+  console.log("location.pathname : ", location.pathname);
   return (
     <div className={"appMain"}>
-      {!isAuthRoute && <AppBar />}
+      {!isAuthRoute && (
+        <AppBar searchBar={location.pathname !== "/singleImage"} />
+      )}
       {userIsAuthenticated && <SideMenu isOpen={sidePanelIsOpen} />}
       <main className="mainSection">
         <Suspense fallback={<Spinner side={100} />}>

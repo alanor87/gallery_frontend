@@ -6,12 +6,13 @@ import store from "../../MST/store";
 import styles from "./AppBar.module.scss";
 
 export type AppBarProps = {
+  searchBar: boolean;
   filterValue: string;
   filterChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
   searchQueryHandler: (e: any) => void;
 };
 
-function AppBar() {
+function AppBar({ searchBar }: Pick<AppBarProps, "searchBar">) {
   const { currentWindowWidth } = store;
   const { setFilter } = store.imagesStoreSettings;
 
@@ -37,12 +38,14 @@ function AppBar() {
     <header className={styles.sectionHeader}>
       {currentWindowWidth <= 900 ? (
         <AppBarMobile
+          searchBar={searchBar}
           filterValue={filterValue}
           filterChangeHandler={onFilterChange}
           searchQueryHandler={onSearchQuery}
         />
       ) : (
         <AppBarDesktop
+          searchBar={searchBar}
           filterValue={filterValue}
           filterChangeHandler={onFilterChange}
           searchQueryHandler={onSearchQuery}

@@ -6,6 +6,7 @@ import styles from "./AppBar.module.scss";
 
 function AppBarDesktop({
   filterValue,
+  searchBar,
   filterChangeHandler,
   searchQueryHandler,
 }: AppBarProps) {
@@ -40,23 +41,25 @@ function AppBarDesktop({
           hint="Toggle side panel"
         />
       )}
-      <div className={styles.searchInputWrap}>
-        <input
-          type="text"
-          value={filterValue}
-          className={styles.searchInput}
-          placeholder="Search"
-          autoComplete="off"
-          onChange={filterChangeHandler}
-          onKeyPress={searchQueryHandler}
-        />
-        <Button
-          type="button"
-          text="Search"
-          className={styles.searchButton}
-          onClick={searchQueryHandler}
-        />
-      </div>
+      {searchBar && (
+        <div className={styles.searchInputWrap}>
+          <input
+            type="text"
+            value={filterValue}
+            className={styles.searchInput}
+            placeholder="Search"
+            autoComplete="off"
+            onChange={filterChangeHandler}
+            onKeyPress={searchQueryHandler}
+          />
+          <Button
+            type="button"
+            text="Search"
+            className={styles.searchButton}
+            onClick={searchQueryHandler}
+          />
+        </div>
+      )}
       <div className="themeToggleWrapper">
         <span>dark theme</span>
         <ToggleButton
