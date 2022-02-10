@@ -11,14 +11,16 @@ import SideMenu from "./components/SideMenu";
 import { ToggleButton, Spinner } from "./components/elements";
 import routes from "./routes";
 import store from "./MST/store";
-import path from "path/posix";
 
 function App() {
+  console.log("App render");
   const {
     userSettings,
     publicSettingsInit,
     localTokenInit,
     setCurrentWindowWidth,
+    backendUrl,
+    setBackendUrl,
   } = store;
   const { userIsAuthenticated } = userSettings;
   const { lightThemeIsOn, sidePanelIsOpen } = userSettings.userInterface;
@@ -27,11 +29,10 @@ function App() {
 
   const [isAuthRoute, setIsAuthRoute] = useState(true);
 
-  const [backendURL, setBackendURL] = useState(
-    process.env.NODE_ENV === "production"
-      ? "https://gallery-app-mj.herokuapp.com/api/v1"
-      : "http://localhost:3030/api/v1"
-  );
+  useEffect(() => {
+    console.log("setting axios default backend url : ", backendUrl);
+    axios.defaults.baseURL = backendUrl;
+  }, [backendUrl]);
 
   useEffect(() => {
     window.onresize = () => {
@@ -41,10 +42,6 @@ function App() {
       window.onresize = null;
     };
   }, [setCurrentWindowWidth]);
-
-  useEffect(() => {
-    axios.defaults.baseURL = backendURL;
-  }, [backendURL]);
 
   useEffect(() => {
     publicSettingsInit();
@@ -63,10 +60,10 @@ function App() {
 
   const backendToggle = () => {
     const newBackendURL =
-      backendURL === "http://localhost:3030/api/v1"
+      backendUrl === "http://localhost:3030/api/v1"
         ? "https://gallery-app-mj.herokuapp.com/api/v1"
         : "http://localhost:3030/api/v1";
-    setBackendURL(newBackendURL);
+    setBackendUrl(newBackendURL);
   };
 
   /*
@@ -76,8 +73,6 @@ function App() {
   if (localStorage.getItem("token") && !store.userSettings.userIsAuthenticated)
     return <Spinner text="Checking token" side={100} />;
 
-  console.log("App render");
-  console.log("location.pathname : ", location.pathname);
   return (
     <div className={"appMain"}>
       {!isAuthRoute && (
@@ -124,7 +119,7 @@ function App() {
           </Switch>
         </Suspense>
         <ToggleButton
-          hint={backendURL}
+          hint={backendUrl}
           style={{ position: "absolute", bottom: "10px", right: "10px" }}
           toggleHandler={backendToggle}
         />

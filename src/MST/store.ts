@@ -40,6 +40,12 @@ const store = types
     modalWindowsSettings: types.optional(modalSettings, {}),
     publicSettings: types.optional(publicSettings, {}),
     currentWindowWidth: types.optional(types.number, window.innerWidth),
+    backendUrl: types.optional(
+      types.string,
+      process.env.NODE_ENV === "production"
+        ? "https://gallery-app-mj.herokuapp.com/api/v1"
+        : "http://localhost:3030/api/v1"
+    ),
   })
   .actions((self) => {
     const registerInit = flow(function* (registerData: RegisterFormInterface) {
@@ -103,6 +109,10 @@ const store = types
       self.currentWindowWidth = value;
     };
 
+    const setBackendUrl = (value: string) => {
+      self.backendUrl = value;
+    };
+
     return {
       publicSettingsInit,
       localTokenInit,
@@ -110,6 +120,7 @@ const store = types
       loginInit,
       logoutInit,
       setCurrentWindowWidth,
+      setBackendUrl,
     };
   });
 

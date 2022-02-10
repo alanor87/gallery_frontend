@@ -3,6 +3,10 @@ Global aim is to create an image hosting that would make the sharing of images a
  also - options to generate the QR code for the image link.
 
 - CURRENT - add sharing of the image as the link on the site page of the image - and as wht link to the image on hosting.
+ Single image sharing goes through generating link with the token that has encrypted image info inside - 
+ and the link goes straight to the backend, where through the html template a view of a single image with some additional info (think about it)
+ is being generated -and sent to the requester.
+ 
 - generating QR code for the image link.
 - add sharing through social networks - FB, Twitter, Instagram etc.
 - pack all the svg icons into one sprite.
