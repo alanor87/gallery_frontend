@@ -9,14 +9,16 @@ interface Props {
   _id: string;
   isPublic: boolean;
   openedTo: string[];
+  sharedByLink: boolean;
   onCloseShareOverlay: () => void;
   setIsLoading: (value: boolean) => void;
 }
 
-const ShareOverlay: React.FunctionComponent<Props> = ({
+const ShareOverlay: React.FC<Props> = ({
   _id,
   isPublic,
   openedTo,
+  sharedByLink,
   onCloseShareOverlay,
   setIsLoading,
 }) => {
@@ -25,11 +27,12 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
   );
 
   const [isPublicState, setisPublicState] = useState(isPublic);
-  const [openedToEntriesList, setOpenedToEntriesList] = useState<
-    ImageOpenedToUserEntry[]
-  >(initialOpenedToEntries); // For the imagesMultiuserShare - user names and action - to add or to remove the imagesOpenedToUser user property.
-
+  const [openedToEntriesList, setOpenedToEntriesList] = useState(
+    initialOpenedToEntries
+  ); // For the imagesMultiuserShare - user names and action - to add or to remove the imagesOpenedToUser user property.
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
+
+  const { backendUrl } = store;
   const { editImagesInfo, imagesMultiuserShare } = store.imagesStoreSettings;
   const { userName, checkIfUserExistsByName } = store.userSettings;
 
@@ -104,6 +107,12 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
       .filter((entry) => entry.action !== "remove")
       .map((entry) => entry.name);
 
+  const setSharedByLink = async () => {
+    setIsLoading(true);
+    await editImagesInfo([{ _id, imageInfo: { sharedByLink: true } }]);
+    setIsLoading(false);
+  };
+
   return !openedToOverlayIsOpen ? (
     <div className={`imageCardOverlay`}>
       <div className={`${styles.shareOverlay}`}>
@@ -133,6 +142,20 @@ const ShareOverlay: React.FunctionComponent<Props> = ({
             icon="icon_edit"
             onClick={openToOverlayOpenHandler}
           />
+        </div>
+        <div className={styles.option}>
+          {sharedByLink ? (
+            <div className={styles.standaloneShareLink}>
+              {backendUrl + "/public/standaloneShare/" + _id}
+            </div>
+          ) : (
+            <Button
+              type="button"
+              className={styles.sharedByLinkBtn}
+              text="Generate sharing link"
+              onClick={setSharedByLink}
+            />
+          )}
         </div>
         <div className={styles.buttonWrapper}>
           <Button type="button" text="Accept" onClick={acceptChangesHandler} />

@@ -14,4 +14,5 @@ Global aim is to create an image hosting that would make the sharing of images a
 - random background images for auth views -  from public galleries
 
 BUGS work
+ - logout if the token is expired.
  - handle duplication resilience in tags and openedToUsers lists - in share components especially.

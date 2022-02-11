@@ -37,6 +37,7 @@ const ImageInfo = types
     isPublic: types.optional(types.boolean, false),
     belongsTo: types.optional(types.string, ""),
     openedTo: types.optional(types.array(types.string), []),
+    sharedByLink: types.optional(types.boolean, false),
   })
   .actions((self) => {
     const setIsLoading = (value: boolean) => {
