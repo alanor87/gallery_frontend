@@ -16,13 +16,15 @@ const defaultStack = new PNotify.Stack({
   context: document.body,
 });
 
-const popupNotice = (text: string) =>
+const popupNotice = (text: string, delay = 2000) =>
   PNotify.notice({
     text,
     styling: "custom",
     width: "300px",
     icon: false,
     stack: defaultStack,
-    delay: 4000,
+    delay,
+    closer: true,
+    closerHover: true,
   });
 export { popupNotice };

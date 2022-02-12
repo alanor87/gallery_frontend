@@ -1,8 +1,10 @@
-import { useState } from "react";
+import React, { EventHandler, SyntheticEvent, useState } from "react";
 import store from "../../../MST/store";
 import TagEditor from "../../TagEditor";
 import { Checkbox, Button, Tag } from "../../elements";
 import { ImageOpenedToUserEntry } from "types/common";
+import stringTrimmer from "utils/stringTrimmer";
+import { popupNotice } from "utils/popupNotice";
 import styles from "./ShareOverlay.module.scss";
 
 interface Props {
@@ -22,19 +24,20 @@ const ShareOverlay: React.FC<Props> = ({
   onCloseShareOverlay,
   setIsLoading,
 }) => {
+  const { backendUrl } = store;
+  const { editImagesInfo, imagesMultiuserShare } = store.imagesStoreSettings;
+  const { userName, checkIfUserExistsByName } = store.userSettings;
+
   const initialOpenedToEntries: ImageOpenedToUserEntry[] = openedTo.map(
     (name) => ({ name, action: "none" })
   );
 
-  const [isPublicState, setisPublicState] = useState(isPublic);
+  const [isPublicState, setIsPublicState] = useState(isPublic);
+  const [isSharedByLinkState, setIsSharedByLinkState] = useState(sharedByLink);
   const [openedToEntriesList, setOpenedToEntriesList] = useState(
     initialOpenedToEntries
   ); // For the imagesMultiuserShare - user names and action - to add or to remove the imagesOpenedToUser user property.
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
-
-  const { backendUrl } = store;
-  const { editImagesInfo, imagesMultiuserShare } = store.imagesStoreSettings;
-  const { userName, checkIfUserExistsByName } = store.userSettings;
 
   const openToOverlayOpenHandler = () => {
     setOpenedToOverlayIsOpen(true);
@@ -44,7 +47,7 @@ const ShareOverlay: React.FC<Props> = ({
   };
 
   const publicStateChangeHandler = () => {
-    setisPublicState(!isPublicState);
+    setIsPublicState(!isPublicState);
   };
 
   const userAddHandler = async (nameToAdd: string) => {
@@ -89,7 +92,11 @@ const ShareOverlay: React.FC<Props> = ({
     await editImagesInfo([
       {
         _id,
-        imageInfo: { isPublic: isPublicState, openedTo: openedToNamesList },
+        imageInfo: {
+          isPublic: isPublicState,
+          openedTo: openedToNamesList,
+          sharedByLink: isSharedByLinkState,
+        },
       },
     ]);
 
@@ -107,10 +114,21 @@ const ShareOverlay: React.FC<Props> = ({
       .filter((entry) => entry.action !== "remove")
       .map((entry) => entry.name);
 
-  const setSharedByLink = async () => {
-    setIsLoading(true);
-    await editImagesInfo([{ _id, imageInfo: { sharedByLink: true } }]);
-    setIsLoading(false);
+  const sharedByLinkStateCreateHandler = () => {
+    setIsSharedByLinkState(true);
+    popupNotice("Sharing link created. Click accept to activate it.");
+  };
+  const sharedByLinkStateRemoveHandler = (e: SyntheticEvent) => {
+    e.stopPropagation();
+    setIsSharedByLinkState(false);
+    popupNotice("Sharing link removed. Click accept to deactivate it.");
+  };
+
+  const shareLinkCopyHandler = () => {
+    navigator.clipboard.writeText(
+      backendUrl + "/public/standaloneShare/" + _id
+    );
+    popupNotice("Sharing link copied to clipboard.");
   };
 
   return !openedToOverlayIsOpen ? (
@@ -144,16 +162,31 @@ const ShareOverlay: React.FC<Props> = ({
           />
         </div>
         <div className={styles.option}>
-          {sharedByLink ? (
-            <div className={styles.standaloneShareLink}>
-              {backendUrl + "/public/standaloneShare/" + _id}
+          {isSharedByLinkState ? (
+            <div
+              className={styles.standaloneShareLinkWrapper}
+              onClick={shareLinkCopyHandler}
+            >
+              Sharing link:{" "}
+              <span className={styles.standaloneShareLink}>
+                {stringTrimmer(
+                  backendUrl + "/public/standaloneShare/" + _id,
+                  50
+                )}
+              </span>
+              <Button
+                className={`${styles.linkRemoveBtn} closeBtn`}
+                iconSize={10}
+                icon="icon_close"
+                onClick={sharedByLinkStateRemoveHandler}
+              />
             </div>
           ) : (
             <Button
               type="button"
               className={styles.sharedByLinkBtn}
               text="Generate sharing link"
-              onClick={setSharedByLink}
+              onClick={sharedByLinkStateCreateHandler}
             />
           )}
         </div>
