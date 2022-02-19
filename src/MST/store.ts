@@ -17,8 +17,8 @@ axios.interceptors.response.use(
         localStorage.removeItem("token");
         axios.defaults.headers.common.Authorization = ``;
         const errorMsg =
-          err.response?.data + " Page will be reloaded in 3 seconds." ||
-          "Unknown error.";
+          err.response?.data?.message +
+            " Page will be reloaded in 3 seconds." || "Unknown error.";
         setTimeout(() => window.location.reload(), 3000);
         throw new Error(errorMsg);
       }
