@@ -7,7 +7,6 @@ import "@pnotify/core/dist/PNotify.css";
 import "./sass/index.scss";
 
 process.env.CI = false;
-process.env.BUILD_MODE = "development";
 
 ReactDOM.render(
   <React.StrictMode>

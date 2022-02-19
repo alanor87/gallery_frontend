@@ -9,8 +9,31 @@ import { RegisterFormInterface, LoginFormInterface } from "types/user";
 axios.interceptors.response.use(
   (res: AxiosResponse) => res,
   (err: AxiosError) => {
-    const errorMsg = err.response?.data.message || "Unknown error.";
-    throw new Error(errorMsg);
+    switch (err.response?.status) {
+      // 401 comes in case if the token is expired or invalid for some other reason, therefore - rejected by server.
+      // In this case the popup will be shown with the incoming message about that from server (invoked from catch clause
+      // anywhere down the road) -  and the page will be reloaded in 3 seconds.
+      case 401: {
+        localStorage.removeItem("token");
+        axios.defaults.headers.common.Authorization = ``;
+        const errorMsg =
+          err.response?.data + " Page will be reloaded in 3 seconds." ||
+          "Unknown error.";
+        setTimeout(() => window.location.reload(), 3000);
+        throw new Error(errorMsg);
+      }
+
+      //403 - in case of wrong email/password combination on the login stage.
+      case 403: {
+        const errorMsg = err.response?.data.message || "Unknown error.";
+        throw new Error(errorMsg);
+      }
+
+      default: {
+        const errorMsg = err.response?.data || "Unknown error.";
+        throw new Error(errorMsg);
+      }
+    }
   }
 );
 
@@ -71,14 +94,8 @@ const store = types
     const localTokenInit = flow(function* () {
       try {
         yield self.userSettings.getTokenFromLocalStorage();
-      } catch (error) {
-        popupNotice(`Error user login.
-        ${error}.
-        Reloading page.`);
-        self.userSettings.userToken = "";
-        localStorage.removeItem("token");
-        axios.defaults.headers.common.Authorization = ``;
-        setTimeout(() => window.location.reload(), 3000);
+      } catch (error: any) {
+        popupNotice(`Local token authentication failed. ${error.message}`);
       }
     });
 

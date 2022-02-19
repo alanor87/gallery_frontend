@@ -40,26 +40,6 @@
   @media screen and (max-width: 900px) {
     margin-top: 15px;
   }
-  height: 30px;
-  width: 100%;
-  max-width: 280px;
-  padding: 5px;
-  background-color: var(--input-color);
-  color: var(--main-text-color);
-  border: 1px solid var(--color-border-main);
-  box-shadow: 3px 3px 5px 0px black;
-  transition: border-color 250ms linear;
-  &:focus {
-    border-color: var(--color-accent);
-    outline: none;
-  }
-}
-.error {
-  border: 2px solid var(--color-error);
-  &:focus {
-    border-color: var(--color-error);
-    outline: none;
-  }
 }
 
 .btnWrapper {
