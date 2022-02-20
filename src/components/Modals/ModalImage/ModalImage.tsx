@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { observer } from "mobx-react-lite";
 import { Spinner, Button } from "components/elements";
 import TagList from "components/TagList";
 import ImageMenu from "components/ImageMenu";
@@ -10,40 +11,139 @@ import { ImageType } from "MST/imagesStoreSettings";
 import styles from "./ModalImage.module.scss";
 
 const ModalImage = () => {
-  const { fetchImageById, editImagesInfo, getCurrentGalleryMode } =
-    store.imagesStoreSettings;
+  console.log("modal image render");
+  const { publicImagesList } = store.publicSettings;
+  const {
+    images,
+    fetchImageById,
+    editImagesInfo,
+    getCurrentGalleryMode,
+    allFilteredImagesId,
+    imagesPerPage,
+    currentPage,
+    setCurrentPage,
+  } = store.imagesStoreSettings;
   const { modalImageId, setModalImageId, setModalOpen, setModalComponentType } =
     store.modalWindowsSettings;
-  const { userIsAuthenticated, userName } = store.userSettings;
+  const { userIsAuthenticated, userName, userOwnedImages, userOpenedToImages } =
+    store.userSettings;
 
-  const [currentModalImage, setCurrentModalImage] = useState<ImageType>();
+  const [currentImagesIdList, setCurrentImagesIdList] = useState<string[]>([]);
+  const [currentModalImage, setCurrentModalImage] = useState<
+    ImageType | undefined
+  >(undefined);
+  const [currentImageIndex, setCurrentImageIndex] = useState<Number>();
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
   const [imageIsLoading, setImageIsLoading] = useState(true);
   const [tagEditorIsOpen, setTagEditorIsOpen] = useState(false);
   const [shareOverlayIsOpen, setShareOverlayIsOpen] = useState(false);
   const [deleteOverlayIsOpen, setDeleteOverlayIsOpen] = useState(false);
 
-  const loadModalImage = useCallback(
-    () =>
-      fetchImageById(modalImageId).then((image) => {
-        setCurrentModalImage(image);
-      }),
-    []
-  );
+  const loadModalImage = useCallback(async () => {
+    setImageIsLoading(true);
+    setimgInfoIsLoading(true);
+    const newImage = await fetchImageById(modalImageId);
+    setCurrentModalImage(newImage);
+
+    setimgInfoIsLoading(false);
+  }, [modalImageId, fetchImageById]);
+
+  useEffect(() => {
+    // Defining the list of all image IDs that are available for the modal image browsing.
+    // If there are no filtered images - then we take the imagesID list
+    // from the appropriate list - depending on the gallery mode.
+    if (!allFilteredImagesId.length) {
+      switch (getCurrentGalleryMode) {
+        case "userGallery": {
+          setCurrentImagesIdList(userOwnedImages);
+          break;
+        }
+        case "sharedGallery": {
+          setCurrentImagesIdList(userOpenedToImages);
+          break;
+        }
+        case "publicGallery": {
+          setCurrentImagesIdList(publicImagesList);
+          break;
+        }
+      }
+    }
+    // If the images we are dealing with are filtered - we refer to the allFilteredImagesId -
+    // array that we get from the backend with the IDs of filtered images, regardless of the gallery we
+    // deal with.
+    else {
+      setCurrentImagesIdList(allFilteredImagesId);
+    }
+  }, []);
 
   useEffect(() => {
     loadModalImage();
-  }, [modalImageId, fetchImageById, loadModalImage]);
+    setCurrentImageIndex(currentImagesIdList.indexOf(modalImageId));
+  }, [modalImageId, loadModalImage, currentImagesIdList]);
 
   const onImageLoad = () => {
     setImageIsLoading(false);
+  };
+
+  const getPagesNumber = () => {
+    if (allFilteredImagesId.length)
+      return Math.ceil(allFilteredImagesId.length / imagesPerPage);
+    return Math.ceil(currentImagesIdList.length / imagesPerPage);
+  };
+
+  // Accepts the direction - if the previous or next image btn was clicked, and defines if
+  // the current image is still among those that are on the current page - therefere -
+  // in the current images object in imagesStoreSettings. If it is not - the new page request
+  // is initiated - either previous one or the next one, if the current page is NOT first one
+  // or last one, respectively.
+  const pageShiftCheck = (direction: string, id: string) => {
+    const isModalImageOnCurrentPage = images.find((image) => image._id === id);
+    switch (direction) {
+      case "prev": {
+        if (!isModalImageOnCurrentPage && currentPage !== 0)
+          setCurrentPage(currentPage - 1);
+        return;
+      }
+      case "next": {
+        if (!isModalImageOnCurrentPage && currentPage < getPagesNumber() - 1)
+          setCurrentPage(currentPage + 1);
+        return;
+      }
+    }
+  };
+
+  // Unified function for navigating back and forth between modal images. Is being invoked
+  // by the prev/next image buttons with "prev" or "next" arguments respectively.
+  // Depending on this direction mark - the index of the next image is being defined in the
+  // currentImagesIdList, being set as currentImageIndex - and the pageShiftCheck is invoked
+  // to check if the previous or next page should be loaded in case,
+  // if image is beyond the currently loaded images set in gallery.
+  const adjacentImageLoad = (direction: string) => () => {
+    const currentImageIndex = currentImagesIdList.findIndex(
+      (imageId) => imageId === modalImageId
+    );
+    let adjacentImageIndex;
+    switch (direction) {
+      case "prev": {
+        adjacentImageIndex = currentImageIndex - 1;
+        break;
+      }
+      case "next": {
+        adjacentImageIndex = currentImageIndex + 1;
+        break;
+      }
+      default:
+        adjacentImageIndex = 0;
+    }
+    setCurrentImageIndex(adjacentImageIndex);
+    pageShiftCheck(direction, currentImagesIdList[adjacentImageIndex]);
+    setModalImageId(currentImagesIdList[adjacentImageIndex]);
   };
 
   const toggleLikeHandler = async () => {
     const { _id } = currentModalImage!;
     const { likes } = currentModalImage!.imageInfo;
 
-    setimgInfoIsLoading(true);
     let newLikesList = [];
     if (!likes.includes(userName)) {
       newLikesList = [...likes, userName];
@@ -51,8 +151,7 @@ const ModalImage = () => {
       newLikesList = likes.filter((name) => name !== userName);
     }
     await editImagesInfo([{ _id, imageInfo: { likes: newLikesList } }]);
-    loadModalImage();
-    setimgInfoIsLoading(false);
+    await loadModalImage();
   };
 
   const tagEditOpenHandler = () => {
@@ -106,13 +205,16 @@ const ModalImage = () => {
     <div className={styles.modalImage}>
       <div className={styles.imagePart}>
         {imageIsLoading && <Spinner side={50} />}
-        <img
-          src={currentModalImage?.imageURL}
-          alt={"God save the queen!"}
-          onLoad={onImageLoad}
-          style={{ visibility: !imageIsLoading ? "visible" : "hidden" }}
-        />
+        {!imgInfoIsLoading && (
+          <img
+            src={currentModalImage?.imageURL}
+            alt={"God save the queen!"}
+            onLoad={onImageLoad}
+            style={{ visibility: !imageIsLoading ? "visible" : "hidden" }}
+          />
+        )}
       </div>
+
       <div className={styles.nonImagePart}>
         <>
           <div className={styles.modalImageHeader}>
@@ -136,15 +238,34 @@ const ModalImage = () => {
                 onClick={modalImageCloseHandle}
               />
             </div>
-
-            {userIsAuthenticated && isUserMode && (
-              <ImageMenu
-                className={styles.modalImageMenu}
-                modalImageMode={true}
-                onShare={shareOverlayOpenHandler}
-                onDelete={deleteOverlayOpenHandler}
+            <div className={styles.modalControlsWrapper}>
+              <Button
+                className={styles.navButton}
+                type="button"
+                title="Previous image"
+                icon="icon_arrow_left"
+                iconSize={30}
+                onClick={adjacentImageLoad("prev")}
+                disabled={currentImageIndex === 0}
               />
-            )}
+              {userIsAuthenticated && isUserMode && (
+                <ImageMenu
+                  className={styles.modalImageMenu}
+                  modalImageMode={true}
+                  onShare={shareOverlayOpenHandler}
+                  onDelete={deleteOverlayOpenHandler}
+                />
+              )}
+              <Button
+                className={styles.navButton}
+                type="button"
+                title="Next image"
+                icon="icon_arrow_right"
+                iconSize={30}
+                onClick={adjacentImageLoad("next")}
+                disabled={currentImageIndex === currentImagesIdList.length - 1}
+              />
+            </div>
           </div>
 
           <div className={styles.description}>
@@ -253,4 +374,4 @@ const ModalImage = () => {
   );
 };
 
-export default ModalImage;
+export default observer(ModalImage);

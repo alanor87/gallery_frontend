@@ -88,9 +88,9 @@ const ImagesStore = types
       []
     ),
     filter: types.optional(types.string, ""),
-    imagesPerPage: types.optional(types.number, 20),
+    imagesPerPage: types.optional(types.number, 10),
     currentPage: types.optional(types.number, 0),
-    filteredImagesNumber: types.optional(types.number, 0),
+    allFilteredImagesId: types.optional(types.array(types.string), []),
     isLoading: types.optional(types.boolean, true),
   })
   .views((self) => ({
@@ -135,8 +135,8 @@ const ImagesStore = types
           }
         }
         const response = yield axios.get(requestRoute);
-        const { images, filteredImagesNumber } = response.data.body;
-        self.filteredImagesNumber = filteredImagesNumber;
+        const { images, allFilteredImagesId } = response.data.body;
+        self.allFilteredImagesId = allFilteredImagesId;
         applySnapshot(self.images, images);
       } catch (error) {
         popupNotice(`Error while fetching images.

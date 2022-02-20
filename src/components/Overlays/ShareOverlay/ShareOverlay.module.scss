@@ -1,83 +1,83 @@
 .shareOverlay {
   display: block;
   padding: 5px;
-}
 
-.option {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-
-  & > label {
-    width: 100%;
+  .option {
     display: flex;
     align-items: center;
-  }
-}
+    flex-wrap: wrap;
 
-.shareOverlayTitle {
-  text-align: center;
-  margin-bottom: 10px;
-  color: var(--color-accent);
-}
-
-.shareOverlayCheckbox {
-  width: 22px;
-  height: 22px;
-  margin-left: 20px;
-  padding: 0 3px 0 0;
-
-  svg {
-    fill: var(--main-text-color);
-  }
-}
-
-.openedTo {
-  margin-right: 10px;
-}
-
-.addUserBtn {
-  margin-left: 10px;
-  padding: 2px;
-  font-size: 12px;
-
-  & span {
-    height: auto;
-    width: auto;
+    & > label {
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
   }
 
-  svg {
-    fill: var(--main-text-color);
+  .shareOverlayTitle {
+    text-align: center;
+    margin-bottom: 10px;
+    color: var(--color-accent);
   }
-}
 
-.sharedByLinkBtn {
-  font-size: 14px;
-  margin: auto;
-}
+  .shareOverlayCheckbox {
+    width: 22px;
+    height: 22px;
+    margin-left: 20px;
+    padding: 0 3px 0 0;
 
-.standaloneShareLinkWrapper {
-  position: relative;
-  text-align: center;
-  border-radius: 5px;
-  padding: 3px;
-  background-color: var(--main-background-color-alpha);
-  overflow-wrap: anywhere;
-}
+    svg {
+      fill: var(--main-text-color);
+    }
+  }
 
-.standaloneShareLink {
-  display: block;
-  font-size: 14px;
-}
+  .openedTo {
+    margin-right: 10px;
+  }
 
-.linkRemoveBtn {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
+  .addUserBtn {
+    margin-left: 10px;
+    padding: 2px;
+    font-size: 12px;
 
-.buttonWrapper {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 10px;
+    & span {
+      height: auto;
+      width: auto;
+    }
+
+    svg {
+      fill: var(--main-text-color);
+    }
+  }
+
+  .sharedByLinkBtn {
+    font-size: 14px;
+    margin: auto;
+  }
+
+  .standaloneShareLinkWrapper {
+    position: relative;
+    text-align: center;
+    border-radius: 5px;
+    padding: 3px;
+    background-color: var(--main-background-color-alpha);
+    overflow-wrap: anywhere;
+  }
+
+  .standaloneShareLink {
+    display: block;
+    font-size: 14px;
+  }
+
+  .linkRemoveBtn {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .buttonWrapper {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
 }

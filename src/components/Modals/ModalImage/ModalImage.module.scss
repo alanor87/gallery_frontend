@@ -90,6 +90,18 @@
       }
     }
 
+    .modalControlsWrapper {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      padding: 0 6px;
+    }
+
+    .navButton {
+      color: var(--main-background-color);
+      background-color: var(--color-accent);
+    }
+
     .tagListWrapper {
       margin-bottom: 15px;
     }

@@ -12,7 +12,7 @@ const Pagination = () => {
     currentPage,
     imagesPerPage,
     galleryMode,
-    filteredImagesNumber,
+    allFilteredImagesId,
   } = store.imagesStoreSettings;
   const { userOwnedImages, userOpenedToImages } = store.userSettings;
   const { publicImagesList } = store.publicSettings;
@@ -43,8 +43,8 @@ const Pagination = () => {
   };
 
   const getPagesNumber = () => {
-    if (filteredImagesNumber)
-      return Math.ceil(filteredImagesNumber / imagesPerPage);
+    if (allFilteredImagesId.length)
+      return Math.ceil(allFilteredImagesId.length / imagesPerPage);
     return Math.ceil(getTotalGalleryImagesNumber() / imagesPerPage);
   };
 
@@ -121,7 +121,7 @@ const Pagination = () => {
             <span>{getTotalGalleryImagesNumber()}</span>
           </p>
           <p className={styles.totalImagesCount}>
-            Total filtered images : <span>{filteredImagesNumber}</span>
+            Total filtered images : <span>{allFilteredImagesId.length}</span>
           </p>
         </>
       )}

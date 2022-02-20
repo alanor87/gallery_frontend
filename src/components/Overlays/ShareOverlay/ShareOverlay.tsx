@@ -1,4 +1,4 @@
-import React, { EventHandler, SyntheticEvent, useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import store from "../../../MST/store";
 import TagEditor from "../../TagEditor";
 import { Checkbox, Button, Tag } from "../../elements";
