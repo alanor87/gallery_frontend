@@ -340,7 +340,6 @@ const ModalImage = () => {
             </p>
           </div>
         </>
-        {imgInfoIsLoading && <Spinner side={50} />}
       </div>
 
       {shareOverlayIsOpen && (
@@ -374,4 +373,4 @@ const ModalImage = () => {
   );
 };
 
-export default observer(ModalImage);
+export default ModalImage;

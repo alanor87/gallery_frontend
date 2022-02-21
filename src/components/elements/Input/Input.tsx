@@ -11,7 +11,6 @@ interface Props {
 function Input({ className, fieldName, fieldType }: Props) {
   const { values, errors, touched } =
     useFormikContext<FormikContextType<any>>();
-  console.log("errors : ", errors);
   const getFieldClassName = () => {
     return fieldName in values && fieldName in errors && fieldName in touched
       ? styles.input + " " + className + " " + styles.error

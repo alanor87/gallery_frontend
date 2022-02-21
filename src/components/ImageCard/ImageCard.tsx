@@ -35,15 +35,13 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   const [deleteOverlayIsOpen, setDeleteOverlayIsOpen] = useState(false);
   const [shareOverlayIsOpen, setShareOverlayIsOpen] = useState(false);
   const [imageMenuIsOpen, setImageMenuIsOpen] = useState(false);
-  const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
-  const [imageIsLoading, setImageIsLoading] = useState(true);
+  const [imgInfoIsLoading, setimgInfoIsLoading] = useState(true);
   const [tagEditorOverlayIsOpen, setTagEditorOpen] = useState(false);
 
   const imageMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!groupSelectMode) toggleSelectImage(false);
-    console.log("groupSelectMode effect");
   }, [groupSelectMode, toggleSelectImage]);
 
   useEffect(() => {
@@ -51,13 +49,12 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
       imageMenuRef.current.tabIndex = 0;
       imageMenuRef.current.focus();
     }
-    console.log("Image menu effect");
   }, [imageMenuIsOpen]);
 
   const isUserMode = getCurrentGalleryMode === "userGallery";
 
   const onImageLoad = () => {
-    setImageIsLoading(false);
+    setimgInfoIsLoading(false);
   };
 
   const imageMenuToggleHandler = (e: React.SyntheticEvent) => {
@@ -117,7 +114,6 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   };
 
   const toggleLikeHandler = async () => {
-    console.log("toggleLikeHandler fires");
     setimgInfoIsLoading(true);
     let newLikesList = [];
     if (!likes.includes(userName)) {
@@ -141,92 +137,92 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
       tabIndex={groupSelectMode ? -1 : 0}
       onMouseLeave={imageMenuCloseHandler}
     >
-      {!imgInfoIsLoading ? (
-        <>
-          <div
-            className={styles.cardBackdrop}
-            style={{
-              backgroundImage: `url(${smallImageURL})`,
-              visibility: !imageIsLoading ? "visible" : "hidden",
-            }}
-          ></div>
-          <div
-            tabIndex={-1}
-            className={styles.imgWrap}
-            onClick={imageModalOpenHandler}
-          >
-            {imageIsLoading && <Spinner side={50} />}
-            <img
-              className={styles.image}
-              src={smallImageURL}
-              alt={_id}
-              onLoad={onImageLoad}
-              style={{ visibility: !imageIsLoading ? "visible" : "hidden" }}
-            />
-          </div>
-          {overlaysAreClosedCheck() && !groupSelectMode && (
-            <>
-              <div className={styles.menu}>
-                <Button
-                  type="button"
-                  icon="icon_like"
-                  onClick={toggleLikeHandler}
-                  className={styles.menuButton}
-                  text={likes.length}
-                  disabled={!userIsAuthenticated}
-                  title="Like / Dislike"
-                />
-
-                {isUserMode && (
-                  <>
-                    <div
-                      ref={imageMenuRef}
-                      className={
-                        imageMenuIsOpen
-                          ? styles.imageMenuWrapper + " " + styles.isOpened
-                          : styles.imageMenuWrapper
-                      }
-                    >
-                      <ImageMenu
-                        isOpened={imageMenuIsOpen}
-                        onDelete={deleteOverlayOpenHandler}
-                        onEdit={tagEditOpenHandler}
-                        onSelect={groupSelectOnHandler}
-                        onShare={shareOverlayOpenHandler}
-                      />
-                    </div>
-
-                    <div style={{ position: "relative" }}>
-                      <Button
-                        type="button"
-                        title="Image menu"
-                        icon="icon_settings"
-                        onClick={imageMenuToggleHandler}
-                        className={styles.menuButton}
-                      />
-                    </div>
-                  </>
-                )}
-              </div>
-              <div className={styles.text}>
-                <div className={styles.imgCardText}>
-                  <TagList
-                    tags={tags}
-                    title={isUserMode ? "Double click to edit" : "No tags"}
-                    placeholder={
-                      isUserMode ? "Double click to add tags" : "No tags"
-                    }
-                    isEditable={true}
-                    onDoubleClick={isUserMode ? tagEditOpenHandler : () => null}
-                  />
-                </div>
-              </div>
-            </>
-          )}
-        </>
-      ) : (
+      {imgInfoIsLoading && (
         <Spinner side={30} className={styles.imageCardSpinner} />
       )}
+      <>
+        <div
+          className={styles.cardBackdrop}
+          style={{
+            backgroundImage: `url(${smallImageURL})`,
+            visibility: imgInfoIsLoading ? "hidden" : "visible",
+          }}
+        ></div>
+        <div
+          tabIndex={-1}
+          className={styles.imgWrap}
+          onClick={imageModalOpenHandler}
+        >
+          <img
+            className={styles.image}
+            src={smallImageURL}
+            alt={_id}
+            onLoad={onImageLoad}
+            style={{
+              visibility: imgInfoIsLoading ? "hidden" : "visible",
+            }}
+          />
+        </div>
+        {overlaysAreClosedCheck() && !groupSelectMode && (
+          <>
+            <div className={styles.menu}>
+              <Button
+                type="button"
+                icon="icon_like"
+                onClick={toggleLikeHandler}
+                className={styles.menuButton}
+                text={likes.length}
+                disabled={!userIsAuthenticated}
+                title="Like / Dislike"
+              />
+
+              {isUserMode && (
+                <>
+                  <div
+                    ref={imageMenuRef}
+                    className={
+                      imageMenuIsOpen
+                        ? styles.imageMenuWrapper + " " + styles.isOpened
+                        : styles.imageMenuWrapper
+                    }
+                  >
+                    <ImageMenu
+                      isOpened={imageMenuIsOpen}
+                      onDelete={deleteOverlayOpenHandler}
+                      onEdit={tagEditOpenHandler}
+                      onSelect={groupSelectOnHandler}
+                      onShare={shareOverlayOpenHandler}
+                    />
+                  </div>
+
+                  <div style={{ position: "relative" }}>
+                    <Button
+                      type="button"
+                      title="Image menu"
+                      icon="icon_settings"
+                      onClick={imageMenuToggleHandler}
+                      className={styles.menuButton}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+            <div className={styles.text}>
+              <div className={styles.imgCardText}>
+                <TagList
+                  tags={tags}
+                  title={isUserMode ? "Double click to edit" : "No tags"}
+                  placeholder={
+                    isUserMode ? "Double click to add tags" : "No tags"
+                  }
+                  isEditable={true}
+                  onDoubleClick={isUserMode ? tagEditOpenHandler : () => null}
+                />
+              </div>
+            </div>
+          </>
+        )}
+      </>
 
       {!overlaysAreClosedCheck() && (
         <div className={styles.imgOverlay}>
