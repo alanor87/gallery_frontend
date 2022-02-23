@@ -1,17 +1,16 @@
 .shareOverlay {
   position: relative;
+  width: 100%;
   display: block;
-  padding: 5px;
+  padding: 5px 10px 5px 8px;
 
   .option {
     display: flex;
-    align-items: center;
+    justify-content: space-between;
+    align-items: baseline;
     flex-wrap: wrap;
-
-    & > label {
-      width: 100%;
-      display: flex;
-      align-items: center;
+    &:not(:last-child) {
+      margin-bottom: 7px;
     }
   }
 
@@ -21,71 +20,43 @@
     color: var(--color-accent);
   }
 
-  .shareOverlayCheckbox {
-    width: 22px;
-    height: 22px;
-    margin-left: 20px;
-    padding: 0 3px 0 0;
-
-    svg {
-      fill: var(--main-text-color);
-    }
+  .shareOverlayToggleBtn {
+    height: 15px;
+    width: 35px;
   }
 
   .openedTo {
     margin-right: 10px;
   }
 
-  .addUserBtn {
-    margin-left: 10px;
-    padding: 2px;
-    font-size: 12px;
-
-    & span {
-      height: auto;
-      width: auto;
-    }
-
-    svg {
-      fill: var(--main-text-color);
-    }
-  }
-
-  .sharedByLinkBtn {
-    font-size: 14px;
-    margin: auto;
-  }
-
   .standaloneShareLinkWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
     position: relative;
-    text-align: center;
+    width: 100%;
     border-radius: 5px;
-    padding: 3px;
+    padding: 0 3px;
     background-color: var(--main-background-color-alpha);
     overflow-wrap: anywhere;
   }
 
-  .standaloneShareLink {
-    display: block;
-    font-size: 14px;
-  }
-
-  .linkRemoveBtn {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-
-  .qrWrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
   .buttonWrapper {
     display: flex;
     justify-content: space-around;
     margin-top: 10px;
   }
+}
+
+.qrWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--main-text-color-alpha);
+  z-index: 1;
 }

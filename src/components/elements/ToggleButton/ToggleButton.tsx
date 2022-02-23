@@ -5,12 +5,16 @@ interface Props {
   isChecked?: boolean;
   hint?: string;
   toggleHandler: (value: boolean) => void;
+  className?: string;
+  disabled?: boolean;
   style?: {};
 }
 const ToggleButton: React.FC<Props> = ({
   toggleHandler,
   isChecked,
   hint,
+  className,
+  disabled = false,
   style,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -26,15 +30,16 @@ const ToggleButton: React.FC<Props> = ({
     setIsFocused(false);
   };
 
+  const toggleClassName = isFocused
+    ? styles.toggleElement + " " + styles.inFocus + " " + (className || null)
+    : styles.toggleElement +
+      " " +
+      (className || null) +
+      " " +
+      (disabled ? styles.disabled : null);
+
   return (
-    <label
-      className={
-        isFocused
-          ? styles.toggleElement + " " + styles.inFocus
-          : styles.toggleElement
-      }
-      style={style}
-    >
+    <label className={toggleClassName} style={style}>
       <input
         type="checkbox"
         className={`${styles.sideMenuCheckbox} ${styles.toggleCheckbox} isHidden`}
@@ -43,6 +48,7 @@ const ToggleButton: React.FC<Props> = ({
         checked={isChecked}
         onFocus={onFocusHandler}
         onBlur={onBlurHandler}
+        disabled={disabled}
       />
       <span className={styles.innerFrame}>
         <span className={styles.toggleButton} title={hint}></span>

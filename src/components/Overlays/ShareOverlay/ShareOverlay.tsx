@@ -1,10 +1,9 @@
-import React, { SyntheticEvent, useState } from "react";
+import React, { useState } from "react";
 import QRCode from "react-qr-code";
 import store from "../../../MST/store";
 import TagEditor from "../../TagEditor";
-import { Checkbox, Button, Tag } from "../../elements";
+import { Button, ToggleButton } from "../../elements";
 import { ImageOpenedToUserEntry } from "types/common";
-import stringTrimmer from "utils/stringTrimmer";
 import { popupNotice } from "utils/popupNotice";
 import styles from "./ShareOverlay.module.scss";
 
@@ -39,10 +38,8 @@ const ShareOverlay: React.FC<Props> = ({
     initialOpenedToEntries
   ); // For the imagesMultiuserShare - user names and action - to add or to remove the imagesOpenedToUser user property.
   const [openedToOverlayIsOpen, setOpenedToOverlayIsOpen] = useState(false);
+  const [qrIsOpen, setQrIsOpen] = useState(false);
 
-  const openToOverlayOpenHandler = () => {
-    setOpenedToOverlayIsOpen(true);
-  };
   const openToOverlayCloseHandler = () => {
     setOpenedToOverlayIsOpen(false);
   };
@@ -115,14 +112,13 @@ const ShareOverlay: React.FC<Props> = ({
       .filter((entry) => entry.action !== "remove")
       .map((entry) => entry.name);
 
-  const sharedByLinkStateCreateHandler = () => {
-    setIsSharedByLinkState(true);
-    popupNotice("Sharing link created. Click accept to activate it.");
-  };
-  const sharedByLinkStateRemoveHandler = (e: SyntheticEvent) => {
-    e.stopPropagation();
-    setIsSharedByLinkState(false);
-    popupNotice("Sharing link removed. Click accept to deactivate it.");
+  const sharedByLinkStateToggleHandler = (value: boolean) => {
+    setIsSharedByLinkState(value);
+    if (value) {
+      popupNotice("Sharing link was created. Click accept to activate it.");
+    } else {
+      popupNotice("Sharing link was removed. Click accept to deactivate it.");
+    }
   };
 
   const shareLinkCopyHandler = () => {
@@ -132,84 +128,83 @@ const ShareOverlay: React.FC<Props> = ({
     popupNotice("Sharing link copied to clipboard.");
   };
 
-  return !openedToOverlayIsOpen ? (
+  const qrIsOpenToggleHandler = () => {
+    setQrIsOpen(!qrIsOpen);
+  };
+
+  return (
     <div className={`imageCardOverlay`}>
       <div className={`${styles.shareOverlay}`}>
         <p className={`imageCardOverlay-title ${styles.shareOverlayTitle}`}>
           Image share options
         </p>
         <div className={styles.option}>
-          <label>
-            Make the image public.
-            <Checkbox
-              isChecked={isPublicState}
-              onChange={publicStateChangeHandler}
-              className={styles.shareOverlayCheckbox}
-            />
-          </label>
+          Make the image public
+          <ToggleButton
+            isChecked={isPublicState}
+            toggleHandler={publicStateChangeHandler}
+            className={styles.shareOverlayToggleBtn}
+          />
         </div>
         <div className={styles.option}>
-          <p className={styles.openedTo}>Is opened to users : </p>
-          {openedToEntriesList.map((entry) => {
-            if (entry.action === "remove") return null;
-            return <Tag key={entry.name} tagValue={entry.name} />;
-          })}
-          <Button
-            className={styles.addUserBtn}
-            text="Edit"
-            title="Edit list of users with acces to this image"
-            icon="icon_edit"
-            onClick={openToOverlayOpenHandler}
+          Is opened to users
+          {getOpenegToNamesList().length ? (
+            <span className="footnote">users available</span>
+          ) : null}
+          <ToggleButton
+            isChecked={openedToOverlayIsOpen}
+            toggleHandler={setOpenedToOverlayIsOpen}
+            className={styles.shareOverlayToggleBtn}
           />
         </div>
         <div className={styles.option}>
           {isSharedByLinkState ? (
-            <div
-              className={styles.standaloneShareLinkWrapper}
-              onClick={shareLinkCopyHandler}
-            >
-              Sharing link:{" "}
-              <span className={styles.standaloneShareLink}>
-                {stringTrimmer(
-                  backendUrl + "/public/standaloneShare/" + _id,
-                  50
-                )}
+            <>
+              Link :
+              <span onClick={shareLinkCopyHandler} className="footnote">
+                click here to copy link
               </span>
-              <Button
-                className={`${styles.linkRemoveBtn} closeBtn`}
-                iconSize={10}
-                icon="icon_close"
-                onClick={sharedByLinkStateRemoveHandler}
-              />
-            </div>
+            </>
           ) : (
-            <Button
-              type="button"
-              className={styles.sharedByLinkBtn}
-              text="Generate sharing link"
-              onClick={sharedByLinkStateCreateHandler}
-            />
+            "Activate sharing link"
           )}
+          <ToggleButton
+            isChecked={isSharedByLinkState}
+            toggleHandler={sharedByLinkStateToggleHandler}
+            className={styles.shareOverlayToggleBtn}
+          />
         </div>
-        <div className={styles.qrWrapper}>
-          <QRCode
-            value={backendUrl + "/public/standaloneShare/" + _id}
-            size={180}
+        <div className={styles.option}>
+          Generate QR code link
+          <ToggleButton
+            isChecked={qrIsOpen}
+            toggleHandler={qrIsOpenToggleHandler}
+            className={styles.shareOverlayToggleBtn}
+            disabled={!isSharedByLinkState}
           />
         </div>
         <div className={styles.buttonWrapper}>
           <Button type="button" text="Accept" onClick={acceptChangesHandler} />
           <Button type="button" text="Cancel" onClick={onCloseShareOverlay} />
         </div>
-      </div>
+      </div>{" "}
+      {qrIsOpen && (
+        <div className={styles.qrWrapper} onClick={qrIsOpenToggleHandler}>
+          <QRCode
+            value={backendUrl + "/public/standaloneShare/" + _id}
+            size={200}
+          />
+        </div>
+      )}
+      {openedToOverlayIsOpen && (
+        <TagEditor
+          tags={getOpenegToNamesList()}
+          closeHandle={openToOverlayCloseHandler}
+          onTagDelete={userDelHandler}
+          onAddTags={userAddHandler}
+        />
+      )}
     </div>
-  ) : (
-    <TagEditor
-      tags={getOpenegToNamesList()}
-      closeHandle={openToOverlayCloseHandler}
-      onTagDelete={userDelHandler}
-      onAddTags={userAddHandler}
-    />
   );
 };
 

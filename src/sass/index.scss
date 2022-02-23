@@ -60,6 +60,13 @@
   cursor: pointer;
 }
 
+.footnote {
+  font-size: 0.8em;
+  border-radius: 5px;
+  background-color: var(--main-background-color-alpha);
+  padding: 0 3px;
+}
+
 .isHidden {
   position: absolute;
   width: 1px;
