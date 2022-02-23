@@ -1,11 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { observer } from "mobx-react-lite";
 import { Spinner, Button } from "components/elements";
 import TagList from "components/TagList";
 import ImageMenu from "components/ImageMenu";
 import ShareOverlay from "components/Overlays/ShareOverlay";
 import DeleteOverlay from "components/Overlays/DeleteOverlay";
-import TagEditor from "../../TagEditor";
+import TagEditor from "components/TagEditor";
 import store from "../../../MST/store";
 import { ImageType } from "MST/imagesStoreSettings";
 import styles from "./ModalImage.module.scss";
@@ -35,6 +34,7 @@ const ModalImage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState<Number>();
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
   const [imageIsLoading, setImageIsLoading] = useState(true);
+  const [modalImageLikes, setModalImageLikes] = useState<string[]>([]);
   const [tagEditorIsOpen, setTagEditorIsOpen] = useState(false);
   const [shareOverlayIsOpen, setShareOverlayIsOpen] = useState(false);
   const [deleteOverlayIsOpen, setDeleteOverlayIsOpen] = useState(false);
@@ -42,9 +42,9 @@ const ModalImage = () => {
   const loadModalImage = useCallback(async () => {
     setImageIsLoading(true);
     setimgInfoIsLoading(true);
-    const newImage = await fetchImageById(modalImageId);
-    setCurrentModalImage(newImage);
-
+    const newModalImage: any = await fetchImageById(modalImageId);
+    setModalImageLikes(newModalImage.imageInfo.likes);
+    setCurrentModalImage(newModalImage);
     setimgInfoIsLoading(false);
   }, [modalImageId, fetchImageById]);
 
@@ -142,16 +142,16 @@ const ModalImage = () => {
 
   const toggleLikeHandler = async () => {
     const { _id } = currentModalImage!;
-    const { likes } = currentModalImage!.imageInfo;
-
-    let newLikesList = [];
-    if (!likes.includes(userName)) {
-      newLikesList = [...likes, userName];
+    let newLikesList: string[] = [];
+    if (!modalImageLikes.includes(userName)) {
+      newLikesList = [...modalImageLikes, userName];
     } else {
-      newLikesList = likes.filter((name) => name !== userName);
+      newLikesList = modalImageLikes.filter((name) => name !== userName);
     }
+    // Likes are stored in separate state in the modalimage component itself -
+    // to avoid rerendering all the component when the like button is clicked.
     await editImagesInfo([{ _id, imageInfo: { likes: newLikesList } }]);
-    await loadModalImage();
+    setModalImageLikes(newLikesList);
   };
 
   const tagEditOpenHandler = () => {
@@ -224,7 +224,7 @@ const ModalImage = () => {
                 icon="icon_like"
                 onClick={toggleLikeHandler}
                 className={styles.modalImageLikeBtn}
-                text={currentModalImage.imageInfo.likes.length}
+                text={modalImageLikes.length}
                 disabled={!userIsAuthenticated}
                 title="Like / Dislike"
               />

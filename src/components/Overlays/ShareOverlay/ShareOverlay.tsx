@@ -1,4 +1,5 @@
 import React, { SyntheticEvent, useState } from "react";
+import QRCode from "react-qr-code";
 import store from "../../../MST/store";
 import TagEditor from "../../TagEditor";
 import { Checkbox, Button, Tag } from "../../elements";
@@ -189,6 +190,12 @@ const ShareOverlay: React.FC<Props> = ({
               onClick={sharedByLinkStateCreateHandler}
             />
           )}
+        </div>
+        <div className={styles.qrWrapper}>
+          <QRCode
+            value={backendUrl + "/public/standaloneShare/" + _id}
+            size={180}
+          />
         </div>
         <div className={styles.buttonWrapper}>
           <Button type="button" text="Accept" onClick={acceptChangesHandler} />
