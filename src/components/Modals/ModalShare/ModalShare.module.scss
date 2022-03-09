@@ -1,6 +1,8 @@
 @import "../../../sass/formAnimation.scss";
 
 .modalShareForm {
+  display: flex;
+  flex-direction: column;
   position: relative;
   min-height: 200px;
   padding: 15px;
@@ -18,19 +20,17 @@
   }
 }
 
-.shareModalCheckbox {
-  width: 20px;
-  height: 20px;
-  padding: 0 3px 0 0;
-
-  svg {
-    fill: var(--main-text-color);
-  }
+.modalShareToggleBtn {
+  height: 15px;
+  width: 35px;
 }
 
 .option {
   display: flex;
-  align-items: center;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
 }
 
 .text {
@@ -57,4 +57,6 @@
 .buttonWrapper {
   display: flex;
   justify-content: space-around;
+  margin-top: auto;
+  margin-bottom: 0;
 }

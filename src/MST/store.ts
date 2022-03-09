@@ -65,7 +65,7 @@ const store = types
     currentWindowWidth: types.optional(types.number, window.innerWidth),
     backendUrl: types.optional(
       types.string,
-      process.env.NODE_ENV === "production"
+      process.env.NODE_ENV === "production" || window.innerWidth < 900
         ? "https://gallery-app-mj.herokuapp.com/api/v1"
         : "http://localhost:3030/api/v1"
     ),

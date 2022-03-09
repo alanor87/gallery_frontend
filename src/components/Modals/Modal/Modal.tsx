@@ -89,9 +89,7 @@ const Modal: React.FunctionComponent<Props> = () => {
   return createPortal(
     <div
       className={
-        modalIsOpened
-          ? styles.modalBackdrop + " " + styles.isOpened
-          : styles.modalBackdrop
+        modalIsOpened ? "modalBackdrop " + styles.isOpened : "modalBackdrop"
       }
       onClick={modalBackdropClose}
     >

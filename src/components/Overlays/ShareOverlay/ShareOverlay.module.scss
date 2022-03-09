@@ -3,6 +3,7 @@
   width: 100%;
   display: block;
   padding: 5px 10px 5px 8px;
+  overflow-y: auto;
 
   .option {
     display: flex;
@@ -44,12 +45,35 @@
   .buttonWrapper {
     display: flex;
     justify-content: space-around;
-    margin-top: 10px;
+    margin-top: auto;
+  }
+}
+
+// When being displayed through modal image view.
+:global(.modalBackdrop) .shareOverlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  height: 60%;
+  max-width: 600px;
+  font-size: 23px;
+
+  .shareOverlayTitle {
+    margin-bottom: 25px;
+  }
+
+  .option {
+    margin-bottom: 25px;
+  }
+
+  button {
+    font-size: 22px;
   }
 }
 
 .qrWrapper {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -58,5 +82,5 @@
   justify-content: center;
   align-items: center;
   background-color: var(--main-text-color-alpha);
-  z-index: 1;
+  z-index: 2;
 }

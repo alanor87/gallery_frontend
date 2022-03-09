@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Checkbox, Button, Tag, Spinner } from "components/elements";
+import { ToggleButton, Button, Tag, Spinner } from "components/elements";
 import TagEditor from "components/TagEditor";
 import store from "MST/store";
 import { NewImageInfoType } from "types/images";
@@ -109,24 +109,22 @@ const ModalShare: React.FC<ModalWindowProps> = ({
           <h2>Sharing options</h2>
           <div className={styles.optionsWrapper}>
             <div className={styles.option}>
-              <Checkbox
-                className={styles.shareModalCheckbox}
-                onChange={publicStateChangeHandler}
+              Make the image public
+              <ToggleButton
                 isChecked={isPublicState}
+                toggleHandler={publicStateChangeHandler}
+                className={styles.modalShareToggleBtn}
               />
-              Make the image public.
             </div>
             <div className={styles.option}>
-              <p className={styles.openedTo}>Is opened to users : </p>
-              {newOpenedToList.map((entry, index) => (
-                <Tag key={index} tagValue={entry} />
-              ))}
-              <Button
-                className={styles.addUserBtn}
-                text="Edit"
-                title="Edit list of users with acces to this image"
-                icon="icon_edit"
-                onClick={openToOverlayOpenHandler}
+              Is opened to users
+              {newOpenedToList.length ? (
+                <span className="footnote">users available</span>
+              ) : null}
+              <ToggleButton
+                isChecked={openedToOverlayIsOpen}
+                toggleHandler={setOpenedToOverlayIsOpen}
+                className={styles.modalShareToggleBtn}
               />
             </div>
           </div>

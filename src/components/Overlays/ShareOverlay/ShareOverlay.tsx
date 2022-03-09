@@ -121,7 +121,7 @@ const ShareOverlay: React.FC<Props> = ({
     }
   };
 
-  const shareLinkCopyHandler = () => {
+  const shareLinkCopyHandler = (e: React.SyntheticEvent) => {
     navigator.clipboard.writeText(
       backendUrl + "/public/standaloneShare/" + _id
     );
@@ -175,7 +175,7 @@ const ShareOverlay: React.FC<Props> = ({
           />
         </div>
         <div className={styles.option}>
-          Generate QR code link
+          Show QR code link
           <ToggleButton
             isChecked={qrIsOpen}
             toggleHandler={qrIsOpenToggleHandler}
@@ -192,7 +192,7 @@ const ShareOverlay: React.FC<Props> = ({
         <div className={styles.qrWrapper} onClick={qrIsOpenToggleHandler}>
           <QRCode
             value={backendUrl + "/public/standaloneShare/" + _id}
-            size={200}
+            size={300}
           />
         </div>
       )}
