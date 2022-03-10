@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import QRCode from "react-qr-code";
 import store from "../../../MST/store";
 import TagEditor from "../../TagEditor";
-import { Button, ToggleButton } from "../../elements";
+import { Button, Icon, ToggleButton } from "../../elements";
 import { ImageOpenedToUserEntry } from "types/common";
 import { popupNotice } from "utils/popupNotice";
 import styles from "./ShareOverlay.module.scss";
@@ -132,12 +132,46 @@ const ShareOverlay: React.FC<Props> = ({
     setQrIsOpen(!qrIsOpen);
   };
 
+  const socialShareButtonClickHandler = (socialNetwork: string) => () => {
+    let socialNetShareUrl;
+    switch (socialNetwork) {
+      case "facebook": {
+        socialNetShareUrl =
+          "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgallery-app-mj.herokuapp.com%2Fapi%2Fv1%2Fpublic%2FstandaloneShare%2F61ebf765d3bf528a0b26ef97&amp;src=sdkpreparse";
+        break;
+      }
+    }
+    window.open(socialNetShareUrl, "_blank", "popup=1");
+  };
+
   return (
     <div className={`imageCardOverlay`}>
       <div className={`${styles.shareOverlay}`}>
         <p className={`imageCardOverlay-title ${styles.shareOverlayTitle}`}>
           Image share options
         </p>
+        <div className={styles.option}>
+          <div className={styles.socialNetWrapper}>
+            {" "}
+            <div
+              data-href="https://gallery-app-mj.herokuapp.com/api/v1/public/standaloneShare/61ebf765d3bf528a0b26ef97"
+              data-layout="button"
+              data-size="small"
+              onClick={socialShareButtonClickHandler("facebook")}
+            >
+              <Icon iconName="icon_social_facebook" side={30} />
+            </div>
+            <div>
+              <Icon iconName="icon_social_twitter" side={30} />
+            </div>
+            <div>
+              <Icon iconName="icon_social_instagram" side={30} />
+            </div>
+            <div>
+              <Icon iconName="icon_social_pinterest" side={30} />
+            </div>
+          </div>
+        </div>
         <div className={styles.option}>
           Make the image public
           <ToggleButton

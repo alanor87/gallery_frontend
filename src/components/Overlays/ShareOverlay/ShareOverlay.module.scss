@@ -40,6 +40,7 @@
     padding: 0 3px;
     background-color: var(--main-background-color-alpha);
     overflow-wrap: anywhere;
+    cursor: pointer;
   }
 
   .buttonWrapper {
@@ -70,6 +71,12 @@
   button {
     font-size: 22px;
   }
+}
+
+.socialNetWrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
 }
 
 .qrWrapper {
