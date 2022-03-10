@@ -1,6 +1,7 @@
 .shareOverlay {
   position: relative;
   width: 100%;
+  height: 100%;
   display: block;
   padding: 5px 10px 5px 8px;
   overflow-y: auto;
@@ -11,7 +12,7 @@
     align-items: baseline;
     flex-wrap: wrap;
     &:not(:last-child) {
-      margin-bottom: 7px;
+      margin-bottom: 10px;
     }
   }
 

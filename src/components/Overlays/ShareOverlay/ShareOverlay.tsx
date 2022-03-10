@@ -31,6 +31,7 @@ const ShareOverlay: React.FC<Props> = ({
   const initialOpenedToEntries: ImageOpenedToUserEntry[] = openedTo.map(
     (name) => ({ name, action: "none" })
   );
+  const standaloneImageLink = backendUrl + "/public/standaloneShare/" + _id;
 
   const [isPublicState, setIsPublicState] = useState(isPublic);
   const [isSharedByLinkState, setIsSharedByLinkState] = useState(sharedByLink);
@@ -122,9 +123,7 @@ const ShareOverlay: React.FC<Props> = ({
   };
 
   const shareLinkCopyHandler = (e: React.SyntheticEvent) => {
-    navigator.clipboard.writeText(
-      backendUrl + "/public/standaloneShare/" + _id
-    );
+    navigator.clipboard.writeText(standaloneImageLink);
     popupNotice("Sharing link copied to clipboard.");
   };
 
@@ -136,8 +135,11 @@ const ShareOverlay: React.FC<Props> = ({
     let socialNetShareUrl;
     switch (socialNetwork) {
       case "facebook": {
-        socialNetShareUrl =
-          "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgallery-app-mj.herokuapp.com%2Fapi%2Fv1%2Fpublic%2FstandaloneShare%2F61ebf765d3bf528a0b26ef97&amp;src=sdkpreparse";
+        socialNetShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${standaloneImageLink}&amp;src=sdkpreparse`;
+        break;
+      }
+      case "twitter": {
+        socialNetShareUrl = `https://twitter.com/intent/tweet?url=${standaloneImageLink}`;
         break;
       }
     }
@@ -147,21 +149,14 @@ const ShareOverlay: React.FC<Props> = ({
   return (
     <div className={`imageCardOverlay`}>
       <div className={`${styles.shareOverlay}`}>
-        <p className={`imageCardOverlay-title ${styles.shareOverlayTitle}`}>
-          Image share options
-        </p>
         <div className={styles.option}>
           <div className={styles.socialNetWrapper}>
             {" "}
-            <div
-              data-href="https://gallery-app-mj.herokuapp.com/api/v1/public/standaloneShare/61ebf765d3bf528a0b26ef97"
-              data-layout="button"
-              data-size="small"
-              onClick={socialShareButtonClickHandler("facebook")}
-            >
+            <div onClick={socialShareButtonClickHandler("facebook")}>
               <Icon iconName="icon_social_facebook" side={30} />
             </div>
-            <div>
+            <div onClick={socialShareButtonClickHandler("twitter")}>
+              {" "}
               <Icon iconName="icon_social_twitter" side={30} />
             </div>
             <div>
@@ -224,10 +219,7 @@ const ShareOverlay: React.FC<Props> = ({
       </div>{" "}
       {qrIsOpen && (
         <div className={styles.qrWrapper} onClick={qrIsOpenToggleHandler}>
-          <QRCode
-            value={backendUrl + "/public/standaloneShare/" + _id}
-            size={300}
-          />
+          <QRCode value={standaloneImageLink} size={300} />
         </div>
       )}
       {openedToOverlayIsOpen && (
