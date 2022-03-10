@@ -76,8 +76,20 @@
 
 .socialNetWrapper {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   flex-grow: 1;
+
+  &.disabled {
+    pointer-events: none;
+    filter: grayscale(1);
+  }
+}
+
+.socialNetButton {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
 }
 
 .qrWrapper {

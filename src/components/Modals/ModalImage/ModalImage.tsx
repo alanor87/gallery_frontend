@@ -348,6 +348,7 @@ const ModalImage = () => {
           isPublic={currentModalImage.imageInfo.isPublic}
           openedTo={currentModalImage.imageInfo.openedTo}
           sharedByLink={currentModalImage.imageInfo.sharedByLink}
+          imageURL={currentModalImage.imageURL}
           setIsLoading={setimgInfoIsLoading}
           onCloseShareOverlay={shareOverlayCloseHandler}
         />

@@ -29,7 +29,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
   const { userName, userIsAuthenticated } = store.userSettings;
   const { setModalOpen, setModalComponentType, setModalImageId } =
     store.modalWindowsSettings;
-  const { _id, smallImageURL, imageInfo, toggleSelectImage } = image;
+  const { _id, imageURL, smallImageURL, imageInfo, toggleSelectImage } = image;
   const { tags, likes, openedTo, sharedByLink, isPublic } = imageInfo;
 
   const [deleteOverlayIsOpen, setDeleteOverlayIsOpen] = useState(false);
@@ -247,6 +247,7 @@ const ImageCard: React.FC<Props> = ({ image, isSelected, groupSelectMode }) => {
               isPublic={isPublic}
               openedTo={openedTo}
               sharedByLink={sharedByLink}
+              imageURL={imageURL}
               onCloseShareOverlay={shareOverlayCloseHandler}
               setIsLoading={setimgInfoIsLoading}
             />

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import QRCode from "react-qr-code";
 import store from "../../../MST/store";
 import TagEditor from "../../TagEditor";
-import { Button, Icon, ToggleButton } from "../../elements";
+import { Button, ToggleButton } from "../../elements";
 import { ImageOpenedToUserEntry } from "types/common";
 import { popupNotice } from "utils/popupNotice";
 import styles from "./ShareOverlay.module.scss";
@@ -12,6 +12,7 @@ interface Props {
   isPublic: boolean;
   openedTo: string[];
   sharedByLink: boolean;
+  imageURL: string;
   onCloseShareOverlay: () => void;
   setIsLoading: (value: boolean) => void;
 }
@@ -21,6 +22,7 @@ const ShareOverlay: React.FC<Props> = ({
   isPublic,
   openedTo,
   sharedByLink,
+  imageURL,
   onCloseShareOverlay,
   setIsLoading,
 }) => {
@@ -142,6 +144,10 @@ const ShareOverlay: React.FC<Props> = ({
         socialNetShareUrl = `https://twitter.com/intent/tweet?url=${standaloneImageLink}`;
         break;
       }
+      case "pinterest": {
+        socialNetShareUrl = `https://www.pinterest.com/pin/create/button/?url=${standaloneImageLink}&media=https%3A%2F%2Fres.cloudinary.com%2Fnone-for-now%2Fimage%2Fupload%2Fv1643458727%2Fuser_61b1017e775fd9b7f6acb36b%2Fvspcpdjvhmcdb1m2jsza.png&description=Next%20stop%3A%20Pinterest`;
+        break;
+      }
     }
     window.open(socialNetShareUrl, "_blank", "popup=1");
   };
@@ -149,24 +155,6 @@ const ShareOverlay: React.FC<Props> = ({
   return (
     <div className={`imageCardOverlay`}>
       <div className={`${styles.shareOverlay}`}>
-        <div className={styles.option}>
-          <div className={styles.socialNetWrapper}>
-            {" "}
-            <div onClick={socialShareButtonClickHandler("facebook")}>
-              <Icon iconName="icon_social_facebook" side={30} />
-            </div>
-            <div onClick={socialShareButtonClickHandler("twitter")}>
-              {" "}
-              <Icon iconName="icon_social_twitter" side={30} />
-            </div>
-            <div>
-              <Icon iconName="icon_social_instagram" side={30} />
-            </div>
-            <div>
-              <Icon iconName="icon_social_pinterest" side={30} />
-            </div>
-          </div>
-        </div>
         <div className={styles.option}>
           Make the image public
           <ToggleButton
@@ -202,6 +190,35 @@ const ShareOverlay: React.FC<Props> = ({
             toggleHandler={sharedByLinkStateToggleHandler}
             className={styles.shareOverlayToggleBtn}
           />
+        </div>
+        <div className={styles.option}>
+          <div
+            className={
+              isSharedByLinkState
+                ? styles.socialNetWrapper
+                : styles.socialNetWrapper + " " + styles.disabled
+            }
+          >
+            {" "}
+            <Button
+              className={styles.socialNetButton}
+              onClick={socialShareButtonClickHandler("facebook")}
+              icon="icon_social_facebook"
+              iconSize={30}
+            />
+            <Button
+              className={styles.socialNetButton}
+              onClick={socialShareButtonClickHandler("twitter")}
+              icon="icon_social_twitter"
+              iconSize={30}
+            />
+            <Button
+              className={styles.socialNetButton}
+              onClick={socialShareButtonClickHandler("pinterest")}
+              icon="icon_social_pinterest"
+              iconSize={30}
+            />
+          </div>
         </div>
         <div className={styles.option}>
           Show QR code link
