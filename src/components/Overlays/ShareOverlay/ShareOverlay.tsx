@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import QRCode from "react-qr-code";
 import store from "../../../MST/store";
 import TagEditor from "../../TagEditor";
@@ -126,11 +126,6 @@ const ShareOverlay: React.FC<Props> = ({
       },
     ]);
     setIsSharedByLinkState(value);
-    // if (value) {
-    //   popupNotice("Sharing link was created. Click accept to activate it.");
-    // } else {
-    //   popupNotice("Sharing link was removed. Click accept to deactivate it.");
-    // }
     setIsLoading(false);
   };
 
@@ -155,7 +150,7 @@ const ShareOverlay: React.FC<Props> = ({
         break;
       }
       case "pinterest": {
-        socialNetShareUrl = `https://www.pinterest.com/pin/create/button/?url=${standaloneImageLink}&media=https%3A%2F%2Fres.cloudinary.com%2Fnone-for-now%2Fimage%2Fupload%2Fv1643458727%2Fuser_61b1017e775fd9b7f6acb36b%2Fvspcpdjvhmcdb1m2jsza.png&description=Next%20stop%3A%20Pinterest`;
+        socialNetShareUrl = `https://www.pinterest.com/pin/create/button/?url=${standaloneImageLink}&media=${standaloneImageLink}&description=Next%20stop%3A%20Pinterest`;
         break;
       }
     }
