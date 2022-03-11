@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import store from "../../../MST/store";
 import TagEditor from "../../TagEditor";
@@ -115,13 +115,23 @@ const ShareOverlay: React.FC<Props> = ({
       .filter((entry) => entry.action !== "remove")
       .map((entry) => entry.name);
 
-  const sharedByLinkStateToggleHandler = (value: boolean) => {
+  const sharedByLinkStateToggleHandler = async (value: boolean) => {
+    setIsLoading(true);
+    await editImagesInfo([
+      {
+        _id,
+        imageInfo: {
+          sharedByLink: value,
+        },
+      },
+    ]);
     setIsSharedByLinkState(value);
-    if (value) {
-      popupNotice("Sharing link was created. Click accept to activate it.");
-    } else {
-      popupNotice("Sharing link was removed. Click accept to deactivate it.");
-    }
+    // if (value) {
+    //   popupNotice("Sharing link was created. Click accept to activate it.");
+    // } else {
+    //   popupNotice("Sharing link was removed. Click accept to deactivate it.");
+    // }
+    setIsLoading(false);
   };
 
   const shareLinkCopyHandler = (e: React.SyntheticEvent) => {

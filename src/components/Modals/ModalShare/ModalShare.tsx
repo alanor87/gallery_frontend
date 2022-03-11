@@ -25,9 +25,6 @@ const ModalShare: React.FC<ModalWindowProps> = ({
   } = store.imagesStoreSettings;
   const { userName, checkIfUserExistsByName } = store.userSettings;
 
-  const openToOverlayOpenHandler = () => {
-    setOpenedToOverlayIsOpen(true);
-  };
   const openToOverlayCloseHandler = () => {
     setOpenedToOverlayIsOpen(false);
   };
