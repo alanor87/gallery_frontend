@@ -150,7 +150,7 @@ const ShareOverlay: React.FC<Props> = ({
         break;
       }
       case "pinterest": {
-        socialNetShareUrl = `https://www.pinterest.com/pin/create/button/?url=${standaloneImageLink}&media=${standaloneImageLink}&description=Next%20stop%3A%20Pinterest`;
+        socialNetShareUrl = `https://www.pinterest.com/pin/create/button/?url=${standaloneImageLink}&media=${imageURL}&description=Next%20stop%3A%20Pinterest`;
         break;
       }
     }
