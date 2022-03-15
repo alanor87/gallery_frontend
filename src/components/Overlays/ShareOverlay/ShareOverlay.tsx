@@ -112,8 +112,8 @@ const ShareOverlay: React.FC<Props> = ({
   };
 
   // The link sharing is being activated or deactivated as soon as the toggle button is presses.
-  // Therefore - if its state was changed, but afterwards user decided to discard allchanges with Cancel button -
-  // the link sharing state is reset to the state that it had initially on the share overlay opening.
+  // Therefore - if its state was changed, but afterwards user decided to discard all changes with Cancel button -
+  // the link sharing state is being reset to the state that it initially had on the share overlay opening.
   const closeOverlayHandler = async () => {
     if (isSharedByLinkState !== initialSharedByLinkState.current) {
       setIsLoading(true);
