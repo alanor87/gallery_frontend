@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import QRCode from "react-qr-code";
 import store from "../../../MST/store";
 import TagEditor from "../../TagEditor";
@@ -36,6 +36,7 @@ const ShareOverlay: React.FC<Props> = ({
   const standaloneImageLink = backendUrl + "/public/standaloneShare/" + _id;
 
   const [isPublicState, setIsPublicState] = useState(isPublic);
+  const initialSharedByLinkState = useRef(sharedByLink);
   const [isSharedByLinkState, setIsSharedByLinkState] = useState(sharedByLink);
   const [openedToEntriesList, setOpenedToEntriesList] = useState(
     initialOpenedToEntries
@@ -108,6 +109,25 @@ const ShareOverlay: React.FC<Props> = ({
     await imagesMultiuserShare([_id], openedToEntriesList);
     onCloseShareOverlay();
     setIsLoading(false);
+  };
+
+  // The link sharing is being activated or deactivated as soon as the toggle button is presses.
+  // Therefore - if its state was changed, but afterwards user decided to discard allchanges with Cancel button -
+  // the link sharing state is reset to the state that it had initially on the share overlay opening.
+  const closeOverlayHandler = async () => {
+    if (isSharedByLinkState !== initialSharedByLinkState.current) {
+      setIsLoading(true);
+      await editImagesInfo([
+        {
+          _id,
+          imageInfo: {
+            sharedByLink: initialSharedByLinkState.current,
+          },
+        },
+      ]);
+      setIsLoading(false);
+    }
+    onCloseShareOverlay();
   };
 
   const getOpenegToNamesList = () =>
@@ -236,21 +256,21 @@ const ShareOverlay: React.FC<Props> = ({
         </div>
         <div className={styles.buttonWrapper}>
           <Button type="button" text="Accept" onClick={acceptChangesHandler} />
-          <Button type="button" text="Cancel" onClick={onCloseShareOverlay} />
-        </div>
+          <Button type="button" text="Cancel" onClick={closeOverlayHandler} />
+        </div>{" "}
+        {openedToOverlayIsOpen && (
+          <TagEditor
+            tags={getOpenegToNamesList()}
+            closeHandle={openToOverlayCloseHandler}
+            onTagDelete={userDelHandler}
+            onAddTags={userAddHandler}
+          />
+        )}
       </div>{" "}
       {qrIsOpen && (
         <div className={styles.qrWrapper} onClick={qrIsOpenToggleHandler}>
           <QRCode value={standaloneImageLink} size={300} />
         </div>
-      )}
-      {openedToOverlayIsOpen && (
-        <TagEditor
-          tags={getOpenegToNamesList()}
-          closeHandle={openToOverlayCloseHandler}
-          onTagDelete={userDelHandler}
-          onAddTags={userAddHandler}
-        />
       )}
     </div>
   );

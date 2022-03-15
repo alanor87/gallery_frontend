@@ -37,7 +37,7 @@ const TagEditor: React.FC<Props> = ({
   };
 
   return (
-    <div className={`imageCardOverlay ${styles.tagEditor}`}>
+    <div className="tagEditor">
       <div className={styles.tagInputForm}>
         <Button
           type="button"
@@ -56,7 +56,7 @@ const TagEditor: React.FC<Props> = ({
         />
         <Button
           type="button"
-          className={styles.tagEditorInputFormBtn}
+          className={styles.inputFormBtn}
           title="Add tag"
           icon="icon_plus"
           onClick={addTag}

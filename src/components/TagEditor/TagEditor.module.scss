@@ -1,18 +1,17 @@
-.tagEditor {
+:global(.tagEditor) {
   display: block;
   height: 100%;
   padding: 3px;
   background-color: rgba(22, 22, 22, 0.6);
   border-radius: 5px;
   z-index: 1;
-
-  &InputFormBtn {
-    border: none;
-    border-radius: 50%;
-    background-color: var(--color-accent);
-    padding: 1px;
-    cursor: pointer;
-  }
+}
+.inputFormBtn {
+  border: none;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  padding: 1px;
+  cursor: pointer;
 }
 
 .tagInputForm {
@@ -40,5 +39,12 @@
 
   @media screen and (max-width: 800px) {
     flex-grow: 1;
+  }
+}
+
+:global(.modalBackdrop) {
+  .tagEditor {
+    max-width: 600px;
+    margin: 0 auto;
   }
 }
