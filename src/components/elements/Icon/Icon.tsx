@@ -8,7 +8,10 @@ interface Props {
 
 function Icon({ iconName, className, side = 20 }: Props) {
   return (
-    <svg className={className} style={{ width: side, height: side }}>
+    <svg
+      className={className}
+      style={{ display: "block", width: side, height: side }}
+    >
       <use href={sprite + "#" + iconName} />
     </svg>
   );

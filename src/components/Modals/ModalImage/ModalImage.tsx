@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Spinner, Button } from "components/elements";
+import { Spinner, Button, Icon } from "components/elements";
 import TagList from "components/TagList";
 import ImageMenu from "components/ImageMenu";
 import ShareOverlay from "components/Overlays/ShareOverlay";
@@ -34,6 +34,7 @@ const ModalImage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState<Number>();
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
   const [imageIsLoading, setImageIsLoading] = useState(true);
+  const [imageExpand, setimageExpand] = useState(false);
   const [modalImageLikes, setModalImageLikes] = useState<string[]>([]);
   const [tagEditorIsOpen, setTagEditorIsOpen] = useState(false);
   const [shareOverlayIsOpen, setShareOverlayIsOpen] = useState(false);
@@ -154,6 +155,10 @@ const ModalImage = () => {
     setModalImageLikes(newLikesList);
   };
 
+  const nonImagePartToggleHandler = () => {
+    setimageExpand(!imageExpand);
+  };
+
   const tagEditOpenHandler = () => {
     setTagEditorIsOpen(true);
   };
@@ -200,18 +205,61 @@ const ModalImage = () => {
   };
 
   const isUserMode = getCurrentGalleryMode === "userGallery";
-
   return currentModalImage ? (
     <div className={styles.modalImage}>
-      <div className={styles.imagePart}>
+      <div
+        className={
+          imageExpand
+            ? styles.imagePart + " " + styles.expanded
+            : styles.imagePart
+        }
+      >
+        <div className={styles.imageControls}>
+          <Button
+            icon="icon_fullscreen"
+            title="Expand/shrink image"
+            iconSize={20}
+            onClick={nonImagePartToggleHandler}
+          />
+          {userIsAuthenticated && isUserMode && (
+            <ImageMenu
+              modalImageMode={true}
+              onShare={shareOverlayOpenHandler}
+              onDelete={deleteOverlayOpenHandler}
+            />
+          )}
+        </div>
+        <div className={styles.imageNav}>
+          <Button
+            className={styles.navButton}
+            type="button"
+            title="Previous image"
+            icon="icon_arrow_left"
+            iconSize={30}
+            onClick={adjacentImageLoad("prev")}
+            disabled={currentImageIndex === 0}
+          />
+          <Button
+            className={styles.navButton}
+            type="button"
+            title="Previous image"
+            icon="icon_arrow_right"
+            iconSize={30}
+            onClick={adjacentImageLoad("next")}
+            disabled={currentImageIndex === currentImagesIdList.length - 1}
+          />
+        </div>
         {imageIsLoading && <Spinner side={50} />}
         {!imgInfoIsLoading && (
-          <img
-            src={currentModalImage?.imageURL}
-            alt={"God save the queen!"}
-            onLoad={onImageLoad}
-            style={{ visibility: !imageIsLoading ? "visible" : "hidden" }}
-          />
+          <div className={styles.imageWrapper}>
+            {" "}
+            <img
+              src={currentModalImage?.imageURL}
+              alt={"God save the queen!"}
+              onLoad={onImageLoad}
+              style={{ visibility: !imageIsLoading ? "visible" : "hidden" }}
+            />
+          </div>
         )}
       </div>
 
@@ -250,7 +298,6 @@ const ModalImage = () => {
               />
               {userIsAuthenticated && isUserMode && (
                 <ImageMenu
-                  className={styles.modalImageMenu}
                   modalImageMode={true}
                   onShare={shareOverlayOpenHandler}
                   onDelete={deleteOverlayOpenHandler}

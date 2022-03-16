@@ -3,6 +3,10 @@
   display: flex;
   width: 100%;
 
+  :global(.imageCardOverlay) {
+    z-index: 2;
+  }
+
   @media screen and(max-width: 900px) {
     position: absolute;
     display: block;
@@ -13,115 +17,186 @@
       position: fixed;
     }
   }
+}
 
-  .imagePart {
-    position: relative;
-    width: 75%;
-    height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    overflow-y: scroll;
+.imagePart {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 75%;
+  height: 100vh;
+  overflow-x: hidden;
+  transition: width 250ms linear;
+  z-index: 1;
+
+  @media screen and(max-width: 900px) {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow-y: auto;
 
     img {
       width: 100%;
       height: auto;
+      min-height: 200px;
     }
-    @media screen and(max-width: 900px) {
-      width: auto;
-      height: auto;
-      overflow-y: auto;
+  }
 
-      img {
-        width: 100%;
-        height: auto;
-        min-height: 200px;
+  &.expanded {
+    width: 100%;
+  }
+
+  .imageWrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    overflow-y: auto;
+
+    @media screen and(max-width: 900px) {
+      position: static;
+    }
+  }
+
+  .imageNav {
+    position: absolute;
+    bottom: 50%;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 20px 0 10px;
+    opacity: 0;
+    transition: opacity 250ms linear;
+    z-index: 1;
+    @media screen and(max-width: 900px) {
+      display: none;
+    }
+  }
+
+  .imageControls {
+    position: absolute;
+    top: 12px;
+    right: 50%;
+    display: flex;
+    opacity: 0;
+    transition: opacity 250ms linear;
+    transform: translateX(50%);
+    z-index: 1;
+
+    @media screen and(max-width: 900px) {
+      display: none;
+    }
+  }
+
+  & button {
+    background-color: var(--color-accent);
+  }
+
+  &:hover .imageControls,
+  &:hover .imageNav {
+    opacity: 1;
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.nonImagePart {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 25%;
+  height: 100vh;
+  font-size: 20px;
+  overflow-y: auto;
+
+  @media screen and(max-width: 900px) {
+    position: static;
+  }
+
+  .modalImageHeader {
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    background-color: var(--main-background-color-alpha);
+
+    .imageTitleWrapper {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 2px 6px;
+
+      &::before {
+        content: "";
+        display: block;
+        width: 42px;
+      }
+
+      .modalImageLikeBtn {
+        position: absolute;
+        background-color: var(--color-accent);
+      }
+
+      h2 {
+        text-align: center;
       }
     }
   }
 
-  .nonImagePart {
-    position: relative;
-    width: 25%;
-    height: 100vh;
-    font-size: 20px;
-    overflow-y: auto;
-
-    .modalImageHeader {
-      position: sticky;
-      top: 0;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
-      padding-top: 10px;
-      background-color: var(--main-background-color-alpha);
-
-      .imageTitleWrapper {
-        position: relative;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-        padding: 2px 6px;
-
-        &::before {
-          content: "";
-          display: block;
-          width: 42px;
-        }
-
-        .modalImageLikeBtn {
-          position: absolute;
-          background-color: var(--color-accent);
-        }
-
-        h2 {
-          text-align: center;
-        }
-      }
-
-      .modalImageMenu {
-        width: 100%;
-        justify-content: space-around;
-        padding: 0 40px;
-        border-radius: 6px;
-        background-color: var(--main-background-color-alpha);
-      }
+  & :global(.imageMenu) {
+    display: flex;
+    width: 60%;
+    flex-direction: row;
+    justify-content: center;
+    border-radius: 6px;
+    background-color: var(--main-background-color-alpha);
+    & *:not(:last-child) {
+      margin-right: 20px;
     }
+  }
 
-    .modalControlsWrapper {
+  .modalControlsWrapper {
+    display: none;
+    @media screen and(max-width: 900px) {
       width: 100%;
       display: flex;
       justify-content: space-around;
       padding: 0 6px;
     }
+  }
 
-    .navButton {
-      color: var(--main-text-color);
-      background-color: var(--color-accent);
-    }
+  .navButton {
+    color: var(--main-text-color);
+    background-color: var(--color-accent);
+  }
 
-    .tagListWrapper {
-      margin-bottom: 15px;
-    }
+  .tagListWrapper {
+    margin-bottom: 15px;
+  }
 
-    .description {
-      padding: 0 11px;
-      p {
-        &::first-letter {
-          font-size: 19px;
-        }
-        text-indent: 10px;
+  .description {
+    padding: 0 11px;
+    p {
+      &::first-letter {
+        font-size: 19px;
       }
+      text-indent: 10px;
     }
+  }
 
-    @media screen and(max-width: 900px) {
-      position: static;
-      width: auto;
-      height: auto;
-      overflow-y: unset;
-    }
+  @media screen and(max-width: 900px) {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow-y: unset;
   }
 }

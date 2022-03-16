@@ -25,7 +25,7 @@ const ImageMenu: React.FC<Props> = ({
   const { toggleSelectAllImages, selectedImages } = store.imagesStoreSettings;
   const buttonsTabIndex = isOpened ? 0 : -1;
   return (
-    <div className={`${styles.imageMenuWrapper} ${className}`}>
+    <div className={"imageMenu" + (className ? className : "")}>
       {!modalImageMode && (
         <Button
           className={styles.imageMenuButton}
