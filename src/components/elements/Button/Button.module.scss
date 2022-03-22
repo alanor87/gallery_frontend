@@ -17,13 +17,9 @@
   }
 }
 
-.disabled {
-  opacity: 0.5;
-
-  &:hover {
-    border-color: var(--color-border-main);
-    cursor: default;
-  }
+:global(.disabled):hover {
+  border-color: var(--color-border-main);
+  cursor: default;
 }
 
 .buttonIcon {

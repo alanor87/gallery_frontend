@@ -1,4 +1,5 @@
 import React from "react";
+import { inherits } from "util";
 import Icon from "../Icon";
 import styles from "./Button.module.scss";
 
@@ -33,8 +34,9 @@ function Button({
   onBlur,
 }: ButtonProps) {
   const buttonClassName = disabled
-    ? styles.commonButton + " " + className + " " + styles.disabled
+    ? styles.commonButton + " " + className + " disabled"
     : styles.commonButton + " " + className;
+
   return (
     <button
       className={buttonClassName}
@@ -46,6 +48,7 @@ function Button({
       title={title}
       aria-label={title}
       tabIndex={tabIndex}
+      style={disabled ? { opacity: 0.5 } : {}}
     >
       {icon && (
         <span

@@ -6,6 +6,18 @@
   :global(.imageCardOverlay) {
     z-index: 2;
   }
+  :global(.closeBtn) {
+    &.mobile {
+      display: none;
+    }
+    &.desktop {
+      display: block;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+    }
+  }
 
   @media screen and(max-width: 900px) {
     position: absolute;
@@ -15,6 +27,15 @@
 
     :global(.imageCardOverlay) {
       position: fixed;
+    }
+
+    :global(.closeBtn) {
+      &.mobile {
+        display: block;
+      }
+      &.desktop {
+        display: none;
+      }
     }
   }
 }
@@ -58,19 +79,25 @@
     }
   }
 
-  .imageNav {
+  .navButtonPrev,
+  .navButtonNext {
     position: absolute;
-    bottom: 50%;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0 20px 0 10px;
+    top: 50%;
     opacity: 0;
     transition: opacity 250ms linear;
     z-index: 1;
+
     @media screen and(max-width: 900px) {
       display: none;
     }
+  }
+
+  .navButtonPrev {
+    left: 10px;
+  }
+
+  .navButtonNext {
+    right: 20px;
   }
 
   .imageControls {
@@ -93,7 +120,8 @@
   }
 
   &:hover .imageControls,
-  &:hover .imageNav {
+  &:hover .navButtonPrev,
+  &:hover .navButtonNext {
     opacity: 1;
   }
 
@@ -131,6 +159,7 @@
       width: 100%;
       display: flex;
       justify-content: space-between;
+      align-items: flex-start;
       align-items: center;
       margin-bottom: 10px;
       padding: 2px 6px;
@@ -141,8 +170,19 @@
         width: 42px;
       }
 
+      &::after {
+        content: "";
+        display: block;
+        width: 32px;
+        @media screen and(max-width: 900px) {
+          display: none;
+        }
+      }
+
       .modalImageLikeBtn {
         position: absolute;
+        top: 0;
+        left: 0;
         background-color: var(--color-accent);
       }
 

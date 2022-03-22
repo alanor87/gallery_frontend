@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import { Spinner, Button, Icon } from "components/elements";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Spinner, Button } from "components/elements";
 import TagList from "components/TagList";
 import ImageMenu from "components/ImageMenu";
 import ShareOverlay from "components/Overlays/ShareOverlay";
@@ -22,8 +22,14 @@ const ModalImage = () => {
     currentPage,
     setCurrentPage,
   } = store.imagesStoreSettings;
-  const { modalImageId, setModalImageId, setModalOpen, setModalComponentType } =
-    store.modalWindowsSettings;
+  const {
+    modalImageId,
+    setModalImageId,
+    setModalOpen,
+    setModalComponentType,
+    imageIsExpanded,
+    setImageIsExpanded,
+  } = store.modalWindowsSettings;
   const { userIsAuthenticated, userName, userOwnedImages, userOpenedToImages } =
     store.userSettings;
 
@@ -34,11 +40,12 @@ const ModalImage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState<Number>();
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
   const [imageIsLoading, setImageIsLoading] = useState(true);
-  const [imageExpand, setimageExpand] = useState(false);
+  const [imageExpand, setimageExpand] = useState(imageIsExpanded);
   const [modalImageLikes, setModalImageLikes] = useState<string[]>([]);
   const [tagEditorIsOpen, setTagEditorIsOpen] = useState(false);
   const [shareOverlayIsOpen, setShareOverlayIsOpen] = useState(false);
   const [deleteOverlayIsOpen, setDeleteOverlayIsOpen] = useState(false);
+  const modalImageRef = useRef<HTMLDivElement>(null);
 
   const loadModalImage = useCallback(async () => {
     setImageIsLoading(true);
@@ -93,8 +100,8 @@ const ModalImage = () => {
   };
 
   // Accepts the direction - if the previous or next image btn was clicked, and defines if
-  // the current image is still among those that are on the current page - therefere -
-  // in the current images object in imagesStoreSettings. If it is not - the new page request
+  // the current image is still among those that are on the current page - therefore -
+  // in the current images array in imagesStoreSettings. If it is not - the new page request
   // is initiated - either previous one or the next one, if the current page is NOT first one
   // or last one, respectively.
   const pageShiftCheck = (direction: string, id: string) => {
@@ -141,6 +148,21 @@ const ModalImage = () => {
     setModalImageId(currentImagesIdList[adjacentImageIndex]);
   };
 
+  const arrowImageNav = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    switch (e.key) {
+      case "ArrowLeft": {
+        if (currentImageIndex === 0) break;
+        adjacentImageLoad("prev")();
+        break;
+      }
+      case "ArrowRight": {
+        if (currentImageIndex === currentImagesIdList.length - 1) break;
+        adjacentImageLoad("next")();
+        break;
+      }
+    }
+  };
+
   const toggleLikeHandler = async () => {
     const { _id } = currentModalImage!;
     let newLikesList: string[] = [];
@@ -155,7 +177,8 @@ const ModalImage = () => {
     setModalImageLikes(newLikesList);
   };
 
-  const nonImagePartToggleHandler = () => {
+  const imageExpandHandler = () => {
+    setImageIsExpanded(!imageExpand);
     setimageExpand(!imageExpand);
   };
 
@@ -202,11 +225,21 @@ const ModalImage = () => {
   const modalImageCloseHandle = () => {
     setModalOpen(false);
     setModalComponentType("none");
+    setImageIsExpanded(false);
   };
 
   const isUserMode = getCurrentGalleryMode === "userGallery";
   return currentModalImage ? (
-    <div className={styles.modalImage}>
+    <div
+      className={styles.modalImage}
+      onKeyDown={arrowImageNav}
+      tabIndex={0}
+      ref={modalImageRef}
+      onLoad={() => {
+        modalImageRef.current?.focus();
+        console.log("modalImageRef.current : ", modalImageRef.current?.focus);
+      }}
+    >
       <div
         className={
           imageExpand
@@ -219,7 +252,7 @@ const ModalImage = () => {
             icon="icon_fullscreen"
             title="Expand/shrink image"
             iconSize={20}
-            onClick={nonImagePartToggleHandler}
+            onClick={imageExpandHandler}
           />
           {userIsAuthenticated && isUserMode && (
             <ImageMenu
@@ -229,26 +262,24 @@ const ModalImage = () => {
             />
           )}
         </div>
-        <div className={styles.imageNav}>
-          <Button
-            className={styles.navButton}
-            type="button"
-            title="Previous image"
-            icon="icon_arrow_left"
-            iconSize={30}
-            onClick={adjacentImageLoad("prev")}
-            disabled={currentImageIndex === 0}
-          />
-          <Button
-            className={styles.navButton}
-            type="button"
-            title="Previous image"
-            icon="icon_arrow_right"
-            iconSize={30}
-            onClick={adjacentImageLoad("next")}
-            disabled={currentImageIndex === currentImagesIdList.length - 1}
-          />
-        </div>
+        <Button
+          className={styles.navButtonPrev}
+          type="button"
+          title="Previous image"
+          icon="icon_arrow_left"
+          iconSize={30}
+          onClick={adjacentImageLoad("prev")}
+          disabled={currentImageIndex === 0}
+        />
+        <Button
+          className={styles.navButtonNext}
+          type="button"
+          title="Next image"
+          icon="icon_arrow_right"
+          iconSize={30}
+          onClick={adjacentImageLoad("next")}
+          disabled={currentImageIndex === currentImagesIdList.length - 1}
+        />
         {imageIsLoading && <Spinner side={50} />}
         {!imgInfoIsLoading && (
           <div className={styles.imageWrapper}>
@@ -276,11 +307,11 @@ const ModalImage = () => {
                 disabled={!userIsAuthenticated}
                 title="Like / Dislike"
               />
-              <h2>Image title</h2>
+              <h2>{currentModalImage.imageInfo.title || "No title"}</h2>
               <Button
                 type="button"
-                title="Close tag editor"
-                className="closeBtn"
+                title="Close modal image"
+                className={"closeBtn " + styles.mobile}
                 icon="icon_close"
                 iconSize={30}
                 onClick={modalImageCloseHandle}
@@ -326,68 +357,20 @@ const ModalImage = () => {
               )}
             </div>
             <p>
-              Description of the image. Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Rerum accusamus hic distinctio nesciunt
-              temporibus accusantium aliquam quisquam eligendi eveniet enim
-              facilis nisi ad officiis qui, iusto blanditiis labore
-              exercitationem. Voluptatem consectetur molestiae nemo debitis
-              maiores ab tenetur, natus excepturi. Maiores ex hic assumenda
-              molestias rem minima laborum labore natus animi eum. Explicabo
-              ipsam temporibus molestias assumenda numquam officiis sint amet
-              placeat. Eos minus aliquam ratione illo dicta, distinctio a
-              adipisci, rerum hic ex pariatur corrupti odit sit nesciunt
-              accusamus! Minus sunt error sint? Est veritatis possimus nobis
-              placeat. Vel nostrum facilis soluta adipisci explicabo ratione
-              aliquam mollitia reprehenderit delectus neque.
-            </p>
-            <p>
-              Description of the image. Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Rerum accusamus hic distinctio nesciunt
-              temporibus accusantium aliquam quisquam eligendi eveniet enim
-              facilis nisi ad officiis qui, iusto blanditiis labore
-              exercitationem. Voluptatem consectetur molestiae nemo debitis
-              maiores ab tenetur, natus excepturi. Maiores ex hic assumenda
-              molestias rem minima laborum labore natus animi eum. Explicabo
-              ipsam temporibus molestias assumenda numquam officiis sint amet
-              placeat. Eos minus aliquam ratione illo dicta, distinctio a
-              adipisci, rerum hic ex pariatur corrupti odit sit nesciunt
-              accusamus! Minus sunt error sint? Est veritatis possimus nobis
-              placeat. Vel nostrum facilis soluta adipisci explicabo ratione
-              aliquam mollitia reprehenderit delectus neque.
-            </p>
-            <p>
-              Description of the image. Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Rerum accusamus hic distinctio nesciunt
-              temporibus accusantium aliquam quisquam eligendi eveniet enim
-              facilis nisi ad officiis qui, iusto blanditiis labore
-              exercitationem. Voluptatem consectetur molestiae nemo debitis
-              maiores ab tenetur, natus excepturi. Maiores ex hic assumenda
-              molestias rem minima laborum labore natus animi eum. Explicabo
-              ipsam temporibus molestias assumenda numquam officiis sint amet
-              placeat. Eos minus aliquam ratione illo dicta, distinctio a
-              adipisci, rerum hic ex pariatur corrupti odit sit nesciunt
-              accusamus! Minus sunt error sint? Est veritatis possimus nobis
-              placeat. Vel nostrum facilis soluta adipisci explicabo ratione
-              aliquam mollitia reprehenderit delectus neque.
-            </p>
-            <p>
-              Description of the image. Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Rerum accusamus hic distinctio nesciunt
-              temporibus accusantium aliquam quisquam eligendi eveniet enim
-              facilis nisi ad officiis qui, iusto blanditiis labore
-              exercitationem. Voluptatem consectetur molestiae nemo debitis
-              maiores ab tenetur, natus excepturi. Maiores ex hic assumenda
-              molestias rem minima laborum labore natus animi eum. Explicabo
-              ipsam temporibus molestias assumenda numquam officiis sint amet
-              placeat. Eos minus aliquam ratione illo dicta, distinctio a
-              adipisci, rerum hic ex pariatur corrupti odit sit nesciunt
-              accusamus! Minus sunt error sint? Est veritatis possimus nobis
-              placeat. Vel nostrum facilis soluta adipisci explicabo ratione
-              aliquam mollitia reprehenderit delectus neque.
+              {currentModalImage.imageInfo.description ||
+                "Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat. Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat."}
             </p>
           </div>
         </>
       </div>
+      <Button
+        type="button"
+        title="Close modal image"
+        className={"closeBtn " + styles.desktop}
+        icon="icon_close"
+        iconSize={30}
+        onClick={modalImageCloseHandle}
+      />
 
       {shareOverlayIsOpen && (
         <ShareOverlay

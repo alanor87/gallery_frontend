@@ -8,6 +8,7 @@ const modalSettings = types
       "none"
     ),
     modalIsOpened: types.optional(types.boolean, false),
+    imageIsExpanded: types.optional(types.boolean, false),
     modalImageId: types.optional(types.string, ""),
   })
   .actions((self) => {
@@ -20,10 +21,14 @@ const modalSettings = types
     const setModalImageId = (value: string) => {
       self.modalImageId = value;
     };
+    const setImageIsExpanded = (value: boolean) => {
+      self.imageIsExpanded = value;
+    };
     return {
       setModalOpen,
       setModalComponentType,
       setModalImageId,
+      setImageIsExpanded,
     };
   });
 

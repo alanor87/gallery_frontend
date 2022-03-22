@@ -30,6 +30,8 @@ const initialImageStoreSettings: InitialImageStoreSettings = {
 
 const ImageInfo = types
   .model({
+    title: types.optional(types.string, ""),
+    description: types.optional(types.string, ""),
     tags: types.optional(types.array(types.string), []),
     likes: types.optional(types.array(types.string), []),
     isLoading: types.optional(types.boolean, false),
