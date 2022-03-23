@@ -1,4 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { debounce } from "debounce";
+import cn from "classnames";
 import { Spinner, Button } from "components/elements";
 import TagList from "components/TagList";
 import ImageMenu from "components/ImageMenu";
@@ -40,23 +42,16 @@ const ModalImage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState<Number>();
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
   const [imageIsLoading, setImageIsLoading] = useState(true);
-  const [imageExpand, setimageExpand] = useState(imageIsExpanded);
+  const [imageExpand, setImageExpand] = useState(imageIsExpanded);
+  const [imageControlsVisible, setImageControlsVisible] = useState(false);
   const [modalImageLikes, setModalImageLikes] = useState<string[]>([]);
   const [tagEditorIsOpen, setTagEditorIsOpen] = useState(false);
   const [shareOverlayIsOpen, setShareOverlayIsOpen] = useState(false);
   const [deleteOverlayIsOpen, setDeleteOverlayIsOpen] = useState(false);
   const modalImageRef = useRef<HTMLDivElement>(null);
+  const imageWrapperRef = useRef<HTMLDivElement>(null);
 
-  const loadModalImage = useCallback(async () => {
-    setImageIsLoading(true);
-    setimgInfoIsLoading(true);
-    const newModalImage: any = await fetchImageById(modalImageId);
-    setModalImageLikes(newModalImage.imageInfo.likes);
-    setCurrentModalImage(newModalImage);
-    setimgInfoIsLoading(false);
-  }, [modalImageId, fetchImageById]);
-
-  useEffect(() => {
+  const imagesListInit = () => {
     // Defining the list of all image IDs that are available for the modal image browsing.
     // If there are no filtered images - then we take the imagesID list
     // from the appropriate list - depending on the gallery mode.
@@ -82,18 +77,44 @@ const ModalImage = () => {
     else {
       setCurrentImagesIdList(allFilteredImagesId);
     }
+  };
+
+  const loadModalImage = useCallback(async () => {
+    setImageIsLoading(true);
+    setimgInfoIsLoading(true);
+    const newModalImage: any = await fetchImageById(modalImageId);
+    setCurrentModalImage(newModalImage);
+    setModalImageLikes(newModalImage.imageInfo.likes);
+    setimgInfoIsLoading(false);
+  }, [modalImageId, fetchImageById]);
+
+  useEffect(() => {
+    // Initializing the list of imagesID for modal browsing.
+    imagesListInit();
   }, []);
 
   useEffect(() => {
+    // Loading current modal image.
     loadModalImage();
+    // Defining index of the current image in the list of imagesID.
     setCurrentImageIndex(currentImagesIdList.indexOf(modalImageId));
   }, [modalImageId, loadModalImage, currentImagesIdList]);
 
+  useEffect(() => {
+    // Focusing on the modalImage div, so the arrow navigation through keyDown event
+    // would be available. In case of the image being expanded - switching focus to the
+    // imageWrapper - so the down-up arrow scroll would be available as well.
+    modalImageRef.current?.focus();
+    if (imageExpand) imageWrapperRef.current?.focus();
+  }, [imageExpand, currentImageIndex]);
+
   const onImageLoad = () => {
+    // Waiting for the load of whole image - only then showing it.
     setImageIsLoading(false);
   };
 
   const getPagesNumber = () => {
+    // Getting number fo pages.
     if (allFilteredImagesId.length)
       return Math.ceil(allFilteredImagesId.length / imagesPerPage);
     return Math.ceil(currentImagesIdList.length / imagesPerPage);
@@ -121,10 +142,10 @@ const ModalImage = () => {
   };
 
   // Unified function for navigating back and forth between modal images. Is being invoked
-  // by the prev/next image buttons with "prev" or "next" arguments respectively.
-  // Depending on this direction mark - the index of the next image is being defined in the
-  // currentImagesIdList, being set as currentImageIndex - and the pageShiftCheck is invoked
-  // to check if the previous or next page should be loaded in case,
+  // by the prev/next image buttons with "prev" or "next" arguments respectively (or left/right
+  // keyboard arrows). Depending on this direction mark - the index of the next image is being
+  // defined in the currentImagesIdList, being set as currentImageIndex - and the pageShiftCheck
+  // is invoked to check if the previous or next page should be loaded in case,
   // if image is beyond the currently loaded images set in gallery.
   const adjacentImageLoad = (direction: string) => () => {
     const currentImageIndex = currentImagesIdList.findIndex(
@@ -148,8 +169,8 @@ const ModalImage = () => {
     setModalImageId(currentImagesIdList[adjacentImageIndex]);
   };
 
-  const arrowImageNav = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    switch (e.key) {
+  const keyboardImageNav = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    switch (e.code) {
       case "ArrowLeft": {
         if (currentImageIndex === 0) break;
         adjacentImageLoad("prev")();
@@ -160,10 +181,31 @@ const ModalImage = () => {
         adjacentImageLoad("next")();
         break;
       }
+      case "Space": {
+        console.log("");
+        setImageIsExpanded(!imageExpand);
+        setImageExpand(!imageExpand);
+        break;
+      }
     }
   };
 
+  const imageControlsToggle = (value: boolean) => {
+    setImageControlsVisible(value);
+  };
+
+  const imageControlsVisibilityHandler = debounce(
+    () => {
+      setImageControlsVisible(true);
+      setTimeout(() => imageControlsToggle(false), 2000);
+    },
+    3000,
+    true
+  );
+
   const toggleLikeHandler = async () => {
+    // Likes are stored in separate state in the modalimage component itself -
+    // to avoid re-rendering all the component when the like button is clicked.
     const { _id } = currentModalImage!;
     let newLikesList: string[] = [];
     if (!modalImageLikes.includes(userName)) {
@@ -171,15 +213,16 @@ const ModalImage = () => {
     } else {
       newLikesList = modalImageLikes.filter((name) => name !== userName);
     }
-    // Likes are stored in separate state in the modalimage component itself -
-    // to avoid rerendering all the component when the like button is clicked.
     await editImagesInfo([{ _id, imageInfo: { likes: newLikesList } }]);
     setModalImageLikes(newLikesList);
   };
 
   const imageExpandHandler = () => {
+    // Setting flag both locally - and in store.
+    // Thing thats better than wrap whole thing into observer
+    // just for one flag.
     setImageIsExpanded(!imageExpand);
-    setimageExpand(!imageExpand);
+    setImageExpand(!imageExpand);
   };
 
   const tagEditOpenHandler = () => {
@@ -228,29 +271,33 @@ const ModalImage = () => {
     setImageIsExpanded(false);
   };
 
+  const isFirstImage = currentImageIndex === 0;
+  const isLastImage = currentImageIndex === currentImagesIdList.length - 1;
+
   const isUserMode = getCurrentGalleryMode === "userGallery";
   return currentModalImage ? (
     <div
       className={styles.modalImage}
-      onKeyDown={arrowImageNav}
+      onKeyDown={keyboardImageNav}
       tabIndex={0}
       ref={modalImageRef}
-      onLoad={() => {
-        modalImageRef.current?.focus();
-        console.log("modalImageRef.current : ", modalImageRef.current?.focus);
-      }}
     >
       <div
-        className={
-          imageExpand
-            ? styles.imagePart + " " + styles.expanded
-            : styles.imagePart
-        }
+        className={cn({
+          [styles.imagePart]: true,
+          [styles.expanded]: imageExpand,
+        })}
+        onMouseMove={imageControlsVisibilityHandler}
       >
-        <div className={styles.imageControls}>
+        <div
+          className={cn({
+            [styles.imageControls]: true,
+            [styles.visible]: imageControlsVisible,
+          })}
+        >
           <Button
             icon="icon_fullscreen"
-            title="Expand/shrink image"
+            title="Expand/shrink image (Space)"
             iconSize={20}
             onClick={imageExpandHandler}
           />
@@ -262,27 +309,46 @@ const ModalImage = () => {
             />
           )}
         </div>
-        <Button
-          className={styles.navButtonPrev}
-          type="button"
-          title="Previous image"
-          icon="icon_arrow_left"
-          iconSize={30}
-          onClick={adjacentImageLoad("prev")}
-          disabled={currentImageIndex === 0}
-        />
-        <Button
-          className={styles.navButtonNext}
-          type="button"
-          title="Next image"
-          icon="icon_arrow_right"
-          iconSize={30}
-          onClick={adjacentImageLoad("next")}
-          disabled={currentImageIndex === currentImagesIdList.length - 1}
-        />
+        {!isFirstImage && (
+          <Button
+            className={cn({
+              [styles.navButtonPrev]: true,
+              [styles.visible]: imageControlsVisible,
+            })}
+            type="button"
+            title="Previous image (Arrow left)"
+            icon="icon_arrow_left"
+            iconSize={30}
+            onClick={adjacentImageLoad("prev")}
+          />
+        )}
+        {!isLastImage && (
+          <Button
+            className={cn({
+              [styles.navButtonNext]: true,
+              [styles.visible]: imageControlsVisible,
+            })}
+            type="button"
+            title="Next image (Arrow right)"
+            icon="icon_arrow_right"
+            iconSize={30}
+            onClick={adjacentImageLoad("next")}
+          />
+        )}
         {imageIsLoading && <Spinner side={50} />}
         {!imgInfoIsLoading && (
-          <div className={styles.imageWrapper}>
+          <div
+            className={cn({
+              [styles.imageWrapper]: true,
+              [styles.visible]: imageControlsVisible,
+              [styles.expanded]: imageExpand,
+            })}
+            ref={imageWrapperRef}
+            onLoad={() => {
+              imageWrapperRef.current?.focus();
+            }}
+            tabIndex={0}
+          >
             {" "}
             <img
               src={currentModalImage?.imageURL}
@@ -295,78 +361,80 @@ const ModalImage = () => {
       </div>
 
       <div className={styles.nonImagePart}>
-        <>
-          <div className={styles.modalImageHeader}>
-            <div className={styles.imageTitleWrapper}>
-              <Button
-                type="button"
-                icon="icon_like"
-                onClick={toggleLikeHandler}
-                className={styles.modalImageLikeBtn}
-                text={modalImageLikes.length}
-                disabled={!userIsAuthenticated}
-                title="Like / Dislike"
-              />
-              <h2>{currentModalImage.imageInfo.title || "No title"}</h2>
-              <Button
-                type="button"
-                title="Close modal image"
-                className={"closeBtn " + styles.mobile}
-                icon="icon_close"
-                iconSize={30}
-                onClick={modalImageCloseHandle}
-              />
-            </div>
-            <div className={styles.modalControlsWrapper}>
-              <Button
-                className={styles.navButton}
-                type="button"
-                title="Previous image"
-                icon="icon_arrow_left"
-                iconSize={30}
-                onClick={adjacentImageLoad("prev")}
-                disabled={currentImageIndex === 0}
-              />
-              {userIsAuthenticated && isUserMode && (
-                <ImageMenu
-                  modalImageMode={true}
-                  onShare={shareOverlayOpenHandler}
-                  onDelete={deleteOverlayOpenHandler}
-                />
-              )}
-              <Button
-                className={styles.navButton}
-                type="button"
-                title="Next image"
-                icon="icon_arrow_right"
-                iconSize={30}
-                onClick={adjacentImageLoad("next")}
-                disabled={currentImageIndex === currentImagesIdList.length - 1}
-              />
-            </div>
+        <div className={styles.modalImageHeader}>
+          <div className={styles.imageTitleWrapper}>
+            <Button
+              type="button"
+              icon="icon_like"
+              onClick={toggleLikeHandler}
+              className={styles.modalImageLikeBtn}
+              text={modalImageLikes.length}
+              disabled={!userIsAuthenticated}
+              title="Like / Dislike"
+            />
+            <h2>{currentModalImage.imageInfo.title || "No title"}</h2>
+            <Button
+              type="button"
+              title="Close modal image"
+              className={"closeBtn " + styles.mobile}
+              icon="icon_close"
+              iconSize={30}
+              onClick={modalImageCloseHandle}
+            />
           </div>
+          <div className={styles.modalControlsWrapper}>
+            <Button
+              className={styles.navButton}
+              type="button"
+              title="Previous image"
+              icon="icon_arrow_left"
+              iconSize={30}
+              onClick={adjacentImageLoad("prev")}
+              disabled={currentImageIndex === 0}
+            />
+            {userIsAuthenticated && isUserMode && (
+              <ImageMenu
+                modalImageMode={true}
+                onShare={shareOverlayOpenHandler}
+                onDelete={deleteOverlayOpenHandler}
+              />
+            )}
+            <Button
+              className={styles.navButton}
+              type="button"
+              title="Next image"
+              icon="icon_arrow_right"
+              iconSize={30}
+              onClick={adjacentImageLoad("next")}
+              disabled={currentImageIndex === currentImagesIdList.length - 1}
+            />
+          </div>
+        </div>
 
-          <div className={styles.description}>
-            <div className={styles.tagListWrapper}>
-              {currentModalImage.imageInfo.tags.length > 0 && (
-                <TagList
-                  tags={currentModalImage.imageInfo.tags}
-                  isEditable={isUserMode}
-                  onDoubleClick={tagEditOpenHandler}
-                />
-              )}
-            </div>
-            <p>
-              {currentModalImage.imageInfo.description ||
-                "Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat. Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat."}
-            </p>
+        <div className={styles.description}>
+          <div className={styles.tagListWrapper}>
+            {currentModalImage.imageInfo.tags.length > 0 && (
+              <TagList
+                tags={currentModalImage.imageInfo.tags}
+                isEditable={isUserMode}
+                onDoubleClick={tagEditOpenHandler}
+              />
+            )}
           </div>
-        </>
+          <p>
+            {currentModalImage.imageInfo.description ||
+              "Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat. Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat."}
+          </p>
+        </div>
       </div>
       <Button
         type="button"
         title="Close modal image"
-        className={"closeBtn " + styles.desktop}
+        className={cn({
+          [`closeBtn ${styles.desktop}`]: true,
+          [styles.expanded]: imageExpand,
+          [styles.visible]: imageControlsVisible,
+        })}
         icon="icon_close"
         iconSize={30}
         onClick={modalImageCloseHandle}

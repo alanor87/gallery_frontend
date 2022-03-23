@@ -8,6 +8,8 @@ const modalSettings = types
       "none"
     ),
     modalIsOpened: types.optional(types.boolean, false),
+    // The flag for expanded image in modal window. Placed outside the ModalImage window
+    // to keep the flag during next gallery page load and whole Modal  component re-render.
     imageIsExpanded: types.optional(types.boolean, false),
     modalImageId: types.optional(types.string, ""),
   })
