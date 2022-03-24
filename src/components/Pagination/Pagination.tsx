@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { observer } from "mobx-react-lite";
+import { useGetTotalImagesNumber } from "hooks";
 import { Icon } from "components/elements";
 import store from "MST/store";
 import styles from "./Pagination.module.scss";
@@ -11,11 +12,9 @@ const Pagination = () => {
     setCurrentPage,
     currentPage,
     imagesPerPage,
-    galleryMode,
     allFilteredImagesId,
   } = store.imagesStoreSettings;
-  const { userOwnedImages, userOpenedToImages } = store.userSettings;
-  const { publicImagesList } = store.publicSettings;
+  const totalImagesNumber = useGetTotalImagesNumber();
 
   const [isOpened, setIsOpened] = useState(false);
 
@@ -23,29 +22,10 @@ const Pagination = () => {
     setIsOpened(!isOpened);
   };
 
-  const getTotalGalleryImagesNumber = () => {
-    let imagesNumber;
-    switch (galleryMode) {
-      case "userGallery": {
-        imagesNumber = userOwnedImages.length;
-        break;
-      }
-      case "sharedGallery": {
-        imagesNumber = userOpenedToImages.length;
-        break;
-      }
-      case "publicGallery": {
-        imagesNumber = publicImagesList.length;
-        break;
-      }
-    }
-    return imagesNumber;
-  };
-
   const getPagesNumber = () => {
     if (allFilteredImagesId.length)
       return Math.ceil(allFilteredImagesId.length / imagesPerPage);
-    return Math.ceil(getTotalGalleryImagesNumber() / imagesPerPage);
+    return Math.ceil(totalImagesNumber / imagesPerPage);
   };
 
   const getPagesList = () => {
@@ -117,8 +97,7 @@ const Pagination = () => {
           </select>
           <ul className={styles.pagesList}>{getPagesList()}</ul>{" "}
           <p className={styles.totalImagesCount}>
-            Total images in gallery section :{" "}
-            <span>{getTotalGalleryImagesNumber()}</span>
+            Total images in gallery section : <span>{totalImagesNumber}</span>
           </p>
           <p className={styles.totalImagesCount}>
             Total filtered images : <span>{allFilteredImagesId.length}</span>

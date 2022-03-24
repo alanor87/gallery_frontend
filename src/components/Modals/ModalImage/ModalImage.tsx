@@ -51,6 +51,13 @@ const ModalImage = () => {
   const modalImageRef = useRef<HTMLDivElement>(null);
   const imageWrapperRef = useRef<HTMLDivElement>(null);
 
+  const touchCoordinates = {
+    startX: 0,
+    endX: 0,
+  };
+  const isFirstImage = currentImageIndex === 0;
+  const isLastImage = currentImageIndex === currentImagesIdList.length - 1;
+
   const imagesListInit = () => {
     // Defining the list of all image IDs that are available for the modal image browsing.
     // If there are no filtered images - then we take the imagesID list
@@ -154,10 +161,12 @@ const ModalImage = () => {
     let adjacentImageIndex;
     switch (direction) {
       case "prev": {
+        if (isFirstImage) return;
         adjacentImageIndex = currentImageIndex - 1;
         break;
       }
       case "next": {
+        if (isLastImage) return;
         adjacentImageIndex = currentImageIndex + 1;
         break;
       }
@@ -190,14 +199,25 @@ const ModalImage = () => {
     }
   };
 
-  const imageControlsToggle = (value: boolean) => {
-    setImageControlsVisible(value);
+  // Mechanism for back/forth swipe touch navigation on touchscreen.
+  let touchStartX = 0;
+  const touchImageNav = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.type === "touchstart") touchStartX = e.changedTouches[0].clientX;
+    if (e.type === "touchend") {
+      const swipeLength = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(swipeLength) > 100) {
+        swipeLength > 0
+          ? adjacentImageLoad("next")()
+          : adjacentImageLoad("prev")();
+        return;
+      }
+    }
   };
 
   const imageControlsVisibilityHandler = debounce(
     () => {
       setImageControlsVisible(true);
-      setTimeout(() => imageControlsToggle(false), 2000);
+      setTimeout(() => setImageControlsVisible(false), 2000);
     },
     3000,
     true
@@ -271,9 +291,6 @@ const ModalImage = () => {
     setImageIsExpanded(false);
   };
 
-  const isFirstImage = currentImageIndex === 0;
-  const isLastImage = currentImageIndex === currentImagesIdList.length - 1;
-
   const isUserMode = getCurrentGalleryMode === "userGallery";
   return currentModalImage ? (
     <div
@@ -281,17 +298,17 @@ const ModalImage = () => {
       onKeyDown={keyboardImageNav}
       tabIndex={0}
       ref={modalImageRef}
+      onTouchStart={touchImageNav}
+      onTouchEnd={touchImageNav}
     >
       <div
-        className={cn({
-          [styles.imagePart]: true,
+        className={cn(styles.imagePart, {
           [styles.expanded]: imageExpand,
         })}
         onMouseMove={imageControlsVisibilityHandler}
       >
         <div
-          className={cn({
-            [styles.imageControls]: true,
+          className={cn(styles.imageControls, {
             [styles.visible]: imageControlsVisible,
           })}
         >
@@ -311,8 +328,7 @@ const ModalImage = () => {
         </div>
         {!isFirstImage && (
           <Button
-            className={cn({
-              [styles.navButtonPrev]: true,
+            className={cn(styles.navButtonPrev, {
               [styles.visible]: imageControlsVisible,
             })}
             type="button"
@@ -324,8 +340,7 @@ const ModalImage = () => {
         )}
         {!isLastImage && (
           <Button
-            className={cn({
-              [styles.navButtonNext]: true,
+            className={cn(styles.navButtonNext, {
               [styles.visible]: imageControlsVisible,
             })}
             type="button"
@@ -338,8 +353,7 @@ const ModalImage = () => {
         {imageIsLoading && <Spinner side={50} />}
         {!imgInfoIsLoading && (
           <div
-            className={cn({
-              [styles.imageWrapper]: true,
+            className={cn(styles.imageWrapper, {
               [styles.visible]: imageControlsVisible,
               [styles.expanded]: imageExpand,
             })}
@@ -382,33 +396,15 @@ const ModalImage = () => {
               onClick={modalImageCloseHandle}
             />
           </div>
-          <div className={styles.modalControlsWrapper}>
-            <Button
-              className={styles.navButton}
-              type="button"
-              title="Previous image"
-              icon="icon_arrow_left"
-              iconSize={30}
-              onClick={adjacentImageLoad("prev")}
-              disabled={currentImageIndex === 0}
-            />
-            {userIsAuthenticated && isUserMode && (
+          {userIsAuthenticated && isUserMode && (
+            <div className={styles.modalControlsWrapper}>
               <ImageMenu
                 modalImageMode={true}
                 onShare={shareOverlayOpenHandler}
                 onDelete={deleteOverlayOpenHandler}
               />
-            )}
-            <Button
-              className={styles.navButton}
-              type="button"
-              title="Next image"
-              icon="icon_arrow_right"
-              iconSize={30}
-              onClick={adjacentImageLoad("next")}
-              disabled={currentImageIndex === currentImagesIdList.length - 1}
-            />
-          </div>
+            </div>
+          )}
         </div>
 
         <div className={styles.description}>
@@ -430,8 +426,7 @@ const ModalImage = () => {
       <Button
         type="button"
         title="Close modal image"
-        className={cn({
-          [`closeBtn ${styles.desktop}`]: true,
+        className={cn(`closeBtn ${styles.desktop}`, {
           [styles.expanded]: imageExpand,
           [styles.visible]: imageControlsVisible,
         })}

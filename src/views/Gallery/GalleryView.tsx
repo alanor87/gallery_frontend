@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { observer } from "mobx-react-lite";
+import cn from "classnames";
+import { useGetTotalImagesNumber } from "hooks";
 import ImageCard from "../../components/ImageCard";
 import ImageMenu from "../../components/ImageMenu";
 import Modal from "../../components/Modals/Modal/Modal";
@@ -22,9 +24,14 @@ function GalleryView({ label }: Props) {
     groupSelectMode,
     groupSelectModeToggle,
     clearSelectedList,
+    allFilteredImagesId,
+    currentPage,
+    imagesPerPage,
+    setCurrentPage,
     isLoading,
   } = store.imagesStoreSettings;
   const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
+  const totalImagesNumber = useGetTotalImagesNumber();
 
   useEffect(() => {
     imageStoreInit(label).then(() => setImgArray(getUserImages));
@@ -45,24 +52,47 @@ function GalleryView({ label }: Props) {
     setModalOpen(true);
   }, [setModalComponentType, setModalOpen]);
 
+  // Mechanism for back/forth swipe touch navigation on touchscreen.
+  let touchStartX = 0;
+  const touchPageNav = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.type === "touchstart") touchStartX = e.changedTouches[0].clientX;
+    if (e.type === "touchend") {
+      const swipeLength = touchStartX - e.changedTouches[0].clientX;
+
+      const pagesCount = allFilteredImagesId.length
+        ? allFilteredImagesId.length / imagesPerPage
+        : totalImagesNumber / imagesPerPage;
+
+      if (Math.abs(swipeLength) < 200) return;
+      switch (swipeLength > 0) {
+        case true: {
+          if (currentPage + 1 <= pagesCount) setCurrentPage(currentPage + 1);
+          break;
+        }
+        case false: {
+          if (currentPage - 1 >= 0) setCurrentPage(currentPage - 1);
+          break;
+        }
+      }
+    }
+  };
+
   return isLoading ? (
     <Spinner side={100} />
   ) : (
     <section
-      className={
-        groupSelectMode
-          ? styles.sectionGallery + " " + styles.groupSelectMode
-          : styles.sectionGallery
-      }
+      className={cn(styles.sectionGallery, {
+        [styles.groupSelectMode]: groupSelectMode,
+      })}
+      onTouchStart={touchPageNav}
+      onTouchEnd={touchPageNav}
     >
       {imgArray.length ? (
         <>
           <div
-            className={
-              groupSelectMode
-                ? styles.groupImageMenuWrapper + " " + styles.groupSelectMode
-                : styles.groupImageMenuWrapper
-            }
+            className={cn(styles.groupImageMenuWrapper, {
+              [styles.groupSelectMode]: groupSelectMode,
+            })}
           >
             <ImageMenu
               isOpened={groupSelectMode}

@@ -6,6 +6,7 @@
   :global(.imageCardOverlay) {
     z-index: 2;
   }
+
   :global(.closeBtn) {
     transition: opacity 250ms linear;
     &.mobile {
@@ -102,7 +103,7 @@
     opacity: 0;
     transition: opacity 250ms linear;
     z-index: 1;
-    cursor: none;
+    cursor: pointer;
 
     @media screen and(max-width: 900px) {
       display: none;
