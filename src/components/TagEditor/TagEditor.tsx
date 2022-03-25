@@ -5,7 +5,7 @@ import styles from "./TagEditor.module.scss";
 
 interface Props {
   tags: string[];
-  closeHandle: () => void;
+  closeHandle?: () => void;
   onTagDelete: (tagToDelete: string) => void;
   onAddTags: (newTag: string) => void;
 }
@@ -39,13 +39,15 @@ const TagEditor: React.FC<Props> = ({
   return (
     <div className="tagEditor">
       <div className={styles.tagInputForm}>
-        <Button
-          type="button"
-          title="Close tag editor"
-          className="closeBtn"
-          icon="icon_close"
-          onClick={closeHandle}
-        />
+        {closeHandle && (
+          <Button
+            type="button"
+            title="Close tag editor"
+            className="closeBtn"
+            icon="icon_close"
+            onClick={closeHandle}
+          />
+        )}
         <input
           value={tagName}
           type="text"
@@ -62,7 +64,9 @@ const TagEditor: React.FC<Props> = ({
           onClick={addTag}
         />
       </div>
-      <TagList tags={tags} isEditable={true} tagDelHandler={onTagDelete} />
+      {tags.length > 0 && (
+        <TagList tags={tags} isEditable={true} tagDelHandler={onTagDelete} />
+      )}
     </div>
   );
 };

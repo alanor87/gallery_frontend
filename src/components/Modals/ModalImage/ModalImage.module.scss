@@ -3,7 +3,7 @@
   display: flex;
   width: 100%;
 
-  :global(.imageCardOverlay) {
+  :global(.overlay) {
     z-index: 2;
   }
 
@@ -35,7 +35,7 @@
     height: 100vh;
     overflow: auto;
 
-    :global(.imageCardOverlay) {
+    :global(.overlay) {
       position: fixed;
     }
 
@@ -78,6 +78,7 @@
   }
 
   .imageWrapper {
+    display: flex;
     position: absolute;
     top: 0;
     right: 0;
@@ -94,6 +95,12 @@
     @media screen and(max-width: 900px) {
       position: static;
     }
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    margin: auto;
   }
 
   .navButtonPrev,
@@ -139,11 +146,6 @@
 
   & .visible {
     opacity: 1;
-  }
-
-  img {
-    width: 100%;
-    height: auto;
   }
 }
 

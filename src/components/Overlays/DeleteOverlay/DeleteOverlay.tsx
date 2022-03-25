@@ -1,6 +1,7 @@
 import { useState } from "react";
 import store from "../../../MST/store";
 import { Button, Spinner } from "../../elements";
+import styles from "./DeleteOverlay.module.scss";
 
 interface Props {
   _id: string;
@@ -30,19 +31,21 @@ const DeleteOverlay: React.FunctionComponent<Props> = ({
   };
 
   return (
-    <div className="imageCardOverlay">
-      <p className="imageCardOverlay-title">
-        Sure you want to delete this item?
-      </p>
-      <div className="imageCardOverlay-buttonWrapper">
-        <Button type="button" text="Delete" onClick={deleteImageHandler} />
-        <Button
-          type="button"
-          text="Cancel"
-          onClick={closeDeleteOverlayHandler}
-        />
+    <div className="overlay">
+      <div className={styles.deleteOverlay}>
+        <p className={styles.deleteOverlayTitle}>
+          Sure you want to delete this item?
+        </p>
+        <div className="overlay-buttonWrapper">
+          <Button type="button" text="Delete" onClick={deleteImageHandler} />
+          <Button
+            type="button"
+            text="Cancel"
+            onClick={closeDeleteOverlayHandler}
+          />
+        </div>
+        {isLoading && <Spinner side={20} />}
       </div>
-      {isLoading && <Spinner side={20} />}
     </div>
   );
 };

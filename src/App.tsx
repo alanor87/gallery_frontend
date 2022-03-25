@@ -118,11 +118,6 @@ function App() {
             <Redirect to={userIsAuthenticated ? "/userGallery" : "/login"} />
           </Switch>
         </Suspense>
-        <ToggleButton
-          hint={backendUrl}
-          style={{ position: "absolute", bottom: "10px", right: "10px" }}
-          toggleHandler={backendToggle}
-        />
         {!isAuthRoute && <Pagination />}
       </main>
     </div>

@@ -178,8 +178,8 @@ const ShareOverlay: React.FC<Props> = ({
   };
 
   return (
-    <div className={`imageCardOverlay`}>
-      <div className={`${styles.shareOverlay}`}>
+    <div className={`overlay`}>
+      <div className={styles.shareOverlay}>
         <div className={styles.option}>
           Make the image public
           <ToggleButton
@@ -254,7 +254,7 @@ const ShareOverlay: React.FC<Props> = ({
             disabled={!isSharedByLinkState}
           />
         </div>
-        <div className={styles.buttonWrapper}>
+        <div className="overlay-buttonWrapper">
           <Button type="button" text="Accept" onClick={acceptChangesHandler} />
           <Button type="button" text="Cancel" onClick={closeOverlayHandler} />
         </div>{" "}

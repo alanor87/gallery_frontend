@@ -1,5 +1,5 @@
 import React from "react";
-import { inherits } from "util";
+import cn from "classnames";
 import Icon from "../Icon";
 import styles from "./Button.module.scss";
 
@@ -33,9 +33,10 @@ function Button({
   onFocus,
   onBlur,
 }: ButtonProps) {
-  const buttonClassName = disabled
-    ? styles.commonButton + " " + className + " disabled"
-    : styles.commonButton + " " + className;
+  const buttonClassName = cn(styles.commonButton, {
+    [`${className}`]: className,
+    disabled: disabled,
+  });
 
   return (
     <button

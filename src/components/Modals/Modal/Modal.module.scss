@@ -12,6 +12,10 @@
   pointer-events: none;
   transition: opacity 250ms linear, background-color 250ms linear;
   z-index: 10;
+
+  :global(.overlay-buttonWrapper) button {
+    font-size: 22px;
+  }
 }
 
 .isOpened {

@@ -6,7 +6,7 @@ import TagList from "components/TagList";
 import ImageMenu from "components/ImageMenu";
 import ShareOverlay from "components/Overlays/ShareOverlay";
 import DeleteOverlay from "components/Overlays/DeleteOverlay";
-import TagEditor from "components/TagEditor";
+import EditOverlay from "components/Overlays/EditOverlay";
 import store from "../../../MST/store";
 import { ImageType } from "MST/imagesStoreSettings";
 import styles from "./ModalImage.module.scss";
@@ -45,16 +45,12 @@ const ModalImage = () => {
   const [imageExpand, setImageExpand] = useState(imageIsExpanded);
   const [imageControlsVisible, setImageControlsVisible] = useState(false);
   const [modalImageLikes, setModalImageLikes] = useState<string[]>([]);
-  const [tagEditorIsOpen, setTagEditorIsOpen] = useState(false);
   const [shareOverlayIsOpen, setShareOverlayIsOpen] = useState(false);
+  const [editOverlayIsOpen, setEditOverlayIsOpen] = useState(false);
   const [deleteOverlayIsOpen, setDeleteOverlayIsOpen] = useState(false);
   const modalImageRef = useRef<HTMLDivElement>(null);
   const imageWrapperRef = useRef<HTMLDivElement>(null);
 
-  const touchCoordinates = {
-    startX: 0,
-    endX: 0,
-  };
   const isFirstImage = currentImageIndex === 0;
   const isLastImage = currentImageIndex === currentImagesIdList.length - 1;
 
@@ -191,7 +187,7 @@ const ModalImage = () => {
         break;
       }
       case "Space": {
-        console.log("");
+        if (editOverlayIsOpen || shareOverlayIsOpen) return;
         setImageIsExpanded(!imageExpand);
         setImageExpand(!imageExpand);
         break;
@@ -202,6 +198,7 @@ const ModalImage = () => {
   // Mechanism for back/forth swipe touch navigation on touchscreen.
   let touchStartX = 0;
   const touchImageNav = (e: React.TouchEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     if (e.type === "touchstart") touchStartX = e.changedTouches[0].clientX;
     if (e.type === "touchend") {
       const swipeLength = touchStartX - e.changedTouches[0].clientX;
@@ -245,11 +242,11 @@ const ModalImage = () => {
     setImageExpand(!imageExpand);
   };
 
-  const tagEditOpenHandler = () => {
-    setTagEditorIsOpen(true);
-  };
   const shareOverlayOpenHandler = () => {
     setShareOverlayIsOpen(true);
+  };
+  const editOverlayOpenHandler = () => {
+    setEditOverlayIsOpen(true);
   };
   const deleteOverlayOpenHandler = () => {
     setDeleteOverlayIsOpen(true);
@@ -259,7 +256,20 @@ const ModalImage = () => {
     loadModalImage();
     setShareOverlayIsOpen(false);
   };
-  const onTagEditCloseHandler = () => setTagEditorIsOpen(false);
+  const editOverlayCloseHandler = () => {
+    setEditOverlayIsOpen(false);
+  };
+  const editOverlayConfirmHandler = async (
+    title: string,
+    description: string
+  ): Promise<void> => {
+    setimgInfoIsLoading(true);
+    const { _id } = currentModalImage!;
+    await editImagesInfo([{ _id, imageInfo: { title, description } }]);
+    await loadModalImage();
+    editOverlayCloseHandler();
+    setimgInfoIsLoading(false);
+  };
   const deleteOverlayCloseHandler = () => setDeleteOverlayIsOpen(false);
   const deleteOverlayConfirmHandler = () => {
     setModalImageId("");
@@ -281,7 +291,7 @@ const ModalImage = () => {
     const { _id } = currentModalImage!;
     setimgInfoIsLoading(true);
     await editImagesInfo([{ _id, imageInfo: { tags: newTags } }]);
-    loadModalImage();
+    await loadModalImage();
     setimgInfoIsLoading(false);
   };
 
@@ -322,6 +332,7 @@ const ModalImage = () => {
             <ImageMenu
               modalImageMode={true}
               onShare={shareOverlayOpenHandler}
+              onEdit={editOverlayOpenHandler}
               onDelete={deleteOverlayOpenHandler}
             />
           )}
@@ -401,6 +412,7 @@ const ModalImage = () => {
               <ImageMenu
                 modalImageMode={true}
                 onShare={shareOverlayOpenHandler}
+                onEdit={editOverlayOpenHandler}
                 onDelete={deleteOverlayOpenHandler}
               />
             </div>
@@ -413,7 +425,6 @@ const ModalImage = () => {
               <TagList
                 tags={currentModalImage.imageInfo.tags}
                 isEditable={isUserMode}
-                onDoubleClick={tagEditOpenHandler}
               />
             )}
           </div>
@@ -423,6 +434,7 @@ const ModalImage = () => {
           </p>
         </div>
       </div>
+
       <Button
         type="button"
         title="Close modal image"
@@ -453,12 +465,15 @@ const ModalImage = () => {
           onConfirmDeleteOverlay={deleteOverlayConfirmHandler}
         />
       )}
-      {tagEditorIsOpen && (
-        <TagEditor
+      {editOverlayIsOpen && (
+        <EditOverlay
+          title={currentModalImage.imageInfo.title}
+          description={currentModalImage.imageInfo.description}
           tags={currentModalImage.imageInfo.tags}
-          onAddTags={tagAddHandler}
-          onTagDelete={tagDelHandler}
-          closeHandle={onTagEditCloseHandler}
+          tagAddHandler={tagAddHandler}
+          tagDelHandler={tagDelHandler}
+          onAccept={editOverlayConfirmHandler}
+          onCancel={editOverlayCloseHandler}
         />
       )}
     </div>

@@ -44,12 +44,6 @@
     overflow-wrap: anywhere;
     cursor: pointer;
   }
-
-  .buttonWrapper {
-    display: flex;
-    justify-content: space-around;
-    margin-top: auto;
-  }
 }
 
 // When being displayed through modal image view.
@@ -68,13 +62,9 @@
   .option {
     margin-bottom: 25px;
   }
-
-  button {
-    font-size: 22px;
-  }
 }
 
-:global(.imageCardOverlay .tagEditor) {
+:global(.overlay .tagEditor) {
   position: absolute;
   top: 0;
   right: 0;
