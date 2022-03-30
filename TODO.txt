@@ -2,9 +2,6 @@ Global aim is to create an image hosting that would make the sharing of images a
  with not only sharing between the members of the service itself - bu also all the popular social networks, 
  also - options to generate the QR code for the image link.
  
-- swipe navigation for mobile devices.
-- remove spinner when there are no images in gallery.
-- add description and title to images.
 - random background images for auth views -  from public galleries
 - create a text-to-image part pointing mechanism - best of all as a library, npm package (so also I would learn how to make one).
   It would create arrow or line type pointers from special parts of text to specific parts of image.

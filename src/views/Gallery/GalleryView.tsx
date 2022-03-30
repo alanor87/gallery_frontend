@@ -118,7 +118,7 @@ function GalleryView({ label }: Props) {
           </div>
         </>
       ) : (
-        <Spinner side={100} />
+        <div className={styles.noImages}>No images in this gallsery.</div>
       )}
       <Modal />
     </section>

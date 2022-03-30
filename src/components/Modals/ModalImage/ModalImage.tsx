@@ -122,7 +122,6 @@ const ModalImage = () => {
       return Math.ceil(allFilteredImagesId.length / imagesPerPage);
     return Math.ceil(currentImagesIdList.length / imagesPerPage);
   };
-
   // Accepts the direction - if the previous or next image btn was clicked, and defines if
   // the current image is still among those that are on the current page - therefore -
   // in the current images array in imagesStoreSettings. If it is not - the new page request
@@ -143,7 +142,6 @@ const ModalImage = () => {
       }
     }
   };
-
   // Unified function for navigating back and forth between modal images. Is being invoked
   // by the prev/next image buttons with "prev" or "next" arguments respectively (or left/right
   // keyboard arrows). Depending on this direction mark - the index of the next image is being
@@ -187,6 +185,9 @@ const ModalImage = () => {
         break;
       }
       case "Space": {
+        // Skipping the Space button click effect, if one of the overlays is opened -
+        // when there is a need to type something in thos eoverlays - and space is needed
+        // as the keyboard character.
         if (editOverlayIsOpen || shareOverlayIsOpen) return;
         setImageIsExpanded(!imageExpand);
         setImageExpand(!imageExpand);
@@ -194,7 +195,6 @@ const ModalImage = () => {
       }
     }
   };
-
   // Mechanism for back/forth swipe touch navigation on touchscreen.
   let touchStartX = 0;
   const touchImageNav = (e: React.TouchEvent<HTMLDivElement>) => {
@@ -252,13 +252,6 @@ const ModalImage = () => {
     setDeleteOverlayIsOpen(true);
   };
 
-  const shareOverlayCloseHandler = () => {
-    loadModalImage();
-    setShareOverlayIsOpen(false);
-  };
-  const editOverlayCloseHandler = () => {
-    setEditOverlayIsOpen(false);
-  };
   const editOverlayConfirmHandler = async (
     title: string,
     description: string
@@ -270,12 +263,20 @@ const ModalImage = () => {
     editOverlayCloseHandler();
     setimgInfoIsLoading(false);
   };
-  const deleteOverlayCloseHandler = () => setDeleteOverlayIsOpen(false);
   const deleteOverlayConfirmHandler = () => {
     setModalImageId("");
     setModalComponentType("none");
     setModalOpen(false);
   };
+
+  const shareOverlayCloseHandler = () => {
+    loadModalImage();
+    setShareOverlayIsOpen(false);
+  };
+  const editOverlayCloseHandler = () => {
+    setEditOverlayIsOpen(false);
+  };
+  const deleteOverlayCloseHandler = () => setDeleteOverlayIsOpen(false);
 
   const tagDelHandler = (tagToDelete: string) => {
     const newTags = currentModalImage!.imageInfo.tags.filter(
