@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite";
+import store from "MST/store";
 import LoginForm from "../../components/LoginForm";
 import RegisterForm from "../../components/RegisterForm";
 import styles from "./LoginRegisterView.module.scss";
@@ -18,7 +19,7 @@ const LoginRegisterView: React.FC<Props> = ({ path }) => {
 
   const fetchBg = async () => {
     const response = await axios.get(
-      "http://localhost:3030/api/v1/public/getBackgroundImage"
+      "http://" + store.backendUrl + "public/getBackgroundImage"
     );
     console.log(response.data.body.backgroundImage);
     setBackgroundImage(response.data.body.backgroundImage);
