@@ -4,7 +4,6 @@ import { types, flow, getParent } from "mobx-state-tree";
 
 export const interfaceSettings = types
   .model({
-    backgroundImage: types.string,
     lightThemeIsOn: types.boolean,
     imagesPerPage: types.number,
     sidePanelIsOpen: types.boolean,

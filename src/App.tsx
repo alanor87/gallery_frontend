@@ -8,7 +8,7 @@ import PublicRoute from "./components/_routes/PublicRoute";
 import AppBar from "./components/AppBar";
 import Pagination from "./components/Pagination";
 import SideMenu from "./components/SideMenu";
-import { ToggleButton, Spinner } from "./components/elements";
+import { Spinner } from "./components/elements";
 import routes from "./routes";
 import store from "./MST/store";
 
@@ -44,7 +44,6 @@ function App() {
   }, [setCurrentWindowWidth]);
 
   useEffect(() => {
-    publicSettingsInit();
     if (localStorage.getItem("token") && !userIsAuthenticated) localTokenInit();
   }, [localTokenInit, publicSettingsInit, userIsAuthenticated]);
 

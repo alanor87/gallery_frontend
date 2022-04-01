@@ -6,6 +6,11 @@ import modalSettings from "./modalSettings";
 import imagesStoreSettings from "./imagesStoreSettings";
 import { RegisterFormInterface, LoginFormInterface } from "types/user";
 
+const backendUrl =
+  process.env.NODE_ENV === "production" || window.innerWidth < 900
+    ? "https://gallery-app-mj.herokuapp.com/api/v1"
+    : "http://localhost:3030/api/v1";
+
 axios.interceptors.response.use(
   (res: AxiosResponse) => res,
   (err: AxiosError) => {
@@ -44,8 +49,6 @@ const initialUserSettings = {
   userIsAuthenticated: false,
   userOwnedimages: [],
   userInterface: {
-    backgroundImage:
-      "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_960_720.jpg",
     lightThemeIsOn: false,
     imagesPerPage: 10,
     sidePanelIsOpen: false,
@@ -63,12 +66,7 @@ const store = types
     modalWindowsSettings: types.optional(modalSettings, {}),
     publicSettings: types.optional(publicSettings, {}),
     currentWindowWidth: types.optional(types.number, window.innerWidth),
-    backendUrl: types.optional(
-      types.string,
-      process.env.NODE_ENV === "production" || window.innerWidth < 900
-        ? "https://gallery-app-mj.herokuapp.com/api/v1"
-        : "http://localhost:3030/api/v1"
-    ),
+    backendUrl: types.optional(types.string, backendUrl),
   })
   .actions((self) => {
     const registerInit = flow(function* (registerData: RegisterFormInterface) {
@@ -83,7 +81,7 @@ const store = types
     const publicSettingsInit = flow(function* () {
       try {
         const response = yield axios("/public/publicSettings");
-        applySnapshot(self.publicSettings, response.data.body.publicSettings);
+        applySnapshot(self.publicSettings, response.data.body);
       } catch (error) {
         popupNotice(`Error getting public settings.
         ${error}.
