@@ -19,7 +19,7 @@ const LoginRegisterView: React.FC<Props> = ({ path }) => {
 
   const fetchBg = async () => {
     const response = await axios.get(
-      "http://" + store.backendUrl + "public/getBackgroundImage"
+      store.backendUrl + "/public/getBackgroundImage"
     );
     console.log(response.data.body.backgroundImage);
     setBackgroundImage(response.data.body.backgroundImage);
