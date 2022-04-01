@@ -5,12 +5,12 @@ export interface NewImageInfoType {
 
 export interface ImageInfoType {
   tags: string;
-  likes: string[];
-  isLoading: boolean;
-  isSelected: boolean;
-  isPublic: boolean;
-  belongsTo: string;
-  openedTo: string[];
+  likes?: string[];
+  isLoading?: boolean;
+  isSelected?: boolean;
+  isPublic?: boolean;
+  belongsTo?: string;
+  openedTo?: string[];
   title?: string;
   description?: string;
 }

@@ -191,22 +191,10 @@ const ImagesStore = types
     const editImagesInfo = flow(function* (
       updatedImagesInfo: NewImageInfoType[]
     ) {
+      console.log("updatedImagesInfo : ", updatedImagesInfo);
       try {
-        const updatedImagesToSend = updatedImagesInfo.map(
-          (updatedImage: NewImageInfoType) => {
-            const imageToEdit: ImageType = getImageById(updatedImage._id)!;
-            const updatedImageInfo: NewImageInfoType = {
-              _id: updatedImage._id,
-              imageInfo: {
-                ...imageToEdit.imageInfo,
-                ...updatedImage.imageInfo,
-              },
-            };
-            return updatedImageInfo;
-          }
-        );
         const updatedImagesFromServer: NewImageInfoType[] = yield axios
-          .put(`/images/updateImages`, { imagesToUpdate: updatedImagesToSend })
+          .put(`/images/updateImages`, { imagesToUpdate: updatedImagesInfo })
           .then((res) => res.data.body.updatedImages);
         updatedImagesFromServer.forEach((updatedImage) => {
           const imageToEdit: ImageType = getImageById(updatedImage._id)!;

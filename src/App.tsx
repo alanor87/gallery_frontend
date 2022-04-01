@@ -119,6 +119,7 @@ function App() {
         </Suspense>
         {!isAuthRoute && <Pagination />}
       </main>
+      {backendUrl}
     </div>
   );
 }
