@@ -4,12 +4,12 @@ interface Props {
   className?: string;
   backdropClassName?: string;
   text?: string;
-  side: number;
+  side?: number;
 }
 
 const Spinner: React.FC<Props> = ({
   text = "Loading",
-  side,
+  side = 40,
   className,
   backdropClassName,
 }) => {

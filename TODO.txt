@@ -2,9 +2,10 @@ Global aim is to create an image hosting that would make the sharing of images a
  with not only sharing between the members of the service itself - bu also all the popular social networks, 
  also - options to generate the QR code for the image link.
  
+- sort by likes number.
+- modify filter - so it would look also by the title. So it makes the search by the title and tags.
 - create a text-to-image part pointing mechanism - best of all as a library, npm package (so also I would learn how to make one).
   It would create arrow or line type pointers from special parts of text to specific parts of image.
-- sort by likes number.
+  - add Viber and Telegram share, maybe FB messenger.
 
 BUGS work
- - handle duplication resilience in tags and openedToUsers lists - in share components especially.
