@@ -195,6 +195,7 @@ const ModalImage = () => {
       }
     }
   };
+
   // Mechanism for back/forth swipe touch navigation on touchscreen.
   let touchStartX = 0;
   const touchImageNav = (e: React.TouchEvent<HTMLDivElement>) => {
@@ -202,7 +203,7 @@ const ModalImage = () => {
     if (e.type === "touchstart") touchStartX = e.changedTouches[0].clientX;
     if (e.type === "touchend") {
       const swipeLength = touchStartX - e.changedTouches[0].clientX;
-      if (Math.abs(swipeLength) > 100) {
+      if (Math.abs(swipeLength) > 200) {
         swipeLength > 0
           ? adjacentImageLoad("next")()
           : adjacentImageLoad("prev")();
@@ -312,6 +313,7 @@ const ModalImage = () => {
       onTouchStart={touchImageNav}
       onTouchEnd={touchImageNav}
     >
+      <div className={styles.modalImageBackdrop} style={{backgroundImage: `url(${currentModalImage.imageURL})`}}></div>
       <div
         className={cn(styles.imagePart, {
           [styles.expanded]: imageExpand,
