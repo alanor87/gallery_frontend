@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { debounce } from "debounce";
 import cn from "classnames";
 import { Spinner, Button } from "components/elements";
@@ -35,7 +35,7 @@ const ModalImage = () => {
   const { userIsAuthenticated, userName, userOwnedImages, userOpenedToImages } =
     store.userSettings;
 
-  const [currentImagesIdList, setCurrentImagesIdList] = useState<string[]>([]);
+
   const [currentModalImage, setCurrentModalImage] = useState<
     ImageType | undefined
   >(undefined);
@@ -51,25 +51,22 @@ const ModalImage = () => {
   const modalImageRef = useRef<HTMLDivElement>(null);
   const imageWrapperRef = useRef<HTMLDivElement>(null);
 
-  const isFirstImage = currentImageIndex === 0;
-  const isLastImage = currentImageIndex === currentImagesIdList.length - 1;
-
-  const imagesListInit = () => {
+  const imagesList = useMemo(() => {
     // Defining the list of all image IDs that are available for the modal image browsing.
     // If there are no filtered images - then we take the imagesID list
     // from the appropriate list - depending on the gallery mode.
     if (!allFilteredImagesId.length) {
       switch (getCurrentGalleryMode) {
         case "userGallery": {
-          setCurrentImagesIdList(userOwnedImages);
+          return userOwnedImages;
           break;
         }
         case "sharedGallery": {
-          setCurrentImagesIdList(userOpenedToImages);
+          return userOpenedToImages;
           break;
         }
         case "publicGallery": {
-          setCurrentImagesIdList(publicImagesList);
+          return publicImagesList;
           break;
         }
       }
@@ -78,9 +75,12 @@ const ModalImage = () => {
     // array that we get from the backend with the IDs of filtered images, regardless of the gallery we
     // deal with.
     else {
-      setCurrentImagesIdList(allFilteredImagesId);
+     return allFilteredImagesId;
     }
-  };
+  }, [])
+
+  const isFirstImage = currentImageIndex === 0;
+  const isLastImage = currentImageIndex === imagesList.length - 1;
 
   const loadModalImage = useCallback(async () => {
     setImageIsLoading(true);
@@ -92,16 +92,11 @@ const ModalImage = () => {
   }, [modalImageId, fetchImageById]);
 
   useEffect(() => {
-    // Initializing the list of imagesID for modal browsing.
-    imagesListInit();
-  }, []);
-
-  useEffect(() => {
     // Loading current modal image.
     loadModalImage();
     // Defining index of the current image in the list of imagesID.
-    setCurrentImageIndex(currentImagesIdList.indexOf(modalImageId));
-  }, [modalImageId, loadModalImage, currentImagesIdList]);
+    setCurrentImageIndex(imagesList.indexOf(modalImageId));
+  }, [modalImageId, loadModalImage, imagesList]);
 
   useEffect(() => {
     // Focusing on the modalImage div, so the arrow navigation through keyDown event
@@ -120,7 +115,7 @@ const ModalImage = () => {
     // Getting number fo pages.
     if (allFilteredImagesId.length)
       return Math.ceil(allFilteredImagesId.length / imagesPerPage);
-    return Math.ceil(currentImagesIdList.length / imagesPerPage);
+    return Math.ceil(imagesList.length / imagesPerPage);
   };
   // Accepts the direction - if the previous or next image btn was clicked, and defines if
   // the current image is still among those that are on the current page - therefore -
@@ -149,7 +144,7 @@ const ModalImage = () => {
   // is invoked to check if the previous or next page should be loaded in case,
   // if image is beyond the currently loaded images set in gallery.
   const adjacentImageLoad = (direction: string) => () => {
-    const currentImageIndex = currentImagesIdList.findIndex(
+    const currentImageIndex = imagesList.findIndex(
       (imageId) => imageId === modalImageId
     );
     let adjacentImageIndex;
@@ -168,8 +163,8 @@ const ModalImage = () => {
         adjacentImageIndex = 0;
     }
     setCurrentImageIndex(adjacentImageIndex);
-    pageShiftCheck(direction, currentImagesIdList[adjacentImageIndex]);
-    setModalImageId(currentImagesIdList[adjacentImageIndex]);
+    pageShiftCheck(direction, imagesList[adjacentImageIndex]);
+    setModalImageId(imagesList[adjacentImageIndex]);
   };
 
   const keyboardImageNav = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -180,7 +175,7 @@ const ModalImage = () => {
         break;
       }
       case "ArrowRight": {
-        if (currentImageIndex === currentImagesIdList.length - 1) break;
+        if (currentImageIndex === imagesList.length - 1) break;
         adjacentImageLoad("next")();
         break;
       }
