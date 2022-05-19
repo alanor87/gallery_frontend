@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from "react";
 import { debounce } from "debounce";
 import cn from "classnames";
 import { Spinner, Button } from "components/elements";
@@ -35,21 +41,24 @@ const ModalImage = () => {
   const { userIsAuthenticated, userName, userOwnedImages, userOpenedToImages } =
     store.userSettings;
 
-
   const [currentModalImage, setCurrentModalImage] = useState<
     ImageType | undefined
   >(undefined);
   const [currentImageIndex, setCurrentImageIndex] = useState<Number>();
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
   const [imageIsLoading, setImageIsLoading] = useState(true);
+  // The expand flag is duplicated in store - to keep the expanded state while switching between pages.
   const [imageExpand, setImageExpand] = useState(imageIsExpanded);
   const [imageControlsVisible, setImageControlsVisible] = useState(false);
   const [modalImageLikes, setModalImageLikes] = useState<string[]>([]);
   const [shareOverlayIsOpen, setShareOverlayIsOpen] = useState(false);
   const [editOverlayIsOpen, setEditOverlayIsOpen] = useState(false);
   const [deleteOverlayIsOpen, setDeleteOverlayIsOpen] = useState(false);
+  const [anchorBtnVisible, setAnchorBtnVisible] = useState(false);
+  const [anchorBtnCoords, setAnchorBtnCoords] = useState([0, 0]);
   const modalImageRef = useRef<HTMLDivElement>(null);
   const imageWrapperRef = useRef<HTMLDivElement>(null);
+  const descriptionRef = useRef<HTMLDivElement>(null);
 
   const imagesList = useMemo(() => {
     // Defining the list of all image IDs that are available for the modal image browsing.
@@ -59,15 +68,12 @@ const ModalImage = () => {
       switch (getCurrentGalleryMode) {
         case "userGallery": {
           return userOwnedImages;
-          break;
         }
         case "sharedGallery": {
           return userOpenedToImages;
-          break;
         }
         case "publicGallery": {
           return publicImagesList;
-          break;
         }
       }
     }
@@ -75,12 +81,9 @@ const ModalImage = () => {
     // array that we get from the backend with the IDs of filtered images, regardless of the gallery we
     // deal with.
     else {
-     return allFilteredImagesId;
+      return allFilteredImagesId;
     }
-  }, [])
-
-  const isFirstImage = currentImageIndex === 0;
-  const isLastImage = currentImageIndex === imagesList.length - 1;
+  }, []);
 
   const loadModalImage = useCallback(async () => {
     setImageIsLoading(true);
@@ -111,6 +114,71 @@ const ModalImage = () => {
     setImageIsLoading(false);
   };
 
+
+  /*############# Variables without re-render persistant state #############*/
+
+  const isFirstImage = currentImageIndex === 0;
+  const isLastImage = currentImageIndex === imagesList.length - 1;
+  const isUserMode = getCurrentGalleryMode === "userGallery";
+  let touchStartX = 0;
+
+
+  /*############# Text-image anchoring logics #############*/
+
+  const selectAnchorText = (e: React.MouseEvent<HTMLDivElement>) => {
+    console.log(e);
+    let rect = descriptionRef.current!.getBoundingClientRect();
+let x = e.clientX - rect.left; //x position within the element.
+let y = e.clientY - rect.top;  //y position within the element.
+    if (!e.shiftKey || !window.getSelection()) return;
+    const selectedText = window.getSelection()?.toString();
+    setAnchorBtnCoords([x,y])
+    setAnchorBtnVisible(true);
+    console.log(selectedText);
+  };
+  const anchorHideHandler = () => {
+    setAnchorBtnVisible(false);
+  }
+
+  /*############# Image navigation handlers #############*/
+
+  const keyboardImageNav = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    switch (e.code) {
+      case "ArrowLeft": {
+        if (currentImageIndex === 0) break;
+        adjacentImageLoad("prev")();
+        break;
+      }
+      case "ArrowRight": {
+        if (currentImageIndex === imagesList.length - 1) break;
+        adjacentImageLoad("next")();
+        break;
+      }
+      case "Space": {
+        // Skipping the Space button click effect, if one of the overlays is opened -
+        // when there is a need to type something in thos eoverlays - and space is needed
+        // as the keyboard character.
+        if (editOverlayIsOpen || shareOverlayIsOpen) return;
+        setImageIsExpanded(!imageExpand);
+        setImageExpand(!imageExpand);
+        break;
+      }
+    }
+  };
+  // Mechanism for back/forth swipe touch navigation on touchscreen.
+  const touchImageNav = (e: React.TouchEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    if (e.type === "touchstart") touchStartX = e.changedTouches[0].clientX;
+    if (e.type === "touchend") {
+      const swipeLength = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(swipeLength) > 200) {
+        swipeLength > 0
+          ? adjacentImageLoad("next")()
+          : adjacentImageLoad("prev")();
+        return;
+      }
+    }
+  };
   const getPagesNumber = () => {
     // Getting number fo pages.
     if (allFilteredImagesId.length)
@@ -167,46 +235,6 @@ const ModalImage = () => {
     setModalImageId(imagesList[adjacentImageIndex]);
   };
 
-  const keyboardImageNav = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    switch (e.code) {
-      case "ArrowLeft": {
-        if (currentImageIndex === 0) break;
-        adjacentImageLoad("prev")();
-        break;
-      }
-      case "ArrowRight": {
-        if (currentImageIndex === imagesList.length - 1) break;
-        adjacentImageLoad("next")();
-        break;
-      }
-      case "Space": {
-        // Skipping the Space button click effect, if one of the overlays is opened -
-        // when there is a need to type something in thos eoverlays - and space is needed
-        // as the keyboard character.
-        if (editOverlayIsOpen || shareOverlayIsOpen) return;
-        setImageIsExpanded(!imageExpand);
-        setImageExpand(!imageExpand);
-        break;
-      }
-    }
-  };
-
-  // Mechanism for back/forth swipe touch navigation on touchscreen.
-  let touchStartX = 0;
-  const touchImageNav = (e: React.TouchEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    if (e.type === "touchstart") touchStartX = e.changedTouches[0].clientX;
-    if (e.type === "touchend") {
-      const swipeLength = touchStartX - e.changedTouches[0].clientX;
-      if (Math.abs(swipeLength) > 200) {
-        swipeLength > 0
-          ? adjacentImageLoad("next")()
-          : adjacentImageLoad("prev")();
-        return;
-      }
-    }
-  };
-
   const imageControlsVisibilityHandler = debounce(
     () => {
       setImageControlsVisible(true);
@@ -232,11 +260,14 @@ const ModalImage = () => {
 
   const imageExpandHandler = () => {
     // Setting flag both locally - and in store.
-    // Thing thats better than wrap whole thing into observer
+    // Think thats better than wrap whole thing into observer
     // just for one flag.
     setImageIsExpanded(!imageExpand);
     setImageExpand(!imageExpand);
   };
+
+
+  /*############# Overlays open handlers #############*/
 
   const shareOverlayOpenHandler = () => {
     setShareOverlayIsOpen(true);
@@ -247,6 +278,21 @@ const ModalImage = () => {
   const deleteOverlayOpenHandler = () => {
     setDeleteOverlayIsOpen(true);
   };
+
+
+  /*############# Overlays close handlers #############*/
+
+  const shareOverlayCloseHandler = () => {
+    loadModalImage();
+    setShareOverlayIsOpen(false);
+  };
+  const editOverlayCloseHandler = () => {
+    setEditOverlayIsOpen(false);
+  };
+  const deleteOverlayCloseHandler = () => setDeleteOverlayIsOpen(false);
+
+
+  /*############# Overlays confirm click handlers #############*/
 
   const editOverlayConfirmHandler = async (
     title: string,
@@ -265,14 +311,8 @@ const ModalImage = () => {
     setModalOpen(false);
   };
 
-  const shareOverlayCloseHandler = () => {
-    loadModalImage();
-    setShareOverlayIsOpen(false);
-  };
-  const editOverlayCloseHandler = () => {
-    setEditOverlayIsOpen(false);
-  };
-  const deleteOverlayCloseHandler = () => setDeleteOverlayIsOpen(false);
+
+  /*############# Tags operations handlers #############*/
 
   const tagDelHandler = (tagToDelete: string) => {
     const newTags = currentModalImage!.imageInfo.tags.filter(
@@ -295,10 +335,9 @@ const ModalImage = () => {
   const modalImageCloseHandle = () => {
     setModalOpen(false);
     setModalComponentType("none");
-    setImageIsExpanded(false);
+    imageExpandHandler();
   };
 
-  const isUserMode = getCurrentGalleryMode === "userGallery";
   return currentModalImage ? (
     <div
       className={styles.modalImage}
@@ -308,7 +347,10 @@ const ModalImage = () => {
       onTouchStart={touchImageNav}
       onTouchEnd={touchImageNav}
     >
-      <div className={styles.modalImageBackdrop} style={{backgroundImage: `url(${currentModalImage.imageURL})`}}></div>
+      <div
+        className={styles.modalImageBackdrop}
+        style={{ backgroundImage: `url(${currentModalImage.imageURL})` }}
+      ></div>
       <div
         className={cn(styles.imagePart, {
           [styles.expanded]: imageExpand,
@@ -373,17 +415,21 @@ const ModalImage = () => {
             tabIndex={0}
           >
             {" "}
-            <img
-              src={currentModalImage?.imageURL}
-              alt={"God save the queen!"}
-              onLoad={onImageLoad}
+            <div
+              className={styles.imageHighlightContainer}
               style={{ visibility: !imageIsLoading ? "visible" : "hidden" }}
-            />
+            >
+              <img
+                src={currentModalImage?.imageURL}
+                alt={"God save the queen!"}
+                onLoad={onImageLoad}
+              />
+            </div>
           </div>
         )}
       </div>
 
-      <div className={styles.nonImagePart}>
+      <div className={styles.nonImagePart} >
         <div className={styles.modalImageHeader}>
           <div className={styles.imageTitleWrapper}>
             <Button
@@ -417,7 +463,7 @@ const ModalImage = () => {
           )}
         </div>
 
-        <div className={styles.description}>
+        <div ref={descriptionRef} className={styles.description} onMouseLeave={anchorHideHandler}>
           <div className={styles.tagListWrapper}>
             {currentModalImage.imageInfo.tags.length > 0 && (
               <TagList
@@ -426,10 +472,20 @@ const ModalImage = () => {
               />
             )}
           </div>
-          <p>
+          <div className={styles.descriptionText} onMouseUp={selectAnchorText}>
+            <div
+              className={styles.anchoringModeButton}
+              style={{
+                display: anchorBtnVisible ? "block" : "none",
+                top: anchorBtnCoords[1],
+                left: anchorBtnCoords[0],
+              }}
+            >
+              anchor
+            </div>
             {currentModalImage.imageInfo.description ||
               "Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat. Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat."}
-          </p>
+          </div>
         </div>
       </div>
 
