@@ -28,10 +28,20 @@ const initialImageStoreSettings: InitialImageStoreSettings = {
   imagesPerPage: 20,
 };
 
+const DescriptionAnchorType = types.model({
+  anchorText: types.optional(types.string, ""),
+  anchorStartPos: types.optional(types.number, 0),
+});
+
+const ImageDescriptionType = types.model({
+  text: types.optional(types.string, ""),
+  anchors: types.optional(types.array(DescriptionAnchorType), []),
+});
+
 const ImageInfo = types
   .model({
     title: types.optional(types.string, ""),
-    description: types.optional(types.string, ""),
+    description: types.optional(ImageDescriptionType, {}),
     tags: types.optional(types.array(types.string), []),
     likes: types.optional(types.array(types.string), []),
     isLoading: types.optional(types.boolean, false),

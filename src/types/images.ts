@@ -3,6 +3,17 @@ export interface NewImageInfoType {
   imageInfo: any;
 }
 
+export interface DescriptionAnchorType {
+  anchorText : string;
+  anchorTextStartPos: number;
+}
+
+export interface ImageDescriptionType {
+  text: string;
+  anchors: DescriptionAnchorType[];
+
+}
+
 export interface ImageInfoType {
   tags: string;
   likes?: string[];
@@ -12,7 +23,7 @@ export interface ImageInfoType {
   belongsTo?: string;
   openedTo?: string[];
   title?: string;
-  description?: string;
+  description?: ImageDescriptionType;
 }
 
 export interface SelectedImageType {

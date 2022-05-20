@@ -13,7 +13,8 @@ import ImageMenu from "components/ImageMenu";
 import ShareOverlay from "components/Overlays/ShareOverlay";
 import DeleteOverlay from "components/Overlays/DeleteOverlay";
 import EditOverlay from "components/Overlays/EditOverlay";
-import store from "../../../MST/store";
+import { popupNotice } from "utils/popupNotice";
+import store from "MST/store";
 import { ImageType } from "MST/imagesStoreSettings";
 import styles from "./ModalImage.module.scss";
 
@@ -56,6 +57,8 @@ const ModalImage = () => {
   const [deleteOverlayIsOpen, setDeleteOverlayIsOpen] = useState(false);
   const [anchorBtnVisible, setAnchorBtnVisible] = useState(false);
   const [anchorBtnCoords, setAnchorBtnCoords] = useState([0, 0]);
+  const [anchorSelectionText, setAnchorSelectionText] = useState<String>("");
+  const [anchorSelectionOffset, setAnchorSelectionOffset] = useState<Number>(0);
   const modalImageRef = useRef<HTMLDivElement>(null);
   const imageWrapperRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLDivElement>(null);
@@ -94,6 +97,13 @@ const ModalImage = () => {
     setimgInfoIsLoading(false);
   }, [modalImageId, fetchImageById]);
 
+  const onImageLoad = () => {
+    // Waiting for the load of whole image - only then showing it.
+    setImageIsLoading(false);
+  };
+
+  /*############# useEffect hooks #############*/
+
   useEffect(() => {
     // Loading current modal image.
     loadModalImage();
@@ -109,11 +119,14 @@ const ModalImage = () => {
     if (imageExpand) imageWrapperRef.current?.focus();
   }, [imageExpand, currentImageIndex]);
 
-  const onImageLoad = () => {
-    // Waiting for the load of whole image - only then showing it.
-    setImageIsLoading(false);
-  };
-
+  useEffect(() => {
+    // In order to mark parts of description text - description is represented with HTML
+    // rather than plain text. When iimage info is being loaded - the description is rendered
+    // as the innerHTML through the description div ref.
+    if (descriptionRef.current && !imgInfoIsLoading)
+      descriptionRef.current.querySelector("#descriptionText")!.innerHTML =
+        currentModalImage?.imageInfo.description?.text || "";
+  }, [imgInfoIsLoading]);
 
   /*############# Variables without re-render persistant state #############*/
 
@@ -122,23 +135,28 @@ const ModalImage = () => {
   const isUserMode = getCurrentGalleryMode === "userGallery";
   let touchStartX = 0;
 
-
   /*############# Text-image anchoring logics #############*/
 
   const selectAnchorText = (e: React.MouseEvent<HTMLDivElement>) => {
-    console.log(e);
-    let rect = descriptionRef.current!.getBoundingClientRect();
-let x = e.clientX - rect.left; //x position within the element.
-let y = e.clientY - rect.top;  //y position within the element.
-    if (!e.shiftKey || !window.getSelection()) return;
-    const selectedText = window.getSelection()?.toString();
-    setAnchorBtnCoords([x,y])
-    setAnchorBtnVisible(true);
+    const selectedText = window.getSelection()!.toString();
+    if (getCurrentGalleryMode !== "userGallery" || !e.altKey || !selectedText)
+      return;
+
+    const { left } = descriptionRef.current!.getBoundingClientRect();
+    const selectionOffset = window.getSelection()!.anchorOffset;
+
     console.log(selectedText);
+    console.log(selectionOffset);
+
+    setAnchorSelectionText(selectedText);
+    setAnchorSelectionOffset(selectionOffset);
+
+    setAnchorBtnCoords([e.clientX - left, e.clientY]);
+    setAnchorBtnVisible(true);
   };
   const anchorHideHandler = () => {
     setAnchorBtnVisible(false);
-  }
+  };
 
   /*############# Image navigation handlers #############*/
 
@@ -159,13 +177,13 @@ let y = e.clientY - rect.top;  //y position within the element.
         // when there is a need to type something in thos eoverlays - and space is needed
         // as the keyboard character.
         if (editOverlayIsOpen || shareOverlayIsOpen) return;
-        setImageIsExpanded(!imageExpand);
         setImageExpand(!imageExpand);
+        setImageIsExpanded(!imageExpand);
         break;
       }
     }
   };
-  // Mechanism for back/forth swipe touch navigation on touchscreen.
+  /** Mechanism for back/forth swipe touch navigation on touchscreen. */
   const touchImageNav = (e: React.TouchEvent<HTMLDivElement>) => {
     e.stopPropagation();
     if (e.type === "touchstart") touchStartX = e.changedTouches[0].clientX;
@@ -185,11 +203,11 @@ let y = e.clientY - rect.top;  //y position within the element.
       return Math.ceil(allFilteredImagesId.length / imagesPerPage);
     return Math.ceil(imagesList.length / imagesPerPage);
   };
-  // Accepts the direction - if the previous or next image btn was clicked, and defines if
-  // the current image is still among those that are on the current page - therefore -
-  // in the current images array in imagesStoreSettings. If it is not - the new page request
-  // is initiated - either previous one or the next one, if the current page is NOT first one
-  // or last one, respectively.
+  /** Accepts the direction - if the previous or next image btn was clicked, and defines if
+   the current image is still among those that are on the current page - therefore -
+   in the current images array in imagesStoreSettings. If it is not - the new page request
+   is initiated - either previous one or the next one, if the current page is NOT first one
+   or last one, respectively. */
   const pageShiftCheck = (direction: string, id: string) => {
     const isModalImageOnCurrentPage = images.find((image) => image._id === id);
     switch (direction) {
@@ -205,12 +223,12 @@ let y = e.clientY - rect.top;  //y position within the element.
       }
     }
   };
-  // Unified function for navigating back and forth between modal images. Is being invoked
-  // by the prev/next image buttons with "prev" or "next" arguments respectively (or left/right
-  // keyboard arrows). Depending on this direction mark - the index of the next image is being
-  // defined in the currentImagesIdList, being set as currentImageIndex - and the pageShiftCheck
-  // is invoked to check if the previous or next page should be loaded in case,
-  // if image is beyond the currently loaded images set in gallery.
+  /** Unified function for navigating back and forth between modal images. Is being invoked
+   by the prev/next image buttons with "prev" or "next" arguments respectively (or left/right
+   keyboard arrows). Depending on this direction mark - the index of the next image is being
+   defined in the currentImagesIdList, being set as currentImageIndex - and the pageShiftCheck
+   is invoked to check if the previous or next page should be loaded in case,
+   if image is beyond the currently loaded images set in gallery. */
   const adjacentImageLoad = (direction: string) => () => {
     const currentImageIndex = imagesList.findIndex(
       (imageId) => imageId === modalImageId
@@ -235,6 +253,8 @@ let y = e.clientY - rect.top;  //y position within the element.
     setModalImageId(imagesList[adjacentImageIndex]);
   };
 
+  /*############# misc. handles #############*/
+
   const imageControlsVisibilityHandler = debounce(
     () => {
       setImageControlsVisible(true);
@@ -243,7 +263,6 @@ let y = e.clientY - rect.top;  //y position within the element.
     3000,
     true
   );
-
   const toggleLikeHandler = async () => {
     // Likes are stored in separate state in the modalimage component itself -
     // to avoid re-rendering all the component when the like button is clicked.
@@ -257,15 +276,13 @@ let y = e.clientY - rect.top;  //y position within the element.
     await editImagesInfo([{ _id, imageInfo: { likes: newLikesList } }]);
     setModalImageLikes(newLikesList);
   };
-
   const imageExpandHandler = () => {
     // Setting flag both locally - and in store.
     // Think thats better than wrap whole thing into observer
     // just for one flag.
-    setImageIsExpanded(!imageExpand);
     setImageExpand(!imageExpand);
+    setImageIsExpanded(!imageExpand);
   };
-
 
   /*############# Overlays open handlers #############*/
 
@@ -279,7 +296,6 @@ let y = e.clientY - rect.top;  //y position within the element.
     setDeleteOverlayIsOpen(true);
   };
 
-
   /*############# Overlays close handlers #############*/
 
   const shareOverlayCloseHandler = () => {
@@ -291,15 +307,20 @@ let y = e.clientY - rect.top;  //y position within the element.
   };
   const deleteOverlayCloseHandler = () => setDeleteOverlayIsOpen(false);
 
-
   /*############# Overlays confirm click handlers #############*/
 
   const editOverlayConfirmHandler = async (
     title: string,
-    description: string
+    descriptionText: string,
+    descriptionIsChanged: boolean
   ): Promise<void> => {
     setimgInfoIsLoading(true);
-    const { _id } = currentModalImage!;
+    const { _id, imageInfo } = currentModalImage!;
+    // When the description text changes - anchors are reset to empty array.
+    const newAnchors = descriptionIsChanged
+      ? []
+      : imageInfo.description.anchors;
+    const description = { text: descriptionText, anchors: newAnchors };
     await editImagesInfo([{ _id, imageInfo: { title, description } }]);
     await loadModalImage();
     editOverlayCloseHandler();
@@ -310,7 +331,6 @@ let y = e.clientY - rect.top;  //y position within the element.
     setModalComponentType("none");
     setModalOpen(false);
   };
-
 
   /*############# Tags operations handlers #############*/
 
@@ -331,11 +351,11 @@ let y = e.clientY - rect.top;  //y position within the element.
     await loadModalImage();
     setimgInfoIsLoading(false);
   };
-
   const modalImageCloseHandle = () => {
     setModalOpen(false);
     setModalComponentType("none");
-    imageExpandHandler();
+    setImageExpand(false);
+    setImageIsExpanded(false);
   };
 
   return currentModalImage ? (
@@ -418,6 +438,14 @@ let y = e.clientY - rect.top;  //y position within the element.
             <div
               className={styles.imageHighlightContainer}
               style={{ visibility: !imageIsLoading ? "visible" : "hidden" }}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                console.log(e);
+              }}
+              onMouseUp={(e) => {
+                e.preventDefault();
+                console.log(e);
+              }}
             >
               <img
                 src={currentModalImage?.imageURL}
@@ -429,7 +457,7 @@ let y = e.clientY - rect.top;  //y position within the element.
         )}
       </div>
 
-      <div className={styles.nonImagePart} >
+      <div className={styles.nonImagePart}>
         <div className={styles.modalImageHeader}>
           <div className={styles.imageTitleWrapper}>
             <Button
@@ -462,30 +490,35 @@ let y = e.clientY - rect.top;  //y position within the element.
             </div>
           )}
         </div>
-
-        <div ref={descriptionRef} className={styles.description} onMouseLeave={anchorHideHandler}>
-          <div className={styles.tagListWrapper}>
-            {currentModalImage.imageInfo.tags.length > 0 && (
-              <TagList
-                tags={currentModalImage.imageInfo.tags}
-                isEditable={isUserMode}
-              />
-            )}
+        <div className={styles.tagListWrapper}>
+          {currentModalImage.imageInfo.tags.length > 0 && (
+            <TagList
+              tags={currentModalImage.imageInfo.tags}
+              isEditable={isUserMode}
+            />
+          )}
+        </div>
+        <div
+          ref={descriptionRef}
+          className={styles.description}
+          onMouseLeave={anchorHideHandler}
+        >
+          {" "}
+          <div
+            className={styles.anchoringModeButton}
+            style={{
+              display: anchorBtnVisible ? "block" : "none",
+              top: anchorBtnCoords[1],
+              left: anchorBtnCoords[0],
+            }}
+          >
+            <Button text="anchor" />
           </div>
-          <div className={styles.descriptionText} onMouseUp={selectAnchorText}>
-            <div
-              className={styles.anchoringModeButton}
-              style={{
-                display: anchorBtnVisible ? "block" : "none",
-                top: anchorBtnCoords[1],
-                left: anchorBtnCoords[0],
-              }}
-            >
-              anchor
-            </div>
-            {currentModalImage.imageInfo.description ||
-              "Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat. Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat.Consequat id veniam labore dolor ut. Veniam adipisicing ullamco do sunt. Duis minim officia do do fugiat laboris aliquip mollit velit aliqua dolor. Magna nostrud anim exercitation do excepteur proident officia laborum ad. Id ex sint dolore dolore adipisicing ea occaecat culpa ad cillum enim. Est adipisicing duis dolore minim laborum aute veniam officia dolor mollit magna cupidatat."}
-          </div>
+          <div
+            id="descriptionText"
+            className={styles.descriptionText}
+            onMouseUp={selectAnchorText}
+          ></div>
         </div>
       </div>
 
@@ -522,7 +555,7 @@ let y = e.clientY - rect.top;  //y position within the element.
       {editOverlayIsOpen && (
         <EditOverlay
           title={currentModalImage.imageInfo.title}
-          description={currentModalImage.imageInfo.description}
+          descriptionText={currentModalImage.imageInfo.description?.text || ""}
           tags={currentModalImage.imageInfo.tags}
           tagAddHandler={tagAddHandler}
           tagDelHandler={tagDelHandler}

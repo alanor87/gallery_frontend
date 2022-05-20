@@ -5,17 +5,17 @@ import styles from "./EditOverlay.module.scss";
 
 type Props = {
   title: string;
-  description: string;
+  descriptionText: string;
   tags: string[];
   tagAddHandler: (tag: string) => void;
   tagDelHandler: (tag: string) => void;
-  onAccept: (title: string, description: string) => void;
+  onAccept: (title: string, description: string, descriptionIsChanged: boolean) => void;
   onCancel: () => void;
 };
 
 const EditOverlay: React.FC<Props> = ({
   title: initTitle,
-  description: initDescription,
+  descriptionText: initDescriptionText,
   tags,
   tagAddHandler,
   tagDelHandler,
@@ -23,7 +23,7 @@ const EditOverlay: React.FC<Props> = ({
   onCancel,
 }) => {
   const [title, setTitle] = useState(initTitle);
-  const [description, setDescription] = useState(initDescription);
+  const [descriptionText, setDescriptionText] = useState(initDescriptionText);
 
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
@@ -32,11 +32,12 @@ const EditOverlay: React.FC<Props> = ({
 
   const onDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     e.stopPropagation();
-    setDescription(e.target.value);
+    setDescriptionText(e.target.value);
   };
 
   const onAcceptClickHandle = () => {
-    onAccept(title, description);
+    const descriptionIsChanged = initDescriptionText !== descriptionText;
+    onAccept(title, descriptionText, descriptionIsChanged);
   };
   return (
     <div className={`overlay`}>
@@ -55,9 +56,17 @@ const EditOverlay: React.FC<Props> = ({
         <span className={styles.fieldTitle}>Description</span>
         <textarea
           className={styles.description}
-          value={description}
+          value={descriptionText}
           onChange={onDescriptionChange}
         />
+        <span
+          style={{
+            display:
+              initDescriptionText !== descriptionText ? "inline" : "none",
+          }}
+        >
+          Clicking Accept after Description edit will delete all anchors in text
+        </span>
         <div className="overlay-buttonWrapper">
           <Button text="Accept" onClick={onAcceptClickHandle} />
           <Button text="Cancel" onClick={onCancel} />
