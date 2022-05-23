@@ -96,8 +96,6 @@
   }
 
   .imageWrapper {
-    display: flex;
-    align-items: center;
     top: 0;
     right: 0;
     height: 100%;
@@ -117,8 +115,19 @@
   }
 
   .imageHighlightContainer {
-    flex-grow: 1;
     position: relative;
+  }
+
+  .anchorImgFrame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    z-index: 1;
+    border: 1px solid var(--color-accent);
+    cursor: pointer;
+    opacity: 0;
   }
 
   img {
@@ -151,7 +160,7 @@
 
   .imageControls {
     position: absolute;
-    top: 12px;
+    bottom: 20px;
     right: 50%;
     display: flex;
     opacity: 0;

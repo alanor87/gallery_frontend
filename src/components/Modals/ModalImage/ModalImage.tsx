@@ -4,6 +4,7 @@ import React, {
   useMemo,
   useCallback,
   useRef,
+  SyntheticEvent,
 } from "react";
 import { debounce } from "debounce";
 import cn from "classnames";
@@ -59,9 +60,18 @@ const ModalImage = () => {
   const [anchorBtnCoords, setAnchorBtnCoords] = useState([0, 0]);
   const [anchorSelectionText, setAnchorSelectionText] = useState<String>("");
   const [anchorSelectionOffset, setAnchorSelectionOffset] = useState<Number>(0);
+  const [anchorImgFrameCoords, setAnchorImgFrameCoords] = useState([0, 0]);
+  const [anchorImgFrameSize, setAnchorImgFrameSize] = useState([0, 0]);
+  const [anchorSelectionImageMode, setAnchorSelectionImageMode] =
+    useState(false);
+
   const modalImageRef = useRef<HTMLDivElement>(null);
   const imageWrapperRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLDivElement>(null);
+  const anchorImgFrameRef = useRef<HTMLDivElement>(null);
+
+  console.log(anchorImgFrameCoords);
+  console.log(anchorImgFrameSize);
 
   const imagesList = useMemo(() => {
     // Defining the list of all image IDs that are available for the modal image browsing.
@@ -109,6 +119,9 @@ const ModalImage = () => {
     loadModalImage();
     // Defining index of the current image in the list of imagesID.
     setCurrentImageIndex(imagesList.indexOf(modalImageId));
+    // Resetting anchor editing mode  - sot he nav elements would be seen.
+    setAnchorSelectionImageMode(false);
+    anchorBtnHideHandler();
   }, [modalImageId, loadModalImage, imagesList]);
 
   useEffect(() => {
@@ -117,6 +130,9 @@ const ModalImage = () => {
     // imageWrapper - so the down-up arrow scroll would be available as well.
     modalImageRef.current?.focus();
     if (imageExpand) imageWrapperRef.current?.focus();
+    // Resetting anchor editing mode  - sot he nav elements would be seen.
+    setAnchorSelectionImageMode(false);
+    anchorBtnHideHandler();
   }, [imageExpand, currentImageIndex]);
 
   useEffect(() => {
@@ -134,6 +150,12 @@ const ModalImage = () => {
   const isLastImage = currentImageIndex === imagesList.length - 1;
   const isUserMode = getCurrentGalleryMode === "userGallery";
   let touchStartX = 0;
+  // Coordinates and dimensions for the image anchor frame.
+  // Not using useState here to prevent constant rerendering of the component while drawing the div.
+  let frameWidth = 0;
+  let frameHeight = 0;
+  let finalFrameCoordX = 0;
+  let finalFrameCoordY = 0;
 
   /*############# Text-image anchoring logics #############*/
 
@@ -154,8 +176,58 @@ const ModalImage = () => {
     setAnchorBtnCoords([e.clientX - left, e.clientY]);
     setAnchorBtnVisible(true);
   };
-  const anchorHideHandler = () => {
+  const selectAnchorImgFrame = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!anchorSelectionImageMode) return;
+    switch (e.type) {
+      // Getting the coordinates of starting point of the frame rectangle drawing.
+      case "mousedown": {
+        console.log(e);
+        anchorImgFrameRef.current!.setAttribute("style", "");
+        setAnchorImgFrameCoords([e.nativeEvent.offsetX, e.nativeEvent.offsetY]);
+        break;
+      }
+      case "mousemove": {
+        // Defining if the left mouse button is pressed during mouse move over image.
+        if (e.buttons !== 1) return;
+        // Calculating and setting dimensions of the frame div.
+        frameWidth = Math.abs(e.nativeEvent.offsetX - anchorImgFrameCoords[0]);
+        frameHeight = Math.abs(e.nativeEvent.offsetY - anchorImgFrameCoords[1]);
+        // Determining of the coords of the upper left corner of the frame div
+        // for correct positioning.
+        finalFrameCoordX =
+          anchorImgFrameCoords[0] < e.nativeEvent.offsetX
+            ? anchorImgFrameCoords[0]
+            : e.nativeEvent.offsetX;
+        finalFrameCoordY =
+          anchorImgFrameCoords[1] < e.nativeEvent.offsetY
+            ? anchorImgFrameCoords[1]
+            : e.nativeEvent.offsetY;
+        anchorImgFrameRef.current!.setAttribute(
+          "style",
+          `top: ${finalFrameCoordY}px; left: ${finalFrameCoordX}px ; width: ${frameWidth}px; height: ${frameHeight}px; opacity: 1; pointer-events: none;`
+        );
+        break;
+      }
+      case "mouseup": {
+        setAnchorImgFrameSize([frameWidth, frameHeight]);
+        setAnchorImgFrameCoords([finalFrameCoordX, finalFrameCoordY]);
+        anchorImgFrameRef.current!.style.pointerEvents = "all";
+        break;
+      }
+    }
+    // setAnchorSelectionImageMode(false);
+  };
+  const anchorBtnHideHandler = () => {
     setAnchorBtnVisible(false);
+  };
+  const anchorBtnCancelHandler = () => {
+    anchorImgFrameRef.current!.setAttribute("style", "");
+    setAnchorSelectionImageMode(false);
+    anchorBtnHideHandler();
+  };
+  const anchorBtnConfirmHandler = () => {
+    setAnchorSelectionImageMode(true);
   };
 
   /*############# Image navigation handlers #############*/
@@ -257,6 +329,7 @@ const ModalImage = () => {
 
   const imageControlsVisibilityHandler = debounce(
     () => {
+      if (anchorSelectionImageMode) return;
       setImageControlsVisible(true);
       setTimeout(() => setImageControlsVisible(false), 2000);
     },
@@ -371,6 +444,7 @@ const ModalImage = () => {
         className={styles.modalImageBackdrop}
         style={{ backgroundImage: `url(${currentModalImage.imageURL})` }}
       ></div>
+
       <div
         className={cn(styles.imagePart, {
           [styles.expanded]: imageExpand,
@@ -438,15 +512,14 @@ const ModalImage = () => {
             <div
               className={styles.imageHighlightContainer}
               style={{ visibility: !imageIsLoading ? "visible" : "hidden" }}
-              onMouseDown={(e) => {
-                e.preventDefault();
-                console.log(e);
-              }}
-              onMouseUp={(e) => {
-                e.preventDefault();
-                console.log(e);
-              }}
+              onMouseDown={selectAnchorImgFrame}
+              onMouseMove={selectAnchorImgFrame}
+              onMouseUp={selectAnchorImgFrame}
             >
+              <div
+                ref={anchorImgFrameRef}
+                className={cn(styles.anchorImgFrame)}
+              ></div>
               <img
                 src={currentModalImage?.imageURL}
                 alt={"God save the queen!"}
@@ -501,7 +574,9 @@ const ModalImage = () => {
         <div
           ref={descriptionRef}
           className={styles.description}
-          onMouseLeave={anchorHideHandler}
+          onMouseLeave={
+            anchorSelectionImageMode ? () => null : anchorBtnHideHandler
+          }
         >
           {" "}
           <div
@@ -512,7 +587,14 @@ const ModalImage = () => {
               left: anchorBtnCoords[0],
             }}
           >
-            <Button text="anchor" />
+            <Button
+              text={anchorSelectionImageMode ? "Cancel" : "Create anchor"}
+              onClick={
+                anchorSelectionImageMode
+                  ? anchorBtnCancelHandler
+                  : anchorBtnConfirmHandler
+              }
+            />
           </div>
           <div
             id="descriptionText"
