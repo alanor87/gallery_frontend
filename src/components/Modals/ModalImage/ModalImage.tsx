@@ -229,6 +229,12 @@ const ModalImage = () => {
   const anchorBtnConfirmHandler = () => {
     setAnchorSelectionImageMode(true);
   };
+  const createAnchor = async () => {
+    setimgInfoIsLoading(true);
+    const { _id, imageInfo } = currentModalImage!;
+    // editImagesInfo([{ _id, imageInfo: { title, description } }]);
+    setimgInfoIsLoading(false);
+  };
 
   /*############# Image navigation handlers #############*/
 
@@ -519,7 +525,11 @@ const ModalImage = () => {
               <div
                 ref={anchorImgFrameRef}
                 className={cn(styles.anchorImgFrame)}
-              ></div>
+                onClick={createAnchor}
+              >
+                {anchorSelectionText}
+                <span>Click to create anchor.</span>
+              </div>
               <img
                 src={currentModalImage?.imageURL}
                 alt={"God save the queen!"}

@@ -30,7 +30,9 @@ const initialImageStoreSettings: InitialImageStoreSettings = {
 
 const DescriptionAnchorType = types.model({
   anchorText: types.optional(types.string, ""),
-  anchorStartPos: types.optional(types.number, 0),
+  anchorTextStartPos: types.optional(types.number, 0),
+  anchorFrameCoords: types.optional(types.array(types.number), [0, 0]),
+  anchorFrameSize: types.optional(types.array(types.number), [0, 0]),
 });
 
 const ImageDescriptionType = types.model({
