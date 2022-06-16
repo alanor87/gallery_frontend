@@ -4,14 +4,15 @@ export interface NewImageInfoType {
 }
 
 export interface DescriptionAnchorType {
-  anchorText : string;
+  anchorText: string;
   anchorTextStartPos: number;
+  anchorFrameCoords: number[];
+  anchorFrameSize: number[];
 }
 
 export interface ImageDescriptionType {
   text: string;
   anchors: DescriptionAnchorType[];
-
 }
 
 export interface ImageInfoType {

@@ -1,5 +1,5 @@
-import { Button } from "../elements";
-import store from "../../MST/store";
+import { Button } from "components/elements";
+import store from "MST/store";
 import styles from "./ImageMenu.module.scss";
 
 interface Props {

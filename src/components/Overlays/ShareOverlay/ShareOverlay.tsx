@@ -1,8 +1,8 @@
 import React, { useState, useRef } from "react";
 import QRCode from "react-qr-code";
-import store from "../../../MST/store";
-import TagEditor from "../../TagEditor";
-import { Button, ToggleButton } from "../../elements";
+import store from "MST/store";
+import TagEditor from "components/TagEditor";
+import { Button, ToggleButton } from "components/elements";
 import { ImageOpenedToUserEntry } from "types/common";
 import { popupNotice } from "utils/popupNotice";
 import styles from "./ShareOverlay.module.scss";

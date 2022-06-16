@@ -4,11 +4,9 @@ import TagList from "../TagList";
 import { Button, Spinner } from "../elements";
 import TagEditor from "../TagEditor";
 import ImageMenu from "../ImageMenu";
-import DeleteOverlay from "../Overlays/DeleteOverlay";
-import ShareOverlay from "../Overlays/ShareOverlay";
-import SelectOverlay from "../Overlays/SelectOverlay";
-import { ImageType } from "../../MST/imagesStoreSettings";
-import store from "../../MST/store";
+import {ShareOverlay, DeleteOverlay, SelectOverlay} from "components/Overlays";
+import { ImageType } from "MST/imagesStoreSettings";
+import store from "MST/store";
 import styles from "./ImageCard.module.scss";
 
 interface Props {

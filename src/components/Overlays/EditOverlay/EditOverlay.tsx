@@ -55,10 +55,11 @@ const EditOverlay: React.FC<Props> = ({
         />
         <span className={styles.fieldTitle}>Description</span>
         <textarea
+        style={{position: 'relative'}}
           className={styles.description}
           value={descriptionText}
           onChange={onDescriptionChange}
-        />
+        ></textarea>
         <span
           style={{
             display:

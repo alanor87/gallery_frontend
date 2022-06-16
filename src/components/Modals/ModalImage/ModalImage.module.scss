@@ -131,6 +131,7 @@
     gap: 10px;
     padding: 8px;
     overflow: hidden;
+    pointer-events: none;
     z-index: 1;
     border: 1px solid var(--color-accent);
     box-shadow: inset 0px 0px 5px 2px var(--main-background-color-alpha);
@@ -288,17 +289,31 @@
     margin-bottom: 15px;
   }
 
-  .description {
+  .descriptionWrapper {
     padding: 0 11px;
 
     .descriptionText {
       position: relative;
       overflow: visible;
       text-indent: 10px;
+    }
 
-      &::first-letter {
-        font-size: 19px;
-      }
+    .descriptionHighlight {
+      position: absolute;
+      top: 0;
+      text-indent: 10px;
+      background-color: transparent;
+      pointer-events: none;
+    }
+
+    mark {
+      color: transparent;
+      outline: 1px solid var(--color-accent);
+      background-color: transparent;
+      border-radius: 5px;
+      user-select: none;
+      cursor: pointer;
+      pointer-events: all;
     }
 
     .anchoringModeButton {

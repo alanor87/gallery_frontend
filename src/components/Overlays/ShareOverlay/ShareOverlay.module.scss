@@ -44,6 +44,14 @@
     overflow-wrap: anywhere;
     cursor: pointer;
   }
+
+  :global(.tagEditor) {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
 }
 
 // When being displayed through modal image view.
@@ -62,14 +70,6 @@
   .option {
     margin-bottom: 25px;
   }
-}
-
-:global(.overlay .tagEditor) {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
 }
 
 .socialNetWrapper {

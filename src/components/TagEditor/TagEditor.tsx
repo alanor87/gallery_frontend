@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import TagList from "../TagList";
-import { Button } from "../elements";
+import TagList from "components/TagList";
+import { Button } from "components/elements";
 import styles from "./TagEditor.module.scss";
 
 interface Props {

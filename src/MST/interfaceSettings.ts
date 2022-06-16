@@ -1,5 +1,5 @@
 import axios from "axios";
-import { popupNotice } from "../utils/popupNotice";
+import { popupNotice } from "utils/popupNotice";
 import { types, flow, getParent } from "mobx-state-tree";
 
 export const interfaceSettings = types

@@ -1,5 +1,5 @@
-import { Tag } from "../elements";
 import { observer } from "mobx-react-lite";
+import { Tag } from "components/elements";
 import styles from "./TagList.module.scss";
 
 interface Props {

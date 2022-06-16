@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { popupNotice } from "utils/popupNotice";
-import { Button, Spinner } from "../../elements";
-import store from "../../../MST/store";
+import { Button, Spinner } from "components/elements";
+import store from "MST/store";
 import { ModalWindowProps } from "types/modal";
 import styles from "./ModalUpload.module.scss";
 

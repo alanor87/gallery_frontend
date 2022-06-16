@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { observer } from "mobx-react-lite";
 import { createPortal } from "react-dom";
 import { Spinner } from "components/elements";
-import store from "../../../MST/store";
+import store from "MST/store";
 import styles from "./Modal.module.scss";
 
 const ModalUpload = lazy(() => import("../ModalUpload"));

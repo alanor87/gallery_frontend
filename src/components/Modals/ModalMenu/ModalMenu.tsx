@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { ToggleButton, Button } from "components/elements";
 import { ModalWindowProps } from "types/modal";
-import store from "../../../MST/store";
+import store from "MST/store";
 import styles from "./ModalMenu.module.scss";
 
 const ModalMenu: React.FC<ModalWindowProps> = ({ modalCloseHandle }) => {

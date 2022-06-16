@@ -4,6 +4,7 @@ Global aim is to create an image hosting that would make the sharing of images a
  
 - CURRENT - create a text-to-image part pointing mechanism - best of all as a library, npm package (so also I would learn how to make one).
   It would create arrow or line type pointers from special parts of text to specific parts of image.
+- refactor types, where it is possible - create them from the MST models via Instance.
 - add Viber and Telegram share, maybe FB messenger.
 - sort by likes number.
 - modify filter - so it would look also by the title. So it makes the search by the title and tags.

@@ -1,8 +1,8 @@
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import LoginForm from "../../components/LoginForm";
-import RegisterForm from "../../components/RegisterForm";
+import LoginForm from "components/LoginForm";
+import RegisterForm from "components/RegisterForm";
 import { Spinner } from "components/elements";
 import store from "MST/store";
 

@@ -8,7 +8,7 @@ import {
 } from "mobx-state-tree";
 import { ImageOpenedToUserEntry } from "types/common";
 import { NewImageInfoType, GalleryType } from "types/images";
-import { popupNotice } from "../utils/popupNotice";
+import { popupNotice } from "utils/popupNotice";
 
 interface InitialImageStoreSettings {
   galleryMode: GalleryType;
@@ -28,22 +28,22 @@ const initialImageStoreSettings: InitialImageStoreSettings = {
   imagesPerPage: 20,
 };
 
-const DescriptionAnchorType = types.model({
+const DescriptionAnchor = types.model({
   anchorText: types.optional(types.string, ""),
   anchorTextStartPos: types.optional(types.number, 0),
   anchorFrameCoords: types.optional(types.array(types.number), [0, 0]),
   anchorFrameSize: types.optional(types.array(types.number), [0, 0]),
 });
 
-const ImageDescriptionType = types.model({
+const ImageDescription = types.model({
   text: types.optional(types.string, ""),
-  anchors: types.optional(types.array(DescriptionAnchorType), []),
+  anchors: types.optional(types.array(DescriptionAnchor), []),
 });
 
 const ImageInfo = types
   .model({
     title: types.optional(types.string, ""),
-    description: types.optional(ImageDescriptionType, {}),
+    description: types.optional(ImageDescription, {}),
     tags: types.optional(types.array(types.string), []),
     likes: types.optional(types.array(types.string), []),
     isLoading: types.optional(types.boolean, false),
@@ -70,7 +70,6 @@ export const Image = types
     imageInfo: types.optional(ImageInfo, {}),
     isSelected: types.optional(types.boolean, false),
     title: types.optional(types.string, ""),
-    description: types.optional(types.string, ""),
   })
   .actions((self) => {
     const updateImageInfo = (newImageInfo: ImageInfoType) => {

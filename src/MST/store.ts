@@ -1,6 +1,6 @@
 import { types, flow, applySnapshot } from "mobx-state-tree";
 import axios, { AxiosResponse, AxiosError } from "axios";
-import { popupNotice } from "../utils/popupNotice";
+import { popupNotice } from "utils/popupNotice";
 import userSettings from "./userSettings";
 import modalSettings from "./modalSettings";
 import imagesStoreSettings from "./imagesStoreSettings";

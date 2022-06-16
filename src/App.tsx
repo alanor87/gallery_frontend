@@ -3,14 +3,14 @@ import { useLocation } from "react-router";
 import { Switch, Redirect } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import axios from "axios";
-import PrivateRoute from "./components/_routes/PrivateRoute";
-import PublicRoute from "./components/_routes/PublicRoute";
-import AppBar from "./components/AppBar";
-import Pagination from "./components/Pagination";
-import SideMenu from "./components/SideMenu";
-import { Spinner } from "./components/elements";
-import routes from "./routes";
-import store from "./MST/store";
+import PrivateRoute from "components/_routes/PrivateRoute";
+import PublicRoute from "components/_routes/PublicRoute";
+import AppBar from "components/AppBar";
+import Pagination from "components/Pagination";
+import SideMenu from "components/SideMenu";
+import { Spinner } from "components/elements";
+import routes from "routes";
+import store from "MST/store";
 
 function App() {
   console.log("App render");

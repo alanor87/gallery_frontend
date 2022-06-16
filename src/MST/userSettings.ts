@@ -1,13 +1,13 @@
 import axios from "axios";
 import { types, flow, applySnapshot } from "mobx-state-tree";
 import { interfaceSettings } from "./interfaceSettings";
-import { popupNotice } from "../utils/popupNotice";
+import { popupNotice } from "utils/popupNotice";
 import {
   AuthenticatedUserType,
   UserInterfaceSettings,
   RegisterFormInterface,
   LoginFormInterface,
-} from "../types/user";
+} from "types/user";
 
 const initialUserSettings = {
   userName: "",

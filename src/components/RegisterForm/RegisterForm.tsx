@@ -1,10 +1,10 @@
 import { Formik, Form } from "formik";
-import Input from "../elements/Input";
+import Input from "components/elements/Input";
 import { NavLink } from "react-router-dom";
-import store from "../../MST/store";
+import store from "MST/store";
 import * as Yup from "yup";
-import { Button } from "../elements";
-import { RegisterFormInterface } from "../../types/user";
+import { Button } from "components/elements";
+import { RegisterFormInterface } from "types/user";
 import styles from "./RegisterForm.module.scss";
 
 const validationSchema = Yup.object({

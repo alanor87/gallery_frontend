@@ -1,6 +1,6 @@
 import { useState } from "react";
-import store from "../../../MST/store";
-import { Button, Spinner } from "../../elements";
+import store from "MST/store";
+import { Button, Spinner } from "components/elements";
 import styles from "./DeleteOverlay.module.scss";
 
 interface Props {
