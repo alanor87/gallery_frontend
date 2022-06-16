@@ -136,7 +136,7 @@ const ModalImage = () => {
   useEffect(() => {
     // In order to mark parts of description text - description is represented with HTML
     // rather than plain text. When image info is being loaded - the description is rendered
-    // as the innerHTML through the description div ref.
+    // as the innerHTML of div that underlies original text, with highlighted anchors.
 
     if (descriptionHighlightRef.current && !imgInfoIsLoading) {
       descriptionHighlightRef.current!.innerHTML = descriptionParser(
@@ -167,9 +167,6 @@ const ModalImage = () => {
 
     const { left } = descriptionHighlightRef.current!.getBoundingClientRect();
     const selectionOffset = window.getSelection()!.anchorOffset;
-
-    console.log(selectedText);
-    console.log(selectionOffset);
 
     setAnchorText(selectedText);
     setAnchorTextStartPos(selectionOffset);
@@ -564,7 +561,7 @@ const ModalImage = () => {
         )}
       </div>
 
-      <div className={styles.nonImagePart}>
+      {!imgInfoIsLoading && <div className={styles.nonImagePart}>
         <div className={styles.modalImageHeader}>
           <div className={styles.imageTitleWrapper}>
             <Button
@@ -637,7 +634,7 @@ const ModalImage = () => {
             ></div>
           </div>
         </div>
-      </div>
+      </div>}
 
       <Button
         type="button"
