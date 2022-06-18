@@ -4,9 +4,10 @@ import { ImageDescriptionType } from "types/images";
  * using the anchors information, turning the anchored parts
  *  of text to <mark> tags for interaction and stylization purposes.
  */
-const descriptionParser = (imageDescription: ImageDescriptionType) => {
+const descriptionParser = (imageDescription: ImageDescriptionType | undefined) => {
+  if(!imageDescription) return '';
   if (!imageDescription.anchors?.length) return imageDescription.text;
-
+console.log(imageDescription.anchors);
   // Sorting anchors by their starting position in the description text.
   const sortedAnchorsArray = [...imageDescription.anchors].sort(
     (anchor1, anchor2) => {
@@ -37,19 +38,15 @@ const descriptionParser = (imageDescription: ImageDescriptionType) => {
           sortedAnchorsArray[index + 1].anchorTextStartPos
         );
       }
-      // Replacing the anchorText with itself, braced in <mark> tag. The .replace() method
-      // replaces only the first occurence - so there is no risk in case of duplicate occurences.
-      const stringWithTagedAnchor = stringStartFromAnchor.replace(
-        anchor.anchorText,
-        `<mark>${anchor.anchorText}</mark>`
-      );
+      // Bracing the anchor word, that starts at the 0 position in the string, with <mark> JSX.
+      // then adding the rest of the string, deprived of anchorText.length symbols in the start.
+      const stringWithTagedAnchor = [<mark>{anchor.anchorText}</mark>, stringStartFromAnchor.slice(anchor.anchorText.length)]
       return stringWithTagedAnchor;
     }
   );
 
-  // Concatenating beginning of the description with the modified anchored string parts.
-  const parsedDescription =
-    descriptionStart + choppedDescriptionTextArray.join("");
+  // Concatenating beginning of the description with the modified anchored string/JSX parts.
+  const parsedDescription = [descriptionStart, ...choppedDescriptionTextArray.flat()];
 
   return parsedDescription;
 };
