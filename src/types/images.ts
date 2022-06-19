@@ -4,6 +4,7 @@ export interface NewImageInfoType {
 }
 
 export interface DescriptionAnchorType {
+  _id?: string;
   anchorText: string;
   anchorTextStartPos: number;
   anchorFrameCoords: number[];

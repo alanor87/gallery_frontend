@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from "react";
 import { debounce } from "debounce";
-import { descriptionParser } from "utils/descriptionlParser";
+import { DescriptionTextAnchorsLayer } from "./DescriptionTextAnchorsLayer";
 import cn from "classnames";
 import { Spinner, Button } from "components/elements";
 import TagList from "components/TagList";
@@ -43,12 +43,11 @@ const ModalImage = () => {
   const { userIsAuthenticated, userName, userOwnedImages, userOpenedToImages } =
     store.userSettings;
 
-  const [currentModalImage, setCurrentModalImage] = useState<
-    ImageType | undefined
-  >(undefined);
+  const [currentModalImage, setCurrentModalImage] = useState<ImageType>();
   const [currentImageIndex, setCurrentImageIndex] = useState<Number>();
-  const [currentImageUrl, setCurrentImageUrl] = useState();
+  // Loading of image object from backend.
   const [imgInfoIsLoading, setimgInfoIsLoading] = useState(false);
+  // Loading of the image picture itself.
   const [imageIsLoading, setImageIsLoading] = useState(true);
   // The expand flag is duplicated in store - to keep the expanded state while switching between pages.
   const [imageExpand, setImageExpand] = useState(imageIsExpanded);
@@ -70,6 +69,7 @@ const ModalImage = () => {
   const modalImageRef = useRef<HTMLDivElement>(null);
   const imageWrapperRef = useRef<HTMLDivElement>(null);
   const descriptionTextRef = useRef<HTMLDivElement>(null);
+  const anchorImgFrameRef = useRef<HTMLDivElement>(null);
   const newAnchorImgFrameRef = useRef<HTMLDivElement>(null);
 
   const imagesList = useMemo(() => {
@@ -101,7 +101,6 @@ const ModalImage = () => {
     setImageIsLoading(true);
     setimgInfoIsLoading(true);
     const newModalImage: any = await fetchImageById(modalImageId);
-    setCurrentImageUrl(newModalImage.imageURL);
     setCurrentModalImage(newModalImage);
     setModalImageLikes(newModalImage.imageInfo.likes);
     setimgInfoIsLoading(false);
@@ -128,7 +127,6 @@ const ModalImage = () => {
     // Focusing on the modalImage div, so the arrow navigation through keyDown event
     // would be available. In case of the image being expanded - switching focus to the
     // imageWrapper - so the down-up arrow scroll would be available as well.
-    console.log(modalImageRef.current);
     modalImageRef.current?.focus();
     if (imageExpand) imageWrapperRef.current?.focus();
     // Resetting anchor editing mode  - so the nav elements would be seen.
@@ -141,6 +139,7 @@ const ModalImage = () => {
   const isFirstImage = currentImageIndex === 0;
   const isLastImage = currentImageIndex === imagesList.length - 1;
   const isUserMode = getCurrentGalleryMode === "userGallery";
+  let currentChosenAnchorId = "";
   let touchStartX = 0;
   // Coordinates and dimensions for the image anchor frame.
   // Not using useState here to prevent constant rerendering of the component while drawing the div.
@@ -220,6 +219,8 @@ const ModalImage = () => {
     anchorBtnHideHandler();
   };
   const createAnchor = async (e: React.MouseEvent) => {
+    anchorBtnHideHandler();
+    setimgInfoIsLoading(true);
     const { _id, imageInfo } = currentModalImage!;
     const newAnchor: DescriptionAnchorType = {
       anchorText,
@@ -232,28 +233,42 @@ const ModalImage = () => {
       text: imageInfo.description.text,
       anchors: newAnchorsArray,
     };
-    setimgInfoIsLoading(true);
     await editImagesInfo([{ _id, imageInfo: { description } }]);
     await loadModalImage();
-    setAnchorFrameCreated(false);
     setAnchorSelectionImageMode(false);
     setAnchorFrameCreated(false);
-    anchorBtnHideHandler();
+  };
+  const showAnchorImgFrame = (currentAnchorId: string) => {
+    const currentAnchor = currentModalImage!.imageInfo.description.anchors.find(
+      (anchor) => anchor._id === currentAnchorId
+    );
+    const { anchorFrameCoords, anchorFrameSize, anchorText } = currentAnchor!;
+    anchorImgFrameRef.current!.setAttribute(
+      "style",
+      `top: ${anchorFrameCoords[1]}px; 
+      left: ${anchorFrameCoords[0]}px;
+      width: ${anchorFrameSize[0]}px; 
+      height: ${anchorFrameSize[1]}px;
+      opacity: 1; pointer-events: none;`
+    );
+    anchorImgFrameRef.current!.innerText = anchorText;
+  };
+
+  const hideAnchorImgFrame = () => {
+    anchorImgFrameRef.current!.setAttribute("style", ``);
+    anchorImgFrameRef.current!.innerText = "";
   };
 
   /*############# Image navigation handlers #############*/
 
   const keyboardImageNav = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    console.log('key pressed');
     switch (e.code) {
       case "ArrowLeft": {
-        console.log('key ArrowLeft');
         if (currentImageIndex === 0) break;
         adjacentImageLoad("prev")();
         break;
       }
       case "ArrowRight": {
-        console.log('key ArrowRight');
         if (currentImageIndex === imagesList.length - 1) break;
         adjacentImageLoad("next")();
         break;
@@ -263,6 +278,7 @@ const ModalImage = () => {
         // when there is a need to type something in those overlays - and space is needed
         // as the keyboard character.
         if (editOverlayIsOpen || shareOverlayIsOpen) return;
+        hideAnchorImgFrame();
         setImageExpand(!imageExpand);
         setImageIsExpanded(!imageExpand);
         break;
@@ -309,6 +325,7 @@ const ModalImage = () => {
       }
     }
   };
+
   /** Unified function for navigating back and forth between modal images. Is being invoked
    by the prev/next image buttons with "prev" or "next" arguments respectively (or left/right
    keyboard arrows). Depending on this direction mark - the index of the next image is being
@@ -406,7 +423,7 @@ const ModalImage = () => {
     const newAnchors = descriptionIsChanged
       ? []
       : imageInfo.description.anchors;
-    const description = { text: descriptionText, anchors: newAnchors };
+    const description = { text: descriptionText.trim(), anchors: newAnchors };
     await editImagesInfo([{ _id, imageInfo: { title, description } }]);
     await loadModalImage();
     editOverlayCloseHandler();
@@ -452,7 +469,7 @@ const ModalImage = () => {
     >
       <div
         className={styles.modalImageBackdrop}
-        style={{ backgroundImage: `url(${currentImageUrl})` }}
+        style={{ backgroundImage: `url(${currentModalImage.imageURL})` }}
       ></div>
 
       <div
@@ -509,15 +526,12 @@ const ModalImage = () => {
           />
         )}
 
-        {imageIsLoading && <Spinner side={50} />}
-
         {!imgInfoIsLoading && (
           <div
             className={cn(styles.imageWrapper, {
               [styles.visible]: imageControlsVisible,
               [styles.expanded]: imageExpand,
             })}
-            style={{visibility: imageIsLoading ? 'hidden' : 'visible'}}
             ref={imageWrapperRef}
             onLoad={() => {
               imageWrapperRef.current?.focus();
@@ -533,99 +547,114 @@ const ModalImage = () => {
             >
               <div
                 ref={newAnchorImgFrameRef}
-                className={styles.anchorImgFrame}
+                className={styles.newAnchorImgFrame}
                 onClick={createAnchor}
               >
                 {anchorText}
                 <span>Click to create anchor.</span>
               </div>
+              <div
+                ref={anchorImgFrameRef}
+                className={styles.anchorImgFrame}
+              ></div>
               <img
-                src={currentImageUrl}
+                src={currentModalImage.imageURL}
                 alt={currentModalImage.title}
                 onLoad={onImageLoad}
               />
             </div>
           </div>
         )}
+
+        {imageIsLoading && <Spinner side={50} />}
       </div>
 
-        <div className={styles.nonImagePart}>
-          <div className={styles.modalImageHeader}>
-            <div className={styles.imageTitleWrapper}>
-              <Button
-                type="button"
-                icon="icon_like"
-                onClick={toggleLikeHandler}
-                className={styles.modalImageLikeBtn}
-                text={modalImageLikes.length}
-                disabled={!userIsAuthenticated}
-                title="Like / Dislike"
-              />
-              <h2>{currentModalImage.imageInfo.title || "No title"}</h2>
-              <Button
-                type="button"
-                title="Close modal image"
-                className={"closeBtn " + styles.mobile}
-                icon="icon_close"
-                iconSize={30}
-                onClick={modalImageCloseHandle}
-              />
-            </div>
-            {userIsAuthenticated && isUserMode && (
-              <div className={styles.modalControlsWrapper}>
-                <ImageMenu
-                  modalImageMode={true}
-                  onShare={shareOverlayOpenHandler}
-                  onEdit={editOverlayOpenHandler}
-                  onDelete={deleteOverlayOpenHandler}
+      <div className={styles.nonImagePart}>
+        {!imageIsLoading && (
+          <>
+            {" "}
+            <div className={styles.modalImageHeader}>
+              <div className={styles.imageTitleWrapper}>
+                <Button
+                  type="button"
+                  icon="icon_like"
+                  onClick={toggleLikeHandler}
+                  className={styles.modalImageLikeBtn}
+                  text={modalImageLikes.length}
+                  disabled={!userIsAuthenticated}
+                  title="Like / Dislike"
+                />
+                <h2>{currentModalImage.imageInfo.title || "No title"}</h2>
+                <Button
+                  type="button"
+                  title="Close modal image"
+                  className={"closeBtn " + styles.mobile}
+                  icon="icon_close"
+                  iconSize={30}
+                  onClick={modalImageCloseHandle}
                 />
               </div>
-            )}
-          </div>
-          <div className={styles.tagListWrapper}>
-            {currentModalImage.imageInfo.tags.length > 0 && (
-              <TagList
-                tags={currentModalImage.imageInfo.tags}
-                isEditable={isUserMode}
-              />
-            )}
-          </div>
-          <div
-            className={styles.descriptionWrapper}
-            onMouseLeave={
-              anchorSelectionImageMode ? () => null : anchorBtnHideHandler
-            }
-          >
-            {" "}
-            <div
-              className={styles.anchoringModeButton}
-              style={{
-                display: anchorBtnVisible ? "block" : "none",
-                top: anchorBtnCoords[1],
-                left: anchorBtnCoords[0],
-              }}
-            >
-              <Button
-                text={anchorSelectionImageMode ? "Cancel" : "Create anchor"}
-                onClick={
-                  anchorSelectionImageMode
-                    ? anchorCreationCancelHandler
-                    : anchorBtnConfirmHandler
-                }
-              />
+              {userIsAuthenticated && isUserMode && (
+                <div className={styles.modalControlsWrapper}>
+                  <ImageMenu
+                    modalImageMode={true}
+                    onShare={shareOverlayOpenHandler}
+                    onEdit={editOverlayOpenHandler}
+                    onDelete={deleteOverlayOpenHandler}
+                  />
+                </div>
+              )}
+            </div>
+            <div className={styles.tagListWrapper}>
+              {currentModalImage.imageInfo.tags.length > 0 && (
+                <TagList
+                  tags={currentModalImage.imageInfo.tags}
+                  isEditable={isUserMode}
+                />
+              )}
             </div>
             <div
-              ref={descriptionTextRef}
-              className={styles.descriptionText}
-              onMouseUp={selectAnchorText}
+              className={styles.descriptionWrapper}
+              onMouseLeave={
+                anchorSelectionImageMode ? () => null : anchorBtnHideHandler
+              }
             >
-              {currentModalImage.imageInfo?.description?.text}
-              <div className={styles.descriptionHighlight}>
-                {descriptionParser(currentModalImage.imageInfo.description)}
+              {" "}
+              <div
+                className={styles.anchoringModeButton}
+                style={{
+                  display: anchorBtnVisible ? "block" : "none",
+                  top: anchorBtnCoords[1],
+                  left: anchorBtnCoords[0],
+                }}
+              >
+                <Button
+                  text={anchorSelectionImageMode ? "Cancel" : "Create anchor"}
+                  onClick={
+                    anchorSelectionImageMode
+                      ? anchorCreationCancelHandler
+                      : anchorBtnConfirmHandler
+                  }
+                />
               </div>
+              {currentModalImage.imageInfo?.description && (
+                <div
+                  ref={descriptionTextRef}
+                  className={styles.descriptionText}
+                  onMouseUp={selectAnchorText}
+                >
+                  <div>{currentModalImage.imageInfo.description.text}</div>
+                  <DescriptionTextAnchorsLayer
+                    imageDescription={currentModalImage.imageInfo.description}
+                    showAnchorImgFrame={showAnchorImgFrame}
+                    hideAnchorImgFrame={hideAnchorImgFrame}
+                  />
+                </div>
+              )}
             </div>
-          </div>
-        </div>
+          </>
+        )}
+      </div>
 
       <Button
         type="button"
