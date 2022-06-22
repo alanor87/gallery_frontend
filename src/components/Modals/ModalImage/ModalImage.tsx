@@ -17,6 +17,7 @@ import store from "MST/store";
 import { ImageType } from "MST/imagesStoreSettings";
 import { DescriptionAnchorType } from "types/images";
 
+import {pixels2percentage as p2p} from 'utils/pixels2percentage';
 import styles from "./ModalImage.module.scss";
 
 const ModalImage = () => {
@@ -139,7 +140,6 @@ const ModalImage = () => {
   const isFirstImage = currentImageIndex === 0;
   const isLastImage = currentImageIndex === imagesList.length - 1;
   const isUserMode = getCurrentGalleryMode === "userGallery";
-  let currentChosenAnchorId = "";
   let touchStartX = 0;
   // Coordinates and dimensions for the image anchor frame.
   // Not using useState here to prevent constant rerendering of the component while drawing the div.
@@ -197,8 +197,10 @@ const ModalImage = () => {
         break;
       }
       case "mouseup": {
-        setAnchorFrameSize([frameWidth, frameHeight]);
-        setAnchorFrameCoords([finalFrameCoordX, finalFrameCoordY]);
+        const parentWidth = newAnchorImgFrameRef.current!.parentElement!.clientWidth;
+        const parentHeight =  newAnchorImgFrameRef.current!.parentElement!.clientHeight;
+        setAnchorFrameSize([p2p(parentWidth, frameWidth), p2p(parentHeight, frameHeight)]);
+        setAnchorFrameCoords([p2p(parentWidth ,finalFrameCoordX), p2p(parentHeight, finalFrameCoordY)]);
         newAnchorImgFrameRef.current!.style.pointerEvents = "all";
         setAnchorFrameCreated(true);
         break;
@@ -245,15 +247,14 @@ const ModalImage = () => {
     const { anchorFrameCoords, anchorFrameSize, anchorText } = currentAnchor!;
     anchorImgFrameRef.current!.setAttribute(
       "style",
-      `top: ${anchorFrameCoords[1]}px; 
-      left: ${anchorFrameCoords[0]}px;
-      width: ${anchorFrameSize[0]}px; 
-      height: ${anchorFrameSize[1]}px;
+      `top: ${anchorFrameCoords[1]}%; 
+      left: ${anchorFrameCoords[0]}%;
+      width: ${anchorFrameSize[0]}%; 
+      height: ${anchorFrameSize[1]}%;
       opacity: 1; pointer-events: none;`
     );
     anchorImgFrameRef.current!.innerText = anchorText;
   };
-
   const hideAnchorImgFrame = () => {
     anchorImgFrameRef.current!.setAttribute("style", ``);
     anchorImgFrameRef.current!.innerText = "";
