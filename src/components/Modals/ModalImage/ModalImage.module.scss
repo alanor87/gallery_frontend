@@ -134,8 +134,8 @@
     overflow: hidden;
     pointer-events: none;
     z-index: 1;
-    border: 1px solid var(--color-accent);
-    box-shadow: inset 0px 0px 5px 2px var(--main-background-color-alpha);
+    border: 2px solid var(--color-accent);
+    box-shadow: inset 0px 0px 9px 8px var(--main-background-color-alpha);
     transition: width 250ms linear, height 250ms linear, top 250ms linear, left 250ms linear, opacity 250ms linear;
     opacity: 0;
     cursor: pointer;

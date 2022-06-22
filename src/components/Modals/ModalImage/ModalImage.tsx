@@ -197,10 +197,11 @@ const ModalImage = () => {
         break;
       }
       case "mouseup": {
-        const parentWidth = newAnchorImgFrameRef.current!.parentElement!.clientWidth;
-        const parentHeight =  newAnchorImgFrameRef.current!.parentElement!.clientHeight;
-        setAnchorFrameSize([p2p(parentWidth, frameWidth), p2p(parentHeight, frameHeight)]);
-        setAnchorFrameCoords([p2p(parentWidth ,finalFrameCoordX), p2p(parentHeight, finalFrameCoordY)]);
+        // For different screen resolutions compatibility image anchor frame dimensions
+        // are being converted from pixels to percent from the wrapping div.
+        const {clientWidth, clientHeight} = newAnchorImgFrameRef.current!.parentElement!;
+        setAnchorFrameSize([p2p(clientWidth, frameWidth), p2p(clientHeight, frameHeight)]);
+        setAnchorFrameCoords([p2p(clientWidth ,finalFrameCoordX), p2p(clientHeight, finalFrameCoordY)]);
         newAnchorImgFrameRef.current!.style.pointerEvents = "all";
         setAnchorFrameCreated(true);
         break;
