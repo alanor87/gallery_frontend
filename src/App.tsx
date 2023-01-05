@@ -82,37 +82,12 @@ function App() {
         <Suspense fallback={<Spinner side={100} />}>
           {" "}
           <Switch>
-            {routes.map(
-              ({
-                label,
-                redirectTo,
-                isPublic,
-                path,
-                exact,
-                restricted,
-                component,
-              }) =>
-                isPublic ? (
-                  <PublicRoute
-                    key={label}
-                    path={path}
-                    redirectTo={redirectTo}
-                    exact={exact}
-                    restricted={restricted}
-                    component={component}
-                    label={label}
-                  />
-                ) : (
-                  <PrivateRoute
-                    key={label}
-                    path={path}
-                    redirectTo={redirectTo}
-                    exact={exact}
-                    restricted={restricted}
-                    component={component}
-                    label={label}
-                  />
-                )
+            {routes.map(({ isPublic, ...props }) =>
+              isPublic ? (
+                <PublicRoute key={props.label} {...props} />
+              ) : (
+                <PrivateRoute key={props.label} {...props} />
+              )
             )}
             <Redirect to={userIsAuthenticated ? "/userGallery" : "/login"} />
           </Switch>

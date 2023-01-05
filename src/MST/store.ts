@@ -6,12 +6,13 @@ import modalSettings from "./modalSettings";
 import imagesStoreSettings from "./imagesStoreSettings";
 import { RegisterFormInterface, LoginFormInterface } from "types/user";
 
-const backendUrl =
-  process.env.NODE_ENV === "production" || window.innerWidth < 900
-    ? "https://gallery-app-mj.herokuapp.com/api/v1"
-    : "http://localhost:3030/api/v1";
+// const backendUrl =
+//   process.env.NODE_ENV === "production" || window.innerWidth < 900
+//     ? "https://gallery-app-mj.herokuapp.com/api/v1"
+//     : "http://localhost:3030/api/v1";
 
 // const backendUrl = "http://192.168.1.132:3030/api/v1";
+const backendUrl = "https://gallery-app-mj.herokuapp.com/api/v1";
 
 axios.interceptors.response.use(
   (res: AxiosResponse) => res,

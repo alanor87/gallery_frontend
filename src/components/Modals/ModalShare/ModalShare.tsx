@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ToggleButton, Button, Tag, Spinner } from "components/elements";
+import { ToggleButton, Button, Spinner } from "components/elements";
 import TagEditor from "components/TagEditor";
 import store from "MST/store";
 import { NewImageInfoType } from "types/images";

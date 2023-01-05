@@ -424,7 +424,7 @@ const ModalImage = () => {
     // When the description text changes - anchors are reset to empty array.
     const newAnchors = descriptionIsChanged
       ? []
-      : imageInfo.description.anchors;
+      : imageInfo.description?.anchors;
     const description = { text: descriptionText.trim(), anchors: newAnchors };
     await editImagesInfo([{ _id, imageInfo: { title, description } }]);
     await loadModalImage();
