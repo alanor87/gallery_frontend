@@ -1,4 +1,4 @@
-import { types, flow, applySnapshot } from "mobx-state-tree";
+import { types, flow, applySnapshot, Instance } from "mobx-state-tree";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { popupNotice } from "utils/popupNotice";
 import userSettings from "./userSettings";
@@ -45,26 +45,13 @@ axios.interceptors.response.use(
   }
 );
 
-const initialUserSettings = {
-  userName: "",
-  userEmail: "",
-  userToken: "",
-  userIsAuthenticated: false,
-  userOwnedimages: [],
-  userInterface: {
-    lightThemeIsOn: false,
-    imagesPerPage: 10,
-    sidePanelIsOpen: false,
-  },
-};
-
 const publicSettings = types.model({
   publicImagesList: types.optional(types.array(types.string), []),
 });
 
 const store = types
   .model({
-    userSettings: types.optional(userSettings, initialUserSettings),
+    userSettings: types.optional(userSettings, {}),
     imagesStoreSettings: types.optional(imagesStoreSettings, {}),
     modalWindowsSettings: types.optional(modalSettings, {}),
     publicSettings: types.optional(publicSettings, {}),
@@ -141,5 +128,7 @@ const store = types
       setBackendUrl,
     };
   });
+
+export type RootStoreType = Instance<typeof store>
 
 export default store.create();

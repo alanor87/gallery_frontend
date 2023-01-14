@@ -27,14 +27,16 @@ const Modal: React.FunctionComponent<Props> = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const modalBackdropClose = useCallback(
+  const modalBackdropClose = 
     (event: any) => {
+      console.log("click on backdrop, isLoading in Modal : ", isLoading);
+      if (isLoading) {
+        return;
+      }
       if (event.target === event.currentTarget || event.key === "Escape") {
         modalCloseHandle();
       }
-    },
-    [setModalOpen, setModalComponentType]
-  );
+    };
 
   const modalCloseHandle = () => {
     setModalOpen(false);
@@ -84,7 +86,7 @@ const Modal: React.FunctionComponent<Props> = () => {
     return function cleanup() {
       window.removeEventListener("keydown", modalBackdropClose);
     };
-  }, [modalIsOpened, modalBackdropClose, isLoading]);
+  }, [modalIsOpened, isLoading]);
 
   return createPortal(
     <div

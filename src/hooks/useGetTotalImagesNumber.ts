@@ -5,7 +5,7 @@ const useGetTotalImagesNumber = () => {
   const { userOwnedImages, userOpenedToImages } = store.userSettings;
   const { publicImagesList } = store.publicSettings;
 
-  let imagesNumber;
+  let imagesNumber = 0;
   switch (galleryMode) {
     case "userGallery": {
       imagesNumber = userOwnedImages.length;

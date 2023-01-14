@@ -1,3 +1,5 @@
+import { UserInterfaceSettingsType } from "MST/interfaceSettings";
+
 export interface RegisterFormInterface {
   userName: string;
   userEmail: string;
@@ -9,18 +11,11 @@ export interface LoginFormInterface {
   userPassword: string;
 }
 
-export interface UserInterfaceSettings {
-  backgroundImage: string;
-  lightThemeIsOn: boolean;
-  imagesPerPage: number;
-  sidePanelIsOpen: boolean;
-}
-
 export type AuthenticatedUserType =
   | LoginFormInterface
   | RegisterFormInterface
   | {
       userToken: string;
       userIsAuthenticated: boolean;
-      userInterface: UserInterfaceSettings;
+      userInterface: UserInterfaceSettingsType;
     };

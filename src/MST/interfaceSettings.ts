@@ -1,12 +1,14 @@
 import axios from "axios";
 import { popupNotice } from "utils/popupNotice";
-import { types, flow, getParent } from "mobx-state-tree";
+import { types, flow, getParent, SnapshotOrInstance } from "mobx-state-tree";
+import { UserSettingsStoreType } from "./userSettings";
 
 export const interfaceSettings = types
   .model({
-    lightThemeIsOn: types.boolean,
-    imagesPerPage: types.number,
-    sidePanelIsOpen: types.boolean,
+    backgroundImage: types.optional(types.string, ''),
+    lightThemeIsOn: types.optional(types.boolean, false),
+    imagesPerPage: types.optional(types.number, 10),
+    sidePanelIsOpen: types.optional(types.boolean, false),
   })
   .actions((self) => {
     const fetchSetInterfaceSettings = flow(function* () {
@@ -22,7 +24,7 @@ export const interfaceSettings = types
     });
 
     const toggleTheme = (value: boolean) => {
-      const { userIsAuthenticated } = getParent(self);
+      const { userIsAuthenticated } = getParent<UserSettingsStoreType>(self);
       self.lightThemeIsOn = value;
       if (userIsAuthenticated) fetchSetInterfaceSettings();
     };
@@ -38,5 +40,7 @@ export const interfaceSettings = types
       toggleSidePanel,
     };
   });
+
+export type UserInterfaceSettingsType = SnapshotOrInstance<typeof interfaceSettings>
 
 export default interfaceSettings;

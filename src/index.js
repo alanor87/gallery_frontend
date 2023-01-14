@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM, { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "@pnotify/core/dist/BrightTheme.css";
@@ -8,11 +8,14 @@ import "./sass/index.scss";
 
 process.env.CI = false;
 
-ReactDOM.render(
+const container = document.getElementById("root");
+
+const root = createRoot(container);
+
+root.render(
   <React.StrictMode>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );

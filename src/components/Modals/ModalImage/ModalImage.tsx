@@ -6,18 +6,18 @@ import React, {
   useRef,
 } from "react";
 import { debounce } from "debounce";
-import { DescriptionTextAnchorsLayer } from "./DescriptionTextAnchorsLayer";
 import cn from "classnames";
 import { Spinner, Button } from "components/elements";
 import TagList from "components/TagList";
 import ImageMenu from "components/ImageMenu";
+import { DescriptionTextAnchorsLayer } from "./DescriptionTextAnchorsLayer";
 import { ShareOverlay, DeleteOverlay, EditOverlay } from "components/Overlays";
 
 import store from "MST/store";
 import { ImageType } from "MST/imagesStoreSettings";
 import { DescriptionAnchorType } from "types/images";
 
-import {pixels2percentage as p2p} from 'utils/pixels2percentage';
+import { pixels2percentage as p2p } from "utils/pixels2percentage";
 import styles from "./ModalImage.module.scss";
 
 const ModalImage = () => {
@@ -88,6 +88,9 @@ const ModalImage = () => {
         case "publicGallery": {
           return publicImagesList;
         }
+        default : {
+          return [''];
+        }
       }
     }
     // If the images we are dealing with are filtered - we refer to the allFilteredImagesId -
@@ -96,7 +99,7 @@ const ModalImage = () => {
     else {
       return allFilteredImagesId;
     }
-  }, []);
+  }, [allFilteredImagesId, getCurrentGalleryMode]);
 
   const loadModalImage = useCallback(async () => {
     setImageIsLoading(true);
@@ -199,9 +202,16 @@ const ModalImage = () => {
       case "mouseup": {
         // For different screen resolutions compatibility image anchor frame dimensions
         // are being converted from pixels to percent from the wrapping div.
-        const {clientWidth, clientHeight} = newAnchorImgFrameRef.current!.parentElement!;
-        setAnchorFrameSize([p2p(clientWidth, frameWidth), p2p(clientHeight, frameHeight)]);
-        setAnchorFrameCoords([p2p(clientWidth ,finalFrameCoordX), p2p(clientHeight, finalFrameCoordY)]);
+        const { clientWidth, clientHeight } =
+          newAnchorImgFrameRef.current!.parentElement!;
+        setAnchorFrameSize([
+          p2p(clientWidth, frameWidth),
+          p2p(clientHeight, frameHeight),
+        ]);
+        setAnchorFrameCoords([
+          p2p(clientWidth, finalFrameCoordX),
+          p2p(clientHeight, finalFrameCoordY),
+        ]);
         newAnchorImgFrameRef.current!.style.pointerEvents = "all";
         setAnchorFrameCreated(true);
         break;
@@ -362,7 +372,7 @@ const ModalImage = () => {
 
   const imageControlsVisibilityHandler = debounce(
     () => {
-      if (anchorSelectionImageMode) return;
+      if (anchorSelectionImageMode || imageIsLoading) return;
       setImageControlsVisible(true);
       setTimeout(() => setImageControlsVisible(false), 2000);
     },
@@ -471,9 +481,12 @@ const ModalImage = () => {
     >
       <div
         className={styles.modalImageBackdrop}
-        style={{ backgroundImage: `url(${currentModalImage.imageURL})` }}
+        style={{
+          backgroundImage: imageIsLoading
+            ? "none"
+            : `url(${currentModalImage.imageURL})`,
+        }}
       ></div>
-
       <div
         className={cn(styles.imagePart, {
           [styles.expanded]: imageExpand,
@@ -563,6 +576,7 @@ const ModalImage = () => {
                 src={currentModalImage.imageURL}
                 alt={currentModalImage.title}
                 onLoad={onImageLoad}
+                style={{ visibility: imageIsLoading ? "hidden" : "visible" }}
               />
             </div>
           </div>

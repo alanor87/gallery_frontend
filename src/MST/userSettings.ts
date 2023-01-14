@@ -1,15 +1,19 @@
 import axios from "axios";
-import { types, flow, applySnapshot } from "mobx-state-tree";
-import { interfaceSettings } from "./interfaceSettings";
+import {
+  types,
+  flow,
+  applySnapshot,
+  Instance,
+} from "mobx-state-tree";
+import { interfaceSettings, UserInterfaceSettingsType } from "./interfaceSettings";
 import { popupNotice } from "utils/popupNotice";
 import {
   AuthenticatedUserType,
-  UserInterfaceSettings,
   RegisterFormInterface,
   LoginFormInterface,
 } from "types/user";
 
-const initialUserSettings = {
+export const initialUserSettings = {
   userName: "",
   userEmail: "",
   userToken: "",
@@ -17,6 +21,7 @@ const initialUserSettings = {
   userOwnedImages: [],
   userOpenedToImages: [],
   userInterface: {
+    backgroundImage: '',
     lightThemeIsOn: false,
     imagesPerPage: 10,
     sidePanelIsOpen: false,
@@ -31,12 +36,12 @@ const userSettings = types
     userIsAuthenticated: types.optional(types.boolean, false),
     userOwnedImages: types.optional(types.array(types.string), []),
     userOpenedToImages: types.optional(types.array(types.string), []),
-    userInterface: interfaceSettings,
+    userInterface: types.optional(interfaceSettings, {}) ,
   })
   .actions((self) => {
     const savingAuthenticatedUserData = (
       authenticatedUserData: AuthenticatedUserType & {
-        userInterface: UserInterfaceSettings;
+        userInterface: UserInterfaceSettingsType;
       }
     ) => {
       applySnapshot(self, { ...self, ...authenticatedUserData });
@@ -109,4 +114,7 @@ const userSettings = types
       purgeStorage,
     };
   });
+
+export type UserSettingsStoreType = Instance<typeof userSettings>;
+
 export default userSettings;

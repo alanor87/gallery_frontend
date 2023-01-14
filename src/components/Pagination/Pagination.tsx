@@ -10,6 +10,8 @@ const Pagination = () => {
   const {
     setImagesPerPage,
     setCurrentPage,
+    groupSelectModeToggle,
+    clearSelectedList,
     currentPage,
     imagesPerPage,
     allFilteredImagesId,
@@ -46,10 +48,13 @@ const Pagination = () => {
   };
 
   const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    groupSelectModeToggle(false);
     setImagesPerPage(Number(e.target.value));
   };
 
   const onCurrentPageChange = (value: number) => () => {
+    groupSelectModeToggle(false);
+    clearSelectedList();
     setCurrentPage(value);
   };
 

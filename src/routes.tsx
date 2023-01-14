@@ -1,3 +1,4 @@
+import { Spinner } from "components/elements";
 import { lazy } from "react";
 
 const LoginRegisterView = lazy(() => import("./views/LoginRegister"));
@@ -48,6 +49,15 @@ const routes = [
     restricted: false,
     component: GalleryView,
     label: "publicGallery",
+  },
+  {
+    isPublic: true,
+    path: "/spinner",
+    redirectTo: "/login",
+    exact: true,
+    restricted: false,
+    component: Spinner,
+    label: "spinner",
   },
 ];
 

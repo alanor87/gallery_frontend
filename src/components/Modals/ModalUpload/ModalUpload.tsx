@@ -62,6 +62,7 @@ const ModalUpload: React.FC<ModalWindowProps> = ({
       formData.append("images", file);
     });
     await uploadImages(formData);
+    setIsLoading && setIsLoading(false);
     modalCloseHandle();
   };
 

@@ -9,6 +9,7 @@ import {
 import { ImageOpenedToUserEntry } from "types/common";
 import { NewImageInfoType, GalleryType } from "types/images";
 import { popupNotice } from "utils/popupNotice";
+import { RootStoreType } from "./store";
 
 interface InitialImageStoreSettings {
   galleryMode: GalleryType;
@@ -108,7 +109,7 @@ const ImagesStore = types
     isLoading: types.optional(types.boolean, true),
   })
   .views((self) => ({
-    get getCurrentGalleryMode(): GalleryType {
+    get getCurrentGalleryMode() {
       return self.galleryMode;
     },
     get getUserImages(): ImageType[] {
@@ -142,10 +143,13 @@ const ImagesStore = types
             break;
           }
           case "publicGallery": {
-            const { publicSettingsInit } = getParent(self, 1);
+            const { publicSettingsInit } = getParent<RootStoreType>(self, 1);
             publicSettingsInit();
             requestRoute = `/public/publicImages?currentPage=${self.currentPage}&imagesPerPage=${self.imagesPerPage}&filter=${self.filter}`;
             break;
+          }
+          default : {
+            requestRoute = `/public/publicImages?currentPage=${self.currentPage}&imagesPerPage=${self.imagesPerPage}&filter=${self.filter}`;
           }
         }
         const response = yield axios.get(requestRoute);
@@ -187,7 +191,7 @@ const ImagesStore = types
         );
         const newImages: ImageType[] = uploadedImages.data.newImages;
         const newImagesIdList = newImages.map((image) => image._id);
-        const { userSettings } = getParent(self, 1);
+        const { userSettings } = getParent<RootStoreType>(self, 1);
         updateUserOwnedImagesLocal([
           ...userSettings.userOwnedImages,
           ...newImagesIdList,
@@ -272,7 +276,11 @@ const ImagesStore = types
     const getImageById = (id: string) =>
       self.images.find((image) => image._id === id);
 
-    const groupSelectModeToggle = () => {
+    const groupSelectModeToggle = (value?: boolean) => {
+      if (value !== undefined) {
+        self.groupSelectMode = value;
+        return;
+      }
       self.groupSelectMode = !self.groupSelectMode;
     };
 
@@ -319,7 +327,7 @@ const ImagesStore = types
     };
 
     const updateUserOwnedImagesLocal = (newImagesIdList: string[]) => {
-      const { userSettings } = getParent(self, 1);
+      const { userSettings } = getParent<RootStoreType>(self);
       userSettings.updateUserOwnedImages(newImagesIdList);
     };
 
