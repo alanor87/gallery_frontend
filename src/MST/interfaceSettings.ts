@@ -1,6 +1,6 @@
 import axios from "axios";
 import { popupNotice } from "utils/popupNotice";
-import { types, flow, getParent, SnapshotOrInstance } from "mobx-state-tree";
+import { types, flow, getParent, Instance } from "mobx-state-tree";
 import { UserSettingsStoreType } from "./userSettings";
 
 export const interfaceSettings = types
@@ -41,6 +41,6 @@ export const interfaceSettings = types
     };
   });
 
-export type UserInterfaceSettingsType = SnapshotOrInstance<typeof interfaceSettings>
+export type UserInterfaceSettingsType = Instance<typeof interfaceSettings>
 
 export default interfaceSettings;

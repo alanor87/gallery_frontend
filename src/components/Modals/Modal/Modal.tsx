@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, lazy, Suspense } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { observer } from "mobx-react-lite";
 import { createPortal } from "react-dom";
 import { Spinner } from "components/elements";

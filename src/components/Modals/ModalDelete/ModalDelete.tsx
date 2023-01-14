@@ -11,7 +11,7 @@ const ModalDelete: React.FC<ModalWindowProps> = ({
   const { selectedImages, deleteImages, groupSelectModeToggle } =
     store.imagesStoreSettings;
 
-  const { setModalComponentType, setModalOpen } = store.modalWindowsSettings;
+  const { setModalOpen } = store.modalWindowsSettings;
 
   const deleteClickHandler = async () => {
     setIsLoading && setIsLoading(true);
