@@ -5,29 +5,13 @@ import {
   Instance,
   applySnapshot,
   getParent,
+  SnapshotIn,
+  SnapshotOrInstance,
 } from "mobx-state-tree";
 import { ImageOpenedToUserEntry } from "types/common";
 import { NewImageInfoType, GalleryType } from "types/images";
 import { popupNotice } from "utils/popupNotice";
 import { RootStoreType } from "./store";
-
-interface InitialImageStoreSettings {
-  galleryMode: GalleryType;
-  images: ImageType[];
-  groupSelectMode: boolean;
-  filter: string;
-  page: number;
-  imagesPerPage: number;
-}
-
-const initialImageStoreSettings: InitialImageStoreSettings = {
-  galleryMode: "userGallery",
-  images: [],
-  groupSelectMode: false,
-  filter: "",
-  page: 0,
-  imagesPerPage: 20,
-};
 
 const DescriptionAnchor = types.model({
   _id: types.optional(types.string, ""),
@@ -148,7 +132,7 @@ const ImagesStore = types
             requestRoute = `/public/publicImages?currentPage=${self.currentPage}&imagesPerPage=${self.imagesPerPage}&filter=${self.filter}`;
             break;
           }
-          default : {
+          default: {
             requestRoute = `/public/publicImages?currentPage=${self.currentPage}&imagesPerPage=${self.imagesPerPage}&filter=${self.filter}`;
           }
         }
@@ -332,7 +316,13 @@ const ImagesStore = types
     };
 
     const purgeStorage = () => {
-      applySnapshot(self, initialImageStoreSettings);
+      applySnapshot(self, {
+        galleryMode: "userGallery",
+        images: [],
+        groupSelectMode: false,
+        filter: "",
+        imagesPerPage: 20,
+      });
     };
 
     return {
@@ -356,7 +346,10 @@ const ImagesStore = types
     };
   });
 
-export interface ImageInfoType extends Instance<typeof ImageInfo> {}
-export interface ImageType extends Instance<typeof Image> {}
-export interface ImagesStoreType extends Instance<typeof ImagesStore> {}
+export type DescriptionAnchorType = SnapshotIn<typeof DescriptionAnchor>;
+export type ImageDescriptionType = Instance<typeof ImageDescription>;
+export type ImageInfoType = Instance<typeof ImageInfo>;
+export type ImageType = Instance<typeof Image>;
+export type ImagesStoreType = SnapshotOrInstance<typeof ImagesStore>;
+
 export default ImagesStore;

@@ -27,16 +27,12 @@ const Modal: React.FunctionComponent<Props> = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const modalBackdropClose = 
-    (event: any) => {
-      console.log("click on backdrop, isLoading in Modal : ", isLoading);
-      if (isLoading) {
-        return;
-      }
-      if (event.target === event.currentTarget || event.key === "Escape") {
-        modalCloseHandle();
-      }
-    };
+  const modalBackdropClose = (event: any) => {
+    if (isLoading) return;
+    if (event.target === event.currentTarget || event.key === "Escape") {
+      modalCloseHandle();
+    }
+  };
 
   const modalCloseHandle = () => {
     setModalOpen(false);
@@ -83,7 +79,7 @@ const Modal: React.FunctionComponent<Props> = () => {
   useEffect(() => {
     if (modalIsOpened && !isLoading)
       window.addEventListener("keydown", modalBackdropClose);
-    return function cleanup() {
+    return () => {
       window.removeEventListener("keydown", modalBackdropClose);
     };
   }, [modalIsOpened, isLoading]);

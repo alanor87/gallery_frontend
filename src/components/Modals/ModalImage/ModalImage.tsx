@@ -14,8 +14,7 @@ import { DescriptionTextAnchorsLayer } from "./DescriptionTextAnchorsLayer";
 import { ShareOverlay, DeleteOverlay, EditOverlay } from "components/Overlays";
 
 import store from "MST/store";
-import { ImageType } from "MST/imagesStoreSettings";
-import { DescriptionAnchorType } from "types/images";
+import { DescriptionAnchorType, ImageType } from "MST/imagesStoreSettings";
 
 import { pixels2percentage as p2p } from "utils/pixels2percentage";
 import styles from "./ModalImage.module.scss";

@@ -1,5 +1,5 @@
+import { DescriptionAnchorType, ImageDescriptionType } from "MST/imagesStoreSettings";
 import React, { useState } from "react";
-import { DescriptionAnchorType, ImageDescriptionType } from "types/images";
 
 import styles from "./ModalImage.module.scss";
 
